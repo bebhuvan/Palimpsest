@@ -30,6 +30,98 @@
       "title": "ConfidenceGrade",
       "type": "string"
     },
+    "HistoricalMapRendering": {
+      "additionalProperties": false,
+      "description": "A release-local raster positioned from a reviewed IIIF georeference.",
+      "properties": {
+        "protocol": {
+          "const": "iiif-georeference-maplibre-image-v1",
+          "default": "iiif-georeference-maplibre-image-v1",
+          "title": "Protocol",
+          "type": "string"
+        },
+        "image_path": {
+          "pattern": "^historical-maps/[a-zA-Z0-9][a-zA-Z0-9._/-]*\\.(png|jpg|jpeg|webp)$",
+          "title": "Image Path",
+          "type": "string"
+        },
+        "image_checksum_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Image Checksum Sha256",
+          "type": "string"
+        },
+        "coordinates": {
+          "items": {
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "title": "Coordinates",
+          "type": "array"
+        }
+      },
+      "required": [
+        "image_path",
+        "image_checksum_sha256",
+        "coordinates"
+      ],
+      "title": "HistoricalMapRendering",
+      "type": "object"
+    },
+    "ReleaseRightsApproval": {
+      "additionalProperties": false,
+      "description": "One release decision for one material scope.",
+      "properties": {
+        "scope": {
+          "$ref": "#/$defs/RightsScope"
+        },
+        "status": {
+          "const": "approved",
+          "title": "Status",
+          "type": "string"
+        },
+        "decision_id": {
+          "pattern": "^rights:[a-z0-9][a-z0-9:_-]+$",
+          "title": "Decision Id",
+          "type": "string"
+        },
+        "reviewed_by": {
+          "minLength": 1,
+          "title": "Reviewed By",
+          "type": "string"
+        },
+        "reviewed_at": {
+          "format": "date-time",
+          "title": "Reviewed At",
+          "type": "string"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "scope",
+        "status",
+        "decision_id",
+        "reviewed_by",
+        "reviewed_at",
+        "rationale"
+      ],
+      "title": "ReleaseRightsApproval",
+      "type": "object"
+    },
     "RightsReference": {
       "additionalProperties": false,
       "description": "A rights decision for one kind of material, never an implicit relicense.",
@@ -291,6 +383,31 @@
       "minItems": 1,
       "title": "Lineage",
       "type": "array"
+    },
+    "known_limitations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Known Limitations",
+      "type": "array"
+    },
+    "release_rights_approvals": {
+      "items": {
+        "$ref": "#/$defs/ReleaseRightsApproval"
+      },
+      "title": "Release Rights Approvals",
+      "type": "array"
+    },
+    "rendering": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/HistoricalMapRendering"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     }
   },
   "required": [

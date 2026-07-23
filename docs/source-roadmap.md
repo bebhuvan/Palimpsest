@@ -87,11 +87,12 @@ not an artifact to republish or send to browsers.
 ## Georeferenced scanned maps
 
 The metadata adapter for an Allmaps-compatible IIIF Presentation 3 Manifest and IIIF Georeference
-Annotation is implemented. It exposes map identifiers and rights/provenance metadata as an optional
-build artifact, not a map layer. Selecting an institution/map pilot, reviewing its catalog and
-image rights, and deciding whether to build a later MapLibre renderer remain proposed. Scanned
-sheets must never become the silent default basemap or be treated as agreeing with OHM or a
-reviewed reconstruction merely because their images overlap.
+Annotation is implemented. The optional MapLibre image path consumes only release-local artifacts
+whose metadata, pixels and georeference have three distinct approved rights decisions; arbitrary
+visitor IIIF URLs are not accepted. No institution/map is enabled in production. A deterministic
+synthetic fixture exercises the browser path while selection, rights review and artifact packaging
+for a real map remain deferred. Scanned sheets never become the silent default basemap or count as
+agreement with OHM or a reviewed reconstruction merely because their images overlap.
 
 ## Deep-time map strategy
 

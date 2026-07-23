@@ -37,6 +37,8 @@ def test_schemas_command_writes_public_contracts(tmp_path: Path) -> None:
     assert (output / "AuthorityMatch.schema.json").is_file()
     assert (output / "HistoricalMapMetadata.schema.json").is_file()
     assert (output / "IntegrationIndex.schema.json").is_file()
+    assert (output / "CommunityProposal.schema.json").is_file()
+    assert (output / "AcceptedProposalRelease.schema.json").is_file()
     assert (output / "ApprovedEvidenceBundle.schema.json").is_file()
     assert (output / "DossierDraftContent.schema.json").is_file()
     assert (output / "DossierDraft.schema.json").is_file()

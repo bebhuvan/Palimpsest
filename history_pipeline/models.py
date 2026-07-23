@@ -224,6 +224,45 @@ class RightsReference(BaseModel):
     rights_uri: HttpUrl | None = None
 
 
+class ReleaseRightsApproval(BaseModel):
+    """One release decision for one material scope."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    scope: RightsScope
+    status: Literal["approved"]
+    decision_id: str = Field(pattern=r"^rights:[a-z0-9][a-z0-9:_-]+$")
+    reviewed_by: str = Field(min_length=1)
+    reviewed_at: AwareDatetime
+    rationale: str = Field(min_length=1)
+
+
+class HistoricalMapRendering(BaseModel):
+    """A release-local raster positioned from a reviewed IIIF georeference."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    protocol: Literal["iiif-georeference-maplibre-image-v1"] = (
+        "iiif-georeference-maplibre-image-v1"
+    )
+    image_path: str = Field(
+        pattern=r"^historical-maps/[a-zA-Z0-9][a-zA-Z0-9._/-]*\.(png|jpg|jpeg|webp)$"
+    )
+    image_checksum_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    coordinates: list[tuple[float, float]] = Field(min_length=4, max_length=4)
+
+    @model_validator(mode="after")
+    def validate_rendering(self) -> HistoricalMapRendering:
+        if ".." in self.image_path.split("/"):
+            raise ValueError("historical map image_path cannot traverse release directories")
+        if len(set(self.coordinates)) != 4:
+            raise ValueError("historical map rendering requires four distinct corners")
+        for longitude, latitude in self.coordinates:
+            if not -180 <= longitude <= 180 or not -90 <= latitude <= 90:
+                raise ValueError("historical map rendering coordinates must be WGS84")
+        return self
+
+
 class TransformationStep(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -274,6 +313,9 @@ class HistoricalMapMetadata(BaseModel):
     georeference_confidence: Confidence
     source_refs: list[SourceReference] = Field(min_length=2)
     lineage: list[TransformationStep] = Field(min_length=1)
+    known_limitations: list[str] = Field(default_factory=list)
+    release_rights_approvals: list[ReleaseRightsApproval] = Field(default_factory=list)
+    rendering: HistoricalMapRendering | None = None
 
     @model_validator(mode="after")
     def require_separate_rights_scopes(self) -> HistoricalMapMetadata:
@@ -288,6 +330,21 @@ class HistoricalMapMetadata(BaseModel):
             RightsScope.GEOREFERENCE,
         ):
             raise ValueError("map rights must remain separated by material scope")
+        if self.rendering is not None:
+            approval_scopes = [approval.scope for approval in self.release_rights_approvals]
+            if approval_scopes != [
+                RightsScope.METADATA,
+                RightsScope.MEDIA,
+                RightsScope.GEOREFERENCE,
+            ]:
+                raise ValueError(
+                    "renderable maps require separately ordered metadata, media, "
+                    "and georeference release approvals"
+                )
+            if len({approval.decision_id for approval in self.release_rights_approvals}) != 3:
+                raise ValueError("renderable map rights decisions must be distinct")
+            if not self.known_limitations:
+                raise ValueError("renderable maps require known limitations")
         return self
 
 
@@ -302,6 +359,158 @@ class IntegrationIndex(BaseModel):
     authority_match_count: int = Field(ge=0)
     historical_maps_path: str = "integrations/historical-maps.ndjson"
     historical_map_count: int = Field(ge=0)
+
+
+class ContributionKind(StrEnum):
+    PLACE = "place"
+    NAME = "name"
+    DATE = "date"
+    GEOMETRY = "geometry"
+    SOURCE = "source"
+    GEOREFERENCE = "georeference"
+
+
+class ProposalStatus(StrEnum):
+    PROPOSED = "proposed"
+    IN_REVIEW = "in_review"
+    ACCEPTED = "accepted"
+    REJECTED = "rejected"
+
+
+class ProposalReviewAction(StrEnum):
+    SUBMITTED_FOR_REVIEW = "submitted_for_review"
+    ACCEPTED = "accepted"
+    REJECTED = "rejected"
+
+
+class ProposalContributor(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    contributor_id: str = Field(pattern=r"^contributor:[a-z0-9][a-z0-9:_-]+$")
+    display_name: str = Field(min_length=1)
+    attribution: str = Field(min_length=1)
+
+
+class ProposedChange(BaseModel):
+    """A bounded patch proposal, never a canonical record."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    change_id: str = Field(pattern=r"^change:[a-z0-9][a-z0-9:_-]+$")
+    kind: ContributionKind
+    target_record_id: str | None = None
+    summary: str = Field(min_length=1)
+    proposed_value: dict[str, Any]
+
+
+class ProposalEvidence(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    evidence_id: str = Field(pattern=r"^evidence:[a-z0-9][a-z0-9:_-]+$")
+    supports_change_ids: list[str] = Field(min_length=1)
+    source_ref: SourceReference
+    explanation: str = Field(min_length=1)
+
+
+class ProposalDiscussionEntry(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    entry_id: str = Field(pattern=r"^discussion:[a-z0-9][a-z0-9:_-]+$")
+    author: ProposalContributor
+    created_at: AwareDatetime
+    body: str = Field(min_length=1)
+
+
+class ProposalReviewEvent(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    event_id: str = Field(pattern=r"^review:[a-z0-9][a-z0-9:_-]+$")
+    action: ProposalReviewAction
+    actor: ProposalContributor
+    created_at: AwareDatetime
+    rationale: str = Field(min_length=1)
+
+
+class CommunityProposal(BaseModel):
+    """Editorial input kept structurally separate from published canonical records."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    semantics: Literal["community-proposal-not-canonical-record"] = (
+        "community-proposal-not-canonical-record"
+    )
+    proposal_id: str = Field(pattern=r"^proposal:[a-z0-9][a-z0-9:_-]+$")
+    revision: int = Field(default=1, ge=1)
+    status: ProposalStatus = ProposalStatus.PROPOSED
+    contributor: ProposalContributor
+    contribution_license_id: str = Field(min_length=1)
+    contribution_attribution: str = Field(min_length=1)
+    changes: list[ProposedChange] = Field(min_length=1, max_length=100)
+    source_evidence: list[ProposalEvidence] = Field(min_length=1, max_length=100)
+    discussion_history: list[ProposalDiscussionEntry] = Field(default_factory=list)
+    review_history: list[ProposalReviewEvent] = Field(default_factory=list)
+    supersedes_proposal_ids: list[str] = Field(default_factory=list)
+    superseded_by_proposal_ids: list[str] = Field(default_factory=list)
+    created_at: AwareDatetime
+    updated_at: AwareDatetime
+
+    @model_validator(mode="after")
+    def validate_lifecycle(self) -> CommunityProposal:
+        if self.updated_at < self.created_at:
+            raise ValueError("proposal updated_at cannot precede created_at")
+        change_ids = [change.change_id for change in self.changes]
+        if len(change_ids) != len(set(change_ids)):
+            raise ValueError("proposal change IDs must be unique")
+        known_changes = set(change_ids)
+        if any(
+            not set(evidence.supports_change_ids).issubset(known_changes)
+            for evidence in self.source_evidence
+        ):
+            raise ValueError("proposal evidence must reference changes in the same proposal")
+        if any(
+            self.proposal_id in links
+            for links in (
+                self.supersedes_proposal_ids,
+                self.superseded_by_proposal_ids,
+            )
+        ):
+            raise ValueError("a proposal cannot supersede itself")
+        if set(self.supersedes_proposal_ids) & set(self.superseded_by_proposal_ids):
+            raise ValueError("proposal supersession directions cannot overlap")
+        expected_action = {
+            ProposalStatus.PROPOSED: None,
+            ProposalStatus.IN_REVIEW: ProposalReviewAction.SUBMITTED_FOR_REVIEW,
+            ProposalStatus.ACCEPTED: ProposalReviewAction.ACCEPTED,
+            ProposalStatus.REJECTED: ProposalReviewAction.REJECTED,
+        }[self.status]
+        last_action = self.review_history[-1].action if self.review_history else None
+        if last_action != expected_action:
+            raise ValueError(
+                f"proposal status {self.status.value} requires final review action "
+                f"{expected_action.value if expected_action else 'none'}"
+            )
+        return self
+
+
+class AcceptedProposalRelease(BaseModel):
+    """Immutable linkage from an accepted proposal revision to a release."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    semantics: Literal["accepted-proposal-release-receipt-not-canonical-record"] = (
+        "accepted-proposal-release-receipt-not-canonical-record"
+    )
+    receipt_id: str = Field(pattern=r"^proposal-release:[a-z0-9][a-z0-9:_-]+$")
+    proposal_id: str = Field(pattern=r"^proposal:[a-z0-9][a-z0-9:_-]+$")
+    proposal_revision: int = Field(ge=1)
+    proposal_status: Literal["accepted"] = "accepted"
+    decision_event_id: str = Field(pattern=r"^review:[a-z0-9][a-z0-9:_-]+$")
+    proposal_checksum_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    release_build_id: str = Field(pattern=r"^[a-z0-9][a-z0-9_-]+$")
+    published_record_ids: list[str] = Field(min_length=1)
+    released_at: AwareDatetime
 
 
 class HistoricalName(BaseModel):

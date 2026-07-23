@@ -25,6 +25,7 @@ from history_pipeline.dossiers import (
 )
 from history_pipeline.licenses import enforce_source_license
 from history_pipeline.models import (
+    AcceptedProposalRelease,
     ApprovedEvidenceBundle,
     AssertionIndex,
     AuthorityMatch,
@@ -34,6 +35,7 @@ from history_pipeline.models import (
     CausalIndex,
     CausalPath,
     ChronologyIndex,
+    CommunityProposal,
     ContentIndex,
     CoverageCell,
     DossierDraft,
@@ -132,6 +134,8 @@ def schemas(
         AuthorityMatch,
         HistoricalMapMetadata,
         IntegrationIndex,
+        CommunityProposal,
+        AcceptedProposalRelease,
         HistoricalName,
         HistoricalEntity,
         EvidenceAssertion,

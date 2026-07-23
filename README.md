@@ -91,10 +91,18 @@ downloaded by schema 1.9 clients.
 
 The map also reads live vector tiles from OpenHistoricalMap for time-filtered local historical
 detail and labels. A bundled, low-resolution Natural Earth land silhouette and neutral water sit
-below that live layer, so the world remains legible when remote context is slow or unavailable; the release's reviewed
+below that live layer as modern reference geography, so the world remains legible when remote
+context is slow or unavailable; the release's reviewed
 Cliopatria PMTiles remain a visibly distinct reconstruction layer above OHM detail and below OHM
 labels. The layer control can isolate either source role. A network connection is therefore needed
 for the live detail layer, while release artifacts remain static and checksummed.
+
+An optional historical-map-image control can render an approved, release-local raster positioned
+from IIIF/Allmaps-style georeference metadata. It appears only after metadata, image and
+georeference rights receive separate release approvals. The UI exposes attribution, licences,
+confidence and limitations and never treats the scan as authoritative geography. No real
+institutional map is enabled in the open-core profile; the browser pilot uses a deterministic
+synthetic fixture.
 
 Build the deterministic schema 1.10 browser pilot and exercise place selection end to end:
 
@@ -106,7 +114,8 @@ npm run test:browser
 The pilot is an immutable, verifier-checked release under `tests/browser/fixtures/data`. It contains
 one revision-pinned enriched record and bounded context plus one deliberate missing-enrichment
 record, so browser tests cover map selection, search selection, successful joins, and honest
-missing-dossier states without live Wikimedia requests or generated prose.
+missing-dossier states without live Wikimedia requests or generated prose. It also contains the
+synthetic rights-approved historical-map fixture used to test image rendering.
 
 Build the separate, deterministic Copernicus editorial-dossier pilot:
 
@@ -140,6 +149,11 @@ thematic, confidence and provenance layer roles. The initial bounded Knowledge s
 1543 Nuremberg publication of Copernicus's *De revolutionibus*; it is deliberately not a global
 knowledge-history import. See the
 [entity and layer architecture](docs/entity-event-layer-architecture.md).
+
+Future community contribution handling is bounded by proposal and accepted-release-receipt
+contracts. Proposals remain separate from canonical records, rejected proposals cannot receive a
+release receipt, and no authentication or CMS is implemented. See the
+[community contribution boundary](docs/community-contributions.md).
 
 Run `uv run history-data verify-build --require-tiles` before any publication. GitHub Actions runs
 the same check, retains the build for inspection, uploads raw snapshots to a private R2 bucket,

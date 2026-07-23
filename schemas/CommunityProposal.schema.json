@@ -1,0 +1,402 @@
+{
+  "$defs": {
+    "ContributionKind": {
+      "enum": [
+        "place",
+        "name",
+        "date",
+        "geometry",
+        "source",
+        "georeference"
+      ],
+      "title": "ContributionKind",
+      "type": "string"
+    },
+    "ProposalContributor": {
+      "additionalProperties": false,
+      "properties": {
+        "contributor_id": {
+          "pattern": "^contributor:[a-z0-9][a-z0-9:_-]+$",
+          "title": "Contributor Id",
+          "type": "string"
+        },
+        "display_name": {
+          "minLength": 1,
+          "title": "Display Name",
+          "type": "string"
+        },
+        "attribution": {
+          "minLength": 1,
+          "title": "Attribution",
+          "type": "string"
+        }
+      },
+      "required": [
+        "contributor_id",
+        "display_name",
+        "attribution"
+      ],
+      "title": "ProposalContributor",
+      "type": "object"
+    },
+    "ProposalDiscussionEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "entry_id": {
+          "pattern": "^discussion:[a-z0-9][a-z0-9:_-]+$",
+          "title": "Entry Id",
+          "type": "string"
+        },
+        "author": {
+          "$ref": "#/$defs/ProposalContributor"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "body": {
+          "minLength": 1,
+          "title": "Body",
+          "type": "string"
+        }
+      },
+      "required": [
+        "entry_id",
+        "author",
+        "created_at",
+        "body"
+      ],
+      "title": "ProposalDiscussionEntry",
+      "type": "object"
+    },
+    "ProposalEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "pattern": "^evidence:[a-z0-9][a-z0-9:_-]+$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "supports_change_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Supports Change Ids",
+          "type": "array"
+        },
+        "source_ref": {
+          "$ref": "#/$defs/SourceReference"
+        },
+        "explanation": {
+          "minLength": 1,
+          "title": "Explanation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "supports_change_ids",
+        "source_ref",
+        "explanation"
+      ],
+      "title": "ProposalEvidence",
+      "type": "object"
+    },
+    "ProposalReviewAction": {
+      "enum": [
+        "submitted_for_review",
+        "accepted",
+        "rejected"
+      ],
+      "title": "ProposalReviewAction",
+      "type": "string"
+    },
+    "ProposalReviewEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "event_id": {
+          "pattern": "^review:[a-z0-9][a-z0-9:_-]+$",
+          "title": "Event Id",
+          "type": "string"
+        },
+        "action": {
+          "$ref": "#/$defs/ProposalReviewAction"
+        },
+        "actor": {
+          "$ref": "#/$defs/ProposalContributor"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "event_id",
+        "action",
+        "actor",
+        "created_at",
+        "rationale"
+      ],
+      "title": "ProposalReviewEvent",
+      "type": "object"
+    },
+    "ProposalStatus": {
+      "enum": [
+        "proposed",
+        "in_review",
+        "accepted",
+        "rejected"
+      ],
+      "title": "ProposalStatus",
+      "type": "string"
+    },
+    "ProposedChange": {
+      "additionalProperties": false,
+      "description": "A bounded patch proposal, never a canonical record.",
+      "properties": {
+        "change_id": {
+          "pattern": "^change:[a-z0-9][a-z0-9:_-]+$",
+          "title": "Change Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ContributionKind"
+        },
+        "target_record_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Record Id"
+        },
+        "summary": {
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        },
+        "proposed_value": {
+          "additionalProperties": true,
+          "title": "Proposed Value",
+          "type": "object"
+        }
+      },
+      "required": [
+        "change_id",
+        "kind",
+        "summary",
+        "proposed_value"
+      ],
+      "title": "ProposedChange",
+      "type": "object"
+    },
+    "SourceReference": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "pattern": "^[a-z0-9][a-z0-9_-]+$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "record_id": {
+          "title": "Record Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "publisher": {
+          "title": "Publisher",
+          "type": "string"
+        },
+        "url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Url",
+          "type": "string"
+        },
+        "license_id": {
+          "title": "License Id",
+          "type": "string"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        },
+        "checksum_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Checksum Sha256"
+        },
+        "citation": {
+          "title": "Citation",
+          "type": "string"
+        },
+        "modified": {
+          "default": false,
+          "title": "Modified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source_id",
+        "record_id",
+        "title",
+        "publisher",
+        "url",
+        "license_id",
+        "retrieved_at",
+        "citation"
+      ],
+      "title": "SourceReference",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Editorial input kept structurally separate from published canonical records.",
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "semantics": {
+      "const": "community-proposal-not-canonical-record",
+      "default": "community-proposal-not-canonical-record",
+      "title": "Semantics",
+      "type": "string"
+    },
+    "proposal_id": {
+      "pattern": "^proposal:[a-z0-9][a-z0-9:_-]+$",
+      "title": "Proposal Id",
+      "type": "string"
+    },
+    "revision": {
+      "default": 1,
+      "minimum": 1,
+      "title": "Revision",
+      "type": "integer"
+    },
+    "status": {
+      "$ref": "#/$defs/ProposalStatus",
+      "default": "proposed"
+    },
+    "contributor": {
+      "$ref": "#/$defs/ProposalContributor"
+    },
+    "contribution_license_id": {
+      "minLength": 1,
+      "title": "Contribution License Id",
+      "type": "string"
+    },
+    "contribution_attribution": {
+      "minLength": 1,
+      "title": "Contribution Attribution",
+      "type": "string"
+    },
+    "changes": {
+      "items": {
+        "$ref": "#/$defs/ProposedChange"
+      },
+      "maxItems": 100,
+      "minItems": 1,
+      "title": "Changes",
+      "type": "array"
+    },
+    "source_evidence": {
+      "items": {
+        "$ref": "#/$defs/ProposalEvidence"
+      },
+      "maxItems": 100,
+      "minItems": 1,
+      "title": "Source Evidence",
+      "type": "array"
+    },
+    "discussion_history": {
+      "items": {
+        "$ref": "#/$defs/ProposalDiscussionEntry"
+      },
+      "title": "Discussion History",
+      "type": "array"
+    },
+    "review_history": {
+      "items": {
+        "$ref": "#/$defs/ProposalReviewEvent"
+      },
+      "title": "Review History",
+      "type": "array"
+    },
+    "supersedes_proposal_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Supersedes Proposal Ids",
+      "type": "array"
+    },
+    "superseded_by_proposal_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Superseded By Proposal Ids",
+      "type": "array"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "proposal_id",
+    "contributor",
+    "contribution_license_id",
+    "contribution_attribution",
+    "changes",
+    "source_evidence",
+    "created_at",
+    "updated_at"
+  ],
+  "title": "CommunityProposal",
+  "type": "object"
+}

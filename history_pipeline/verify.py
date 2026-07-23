@@ -11,10 +11,13 @@ import orjson
 from history_pipeline.models import (
     AssertionAdjacency,
     AssertionIndex,
+    AuthorityMatch,
     BuildManifest,
     CausalDataset,
     CausalEntityIndex,
     EvidenceAssertion,
+    HistoricalMapMetadata,
+    IntegrationIndex,
     LatestPointer,
     LayerCatalog,
     RegionTimeBucket,
@@ -135,6 +138,12 @@ def verify_latest_build(
                 manifest_path.parent / _safe_relative(manifest.layer_catalog_path)
             )
         )
+        if "integrations/index.json" in paths:
+            _verify_integration_contract(
+                manifest_path.parent,
+                "integrations/index.json",
+                paths,
+            )
 
     snapshot_checksums: dict[str, set[str]] = {}
     for snapshot in manifest.raw_snapshots:
@@ -171,6 +180,55 @@ def _read_object(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError(f"Expected a JSON object: {path}")
     return value
+
+
+def _read_ndjson(path: Path) -> list[Any]:
+    with path.open("rb") as handle:
+        return [orjson.loads(line) for line in handle if line.strip()]
+
+
+def _verify_integration_contract(
+    build_dir: Path,
+    index_path: str,
+    artifacts: set[str],
+) -> None:
+    index = IntegrationIndex.model_validate(
+        _read_object(build_dir / _safe_relative(index_path))
+    )
+    required = {index.authority_matches_path, index.historical_maps_path}
+    if not required.issubset(artifacts):
+        raise ValueError("Integration collections are absent from artifact list")
+
+    matches = [
+        AuthorityMatch.model_validate(value)
+        for value in _read_ndjson(
+            build_dir / _safe_relative(index.authority_matches_path)
+        )
+    ]
+    maps = [
+        HistoricalMapMetadata.model_validate(value)
+        for value in _read_ndjson(
+            build_dir / _safe_relative(index.historical_maps_path)
+        )
+    ]
+    if len(matches) != index.authority_match_count:
+        raise ValueError("Authority-match integration count mismatch")
+    if len(maps) != index.historical_map_count:
+        raise ValueError("Historical-map integration count mismatch")
+    for historical_map in maps:
+        if historical_map.rendering is None:
+            continue
+        rendering = historical_map.rendering
+        if rendering.image_path not in artifacts:
+            raise ValueError(
+                f"Historical-map image is absent from artifact list: "
+                f"{rendering.image_path}"
+            )
+        image_path = build_dir / _safe_relative(rendering.image_path)
+        if sha256_file(image_path) != rendering.image_checksum_sha256:
+            raise ValueError(
+                f"Historical-map image checksum mismatch: {rendering.image_path}"
+            )
 
 
 def _verify_content_contract(

@@ -65,17 +65,32 @@ URI is rejected, as is an image licence outside both the source media allowlist 
 Georeference rights are independently reviewed because the IIIF extension does not make the image
 licence apply to an annotation.
 
-No institution/map is enabled yet. Selecting a historically useful map, reviewing its manifest
-metadata licence, image rights and georeference contributor terms, and pinning both checksums
-remain publication decisions. Allmaps rendering and any visual map layer remain proposed; this
-change does not redesign or modify the visitor UI.
+The visitor implements an optional `iiif-georeference-maplibre-image-v1` rendering path. A map is
+offered only when its release record has:
+
+- three distinct approved release decisions, ordered as metadata, image/media and georeference;
+- a release-local PNG/JPEG/WebP artifact whose checksum agrees with both map metadata and manifest;
+- four explicit WGS84 image corners derived from the reviewed georeference;
+- at least one known limitation.
+
+The image is loaded through the normal release checksum boundary. There is no visitor URL field,
+and external or path-traversing image references are rejected. The UI displays depicted date,
+provider, attribution, all three licences, georeference confidence and limitations, and says that
+the scan is a depiction rather than geographic or political authority. It remains separate from
+reviewed reconstruction geometry, live OHM context, thematic lenses and evidence overlays.
+
+No institution/map is enabled in the open-core configuration. The deterministic browser release
+contains a synthetic rights-approved image and IIIF/georeference metadata solely to exercise the
+renderer. Selecting a historically useful production map, reviewing the three rights scopes,
+pinning its inputs, and packaging an approved raster artifact remain publication decisions.
 
 ## Schema 1.10 compatibility
 
 These integrations are additive. The schema 1.10 manifest is unchanged; the new files appear in
 its existing generic `artifacts` list. `integrations/index.json` describes the two NDJSON
-collections. Existing 1.10 clients can ignore them, and the browser has no live dependency on WHG,
-Getty, Allmaps or a IIIF image service.
+collections. Existing 1.10 clients can ignore them. The browser renderer uses only release-local
+approved image artifacts and therefore has no live dependency on WHG, Getty, Allmaps or a IIIF
+image service.
 
 The integration contracts have their own `1.0.0` schemas:
 
@@ -83,12 +98,17 @@ The integration contracts have their own `1.0.0` schemas:
 - `HistoricalMapMetadata.schema.json`
 - `IntegrationIndex.schema.json`
 
+`HistoricalMapMetadata` adds optional `known_limitations`, `release_rights_approvals`, and
+`rendering` fields under its existing `1.0.0` additive contract. Older metadata-only records remain
+valid and stay disabled in the visitor.
+
 ## Deferred sources and decisions
 
-Only reconciliation and IIIF map metadata were implemented in this iteration. OpenHistoricalMap,
-Syriaca, ORACC, DHARMA, Nomisma, museum-object/media feeds and OpenAlex remain proposals or
-existing disabled adapters as identified in the source roadmap. World History Encyclopedia is
-explicitly excluded from bulk ingestion.
+Only reconciliation, IIIF map metadata, and the rights-gated release-local image renderer are
+implemented here. OpenHistoricalMap ingestion, Syriaca, ORACC, DHARMA, Nomisma,
+museum-object/media feeds and OpenAlex remain proposals or existing disabled adapters as
+identified in the source roadmap. World History Encyclopedia is explicitly excluded from bulk
+ingestion.
 
 Remaining licensing decisions are:
 

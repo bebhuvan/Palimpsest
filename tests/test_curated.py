@@ -85,4 +85,6 @@ def test_copernicus_slice_publishes_verified_assertion_and_layer_contracts(
         (build_dir / "layers/index.json").read_bytes()
     )
     assert {layer.role for layer in catalog.layers} == set(LayerRole)
-
+    labels = {layer.labels["en"] for layer in catalog.layers}
+    assert "Modern reference geography" in labels
+    assert "Historical map images (optional)" in labels

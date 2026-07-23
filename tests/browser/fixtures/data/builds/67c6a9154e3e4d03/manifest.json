@@ -8,9 +8,9 @@
       "path": "features/ancient.parquet"
     },
     {
-      "bytes": 29503,
+      "bytes": 29447,
       "cache_control": "public, max-age=31536000, immutable",
-      "checksum_sha256": "a1220f64ed5adeda07540fc9a97447a6b3ace71f9cf1347547d6d602446f6fec",
+      "checksum_sha256": "828090f17d2e129052416b8125b15537ea16d00c00ff3fc1b7d4a65a432f3354",
       "media_type": "application/vnd.apache.parquet",
       "path": "features/early-modern.parquet"
     },
@@ -22,11 +22,32 @@
       "path": "entities.ndjson"
     },
     {
-      "bytes": 1947,
+      "bytes": 2011,
       "cache_control": "public, max-age=31536000, immutable",
-      "checksum_sha256": "91c45a4175f695a66efe834913e72b55d45fb837e6abfead10184139341cc06f",
+      "checksum_sha256": "dfea77ebd792f732153d67d24cf5b9b55faf609c1e07053b3f2c6a52ffba9356",
       "media_type": "application/x-ndjson",
       "path": "dossiers.ndjson"
+    },
+    {
+      "bytes": 0,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "media_type": "application/x-ndjson",
+      "path": "integrations/authority-matches.ndjson"
+    },
+    {
+      "bytes": 3390,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "9a0aac270c03a910da606447b002a00c84cbca9d0cd52cc3c9271996f20e9fab",
+      "media_type": "application/x-ndjson",
+      "path": "integrations/historical-maps.ndjson"
+    },
+    {
+      "bytes": 283,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "9f19d856762d3c80119bdc267fe46e5e20b808185c976873941c24358ff3ade5",
+      "media_type": "application/json",
+      "path": "integrations/index.json"
     },
     {
       "bytes": 837,
@@ -99,16 +120,16 @@
       "path": "content/entities/b6.json"
     },
     {
-      "bytes": 1179,
+      "bytes": 1217,
       "cache_control": "public, max-age=31536000, immutable",
-      "checksum_sha256": "cf9dad243bd90d375a856ab5772ed3906dd128901500e104e0b313ad54409116",
+      "checksum_sha256": "77d9f26c66ad9e0d91eb1ee1b650184096da55b9976577eba70cd1fd0d17553f",
       "media_type": "application/json",
       "path": "content/dossiers/17.json"
     },
     {
-      "bytes": 1228,
+      "bytes": 1266,
       "cache_control": "public, max-age=31536000, immutable",
-      "checksum_sha256": "f792f8bfd5326e9364efcb0d5a8d612a4bf4db8eb6ebd80a13a1150f1e4f37b4",
+      "checksum_sha256": "c3a111c7010ad91364c4ed3bcd0e7e4d0504cf714b444e2b28a9613276815342",
       "media_type": "application/json",
       "path": "content/dossiers/63.json"
     },
@@ -323,9 +344,9 @@
       "path": "assertions/index.json"
     },
     {
-      "bytes": 3523,
+      "bytes": 4384,
       "cache_control": "public, max-age=31536000, immutable",
-      "checksum_sha256": "6c1c27923c0e96491fce1e32fbb9e44231f58209d682a6170ece694116cd7740",
+      "checksum_sha256": "e43132336f728b23fd6c38a99862b608f62da52a695219832f3cbc8b55238b24",
       "media_type": "application/json",
       "path": "layers/index.json"
     },
@@ -876,9 +897,9 @@
       "path": "search/index.json"
     },
     {
-      "bytes": 1338,
+      "bytes": 1998,
       "cache_control": "public, max-age=31536000, immutable",
-      "checksum_sha256": "2bbbaeacc7880382634d9c584b298c58c98b1c835ee7722df615ec32c48b6da7",
+      "checksum_sha256": "1f96bd2a542b92c2f3445efb83d20891b8b4e68ac304a45ab97571a084c89789",
       "media_type": "application/json",
       "path": "attribution.json"
     },
@@ -897,6 +918,13 @@
       "path": "source-registry.json"
     },
     {
+      "bytes": 2220,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "ee70ac915f242b00245e6b0cbc4a3a49d179269195ba51cbfcb15bc9188ed386",
+      "media_type": "image/png",
+      "path": "historical-maps/browser-fixture-map.png"
+    },
+    {
       "bytes": 25186,
       "cache_control": "public, max-age=31536000, immutable",
       "checksum_sha256": "71a3fe4eb47180a3956cd84b903c065563586f2d4bb2df53fd072b951992fd5f",
@@ -913,7 +941,7 @@
   ],
   "assertion_index_path": "assertions/index.json",
   "attribution_path": "attribution.json",
-  "build_id": "730b743e46fa6be7",
+  "build_id": "67c6a9154e3e4d03",
   "causal_index_path": "causal/index.json",
   "chronology_index_path": "chronology/index.json",
   "content_index_path": "content/index.json",
@@ -980,6 +1008,32 @@
       "source_id": "wikipedia",
       "title": "Wikipedia browser-pilot introduction",
       "url": "https://en.wikipedia.org/wiki/History",
+      "version": "browser-pilot-v1"
+    },
+    {
+      "checksum_sha256": null,
+      "citation": "History Joice test suite, Deterministic IIIF historical-map fixture",
+      "license_id": "CC0-1.0",
+      "modified": false,
+      "publisher": "History Joice test suite",
+      "record_id": "fixture-manifest-v1",
+      "retrieved_at": "2026-07-23T06:00:00Z",
+      "source_id": "browser-map-metadata",
+      "title": "Deterministic IIIF historical-map fixture",
+      "url": "https://example.org/history-joice/iiif/manifest",
+      "version": "browser-pilot-v1"
+    },
+    {
+      "checksum_sha256": null,
+      "citation": "History Joice test suite, Deterministic IIIF georeference fixture",
+      "license_id": "CC-BY-4.0",
+      "modified": false,
+      "publisher": "History Joice test suite",
+      "record_id": "fixture-georeference-v1",
+      "retrieved_at": "2026-07-23T06:00:00Z",
+      "source_id": "browser-map-georef",
+      "title": "Deterministic IIIF georeference fixture",
+      "url": "https://example.org/history-joice/iiif/georeference",
       "version": "browser-pilot-v1"
     },
     {

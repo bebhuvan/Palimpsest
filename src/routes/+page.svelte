@@ -14,6 +14,8 @@
     loadChronologyContext,
     loadEvidenceAssertions,
     loadFeatureContent,
+    loadHistoricalMapImage,
+    loadHistoricalMaps,
     loadJsonArtifact,
     loadRelease,
     loadLayerCatalog,
@@ -37,6 +39,7 @@
     type FeatureContentLink,
     type HistoricalDossier,
     type HistoricalEntity,
+    type HistoricalMapMetadata,
     type HistoricalNameAttestation,
     type HistoricalPeriodDefinition,
     type LoadedRelease,
@@ -125,6 +128,8 @@
   const MAP_SOURCE = 'historical-world';
   const THEME_DISCOVERY_SOURCE = 'theme-discovery-points';
   const COVERAGE_SOURCE = 'coverage-gaps';
+  const HISTORICAL_MAP_IMAGE_SOURCE = 'historical-map-image';
+  const HISTORICAL_MAP_IMAGE_LAYER = 'historical-map-image-raster';
   const FILL_LAYER = 'history-fill';
   const LINE_LAYER = 'history-line';
   const SOFT_LINE_LAYER = 'history-soft-line';
@@ -174,6 +179,13 @@
   let selectedThematicAssertions: ThematicAssertion[] = [];
   let selectedEvidenceAssertions: EvidenceAssertion[] = [];
   let layerCatalog: LayerCatalog | null = null;
+  let historicalMaps: HistoricalMapMetadata[] = [];
+  let selectedHistoricalMapId = '';
+  let historicalMapVisible = false;
+  let historicalMapLoading = false;
+  let historicalMapError = '';
+  let historicalMapObjectUrl: string | null = null;
+  let historicalMapRequest = 0;
   let selectedFeatureStateId: string | null = null;
   let hoveredFeatureStateId: string | null = null;
   let contentPromise: Promise<ContentBundle> | null = null;
@@ -199,6 +211,9 @@
   let activeLens: HistoricalLens = 'all';
   let evidenceOverlay: 'none' | 'confidence' | 'provenance' = 'none';
 
+  $: activeHistoricalMap = historicalMaps.find(
+    (historicalMap) => historicalMap.map_id === selectedHistoricalMapId
+  ) ?? null;
   $: normalizedQuery = searchQuery.trim().toLocaleLowerCase();
   $: activeLensDefinition = lensDefinition(activeLens);
   $: timelinePosition = scaleForYear(selectedYear);
@@ -690,6 +705,82 @@
     mapAnnouncement = overlay === 'none'
       ? 'Evidence overlay off.'
       : `${overlay === 'confidence' ? 'Interpretive confidence' : 'Source provenance'} overlay selected. The active historical lens remains unchanged.`;
+  }
+
+  function removeHistoricalMapLayer(): void {
+    if (map?.getLayer(HISTORICAL_MAP_IMAGE_LAYER)) {
+      map.removeLayer(HISTORICAL_MAP_IMAGE_LAYER);
+    }
+    if (map?.getSource(HISTORICAL_MAP_IMAGE_SOURCE)) {
+      map.removeSource(HISTORICAL_MAP_IMAGE_SOURCE);
+    }
+    if (historicalMapObjectUrl) {
+      URL.revokeObjectURL(historicalMapObjectUrl);
+      historicalMapObjectUrl = null;
+    }
+  }
+
+  async function updateHistoricalMapOverlay(): Promise<void> {
+    const request = ++historicalMapRequest;
+    removeHistoricalMapLayer();
+    historicalMapError = '';
+    if (!historicalMapVisible || !activeHistoricalMap || !release || !mapReady || !map) {
+      historicalMapLoading = false;
+      return;
+    }
+    historicalMapLoading = true;
+    try {
+      const bytes = await loadHistoricalMapImage(release, activeHistoricalMap);
+      if (
+        request !== historicalMapRequest ||
+        !historicalMapVisible ||
+        !activeHistoricalMap.rendering ||
+        !map
+      ) {
+        return;
+      }
+      const imageArtifact = artifact(release, activeHistoricalMap.rendering.image_path);
+      const objectUrl = URL.createObjectURL(
+        new Blob([bytes], { type: imageArtifact?.media_type ?? 'image/png' })
+      );
+      historicalMapObjectUrl = objectUrl;
+      map.addSource(HISTORICAL_MAP_IMAGE_SOURCE, {
+        type: 'image',
+        url: objectUrl,
+        coordinates: activeHistoricalMap.rendering.coordinates
+      });
+      map.addLayer(
+        {
+          id: HISTORICAL_MAP_IMAGE_LAYER,
+          type: 'raster',
+          source: HISTORICAL_MAP_IMAGE_SOURCE,
+          paint: { 'raster-opacity': 0.68, 'raster-fade-duration': 0 }
+        },
+        map.getLayer(FIRST_OHM_LABEL_LAYER) ? FIRST_OHM_LABEL_LAYER : undefined
+      );
+      mapAnnouncement = `${activeHistoricalMap.label} historical map image enabled. It is a source depiction, not authoritative geography.`;
+    } catch (error) {
+      historicalMapVisible = false;
+      historicalMapError = error instanceof Error
+        ? error.message
+        : 'The approved historical map image could not be loaded.';
+      removeHistoricalMapLayer();
+    } finally {
+      if (request === historicalMapRequest) historicalMapLoading = false;
+    }
+  }
+
+  function toggleHistoricalMap(): void {
+    historicalMapVisible = !historicalMapVisible;
+    void updateHistoricalMapOverlay();
+    if (!historicalMapVisible) {
+      mapAnnouncement = 'Historical map image off.';
+    }
+  }
+
+  function selectHistoricalMap(event: Event): void {
+    selectedHistoricalMapId = (event.currentTarget as HTMLSelectElement).value;
+    if (historicalMapVisible) void updateHistoricalMapOverlay();
   }
 
   function setYear(candidate: number): void {
@@ -1563,6 +1654,15 @@
       const layerCatalogPromise = loadLayerCatalog(release).then((catalog) => {
         layerCatalog = catalog;
       });
+      const historicalMapsPromise = loadHistoricalMaps(release).then((maps) => {
+        historicalMaps = maps;
+        selectedHistoricalMapId = maps[0]?.map_id ?? '';
+      }).catch((error: unknown) => {
+        historicalMaps = [];
+        historicalMapError = error instanceof Error
+          ? error.message
+          : 'Historical map release metadata could not be loaded.';
+      });
       const searchArtifact = artifact(release, 'search.ndjson');
       const searchPromise = staticSearchIndex
         ? loadSearchTimeBand(release, staticSearchIndex, selectedYear).then(async (records) => {
@@ -1583,7 +1683,9 @@
       });
 
       const [{ default: maplibregl }, { Protocol }] = await Promise.all([import('maplibre-gl'), import('pmtiles')]);
-      pmtilesProtocol = new Protocol();
+      // Reading embedded metadata avoids the PMTiles adapter's invalid-bounds warning for a
+      // truthful single-point archive; the point coordinates themselves remain unchanged.
+      pmtilesProtocol = new Protocol({ metadata: true });
       maplibregl.addProtocol('pmtiles', pmtilesProtocol.tile);
       map = new maplibregl.Map({
         container: mapContainer,
@@ -1603,6 +1705,7 @@
         mapReady = true;
         updateOhmYear(map!, selectedYear, activeLens);
         applyLayerMode();
+        if (historicalMapVisible) void updateHistoricalMapOverlay();
         const pixels = new Uint8Array(12 * 12 * 4);
         for (const [x, y] of [[2, 2], [8, 8]]) {
           const offset = (y * 12 + x) * 4;
@@ -1669,7 +1772,12 @@
         if (event.sourceId === MAP_SOURCE && event.isSourceLoaded) refreshSelectionFromMap();
       });
       window.addEventListener('resize', () => updateMapPadding(Boolean(selected)));
-      await Promise.allSettled([searchPromise, coveragePromise, layerCatalogPromise]);
+      await Promise.allSettled([
+        searchPromise,
+        coveragePromise,
+        layerCatalogPromise,
+        historicalMapsPromise
+      ]);
     } catch (error) {
       errorMessage = error instanceof Error ? error.message : 'The historical map could not start.';
     } finally {
@@ -1681,6 +1789,8 @@
     void initialise();
     return () => {
       stopPlayback();
+      historicalMapRequest += 1;
+      removeHistoricalMapLayer();
       map?.remove();
       pmtilesProtocol = null;
     };
@@ -1695,7 +1805,12 @@
 <a class="skip-link" href="#timeline">Skip to timeline controls</a>
 
 <main class:reading={selected} class="app-shell">
-  <div class="map" bind:this={mapContainer} aria-label={`Interactive historical world map for ${formatYear(selectedYear)}`}></div>
+  <div
+    class="map"
+    bind:this={mapContainer}
+    data-historical-map-overlay={historicalMapVisible ? selectedHistoricalMapId : 'off'}
+    aria-label={`Interactive historical world map for ${formatYear(selectedYear)}`}
+  ></div>
 
   <header class="masthead">
     <a class="brand" href="/" aria-label="History Joice home"><span>History Joice</span><small>World history map</small></a>
@@ -1782,6 +1897,58 @@
     <button class:active={evidenceOverlay === 'confidence'} aria-pressed={evidenceOverlay === 'confidence'} disabled={!layerCatalog} onclick={() => setEvidenceOverlay('confidence')}>Confidence</button>
     <button class:active={evidenceOverlay === 'provenance'} aria-pressed={evidenceOverlay === 'provenance'} disabled={!layerCatalog} onclick={() => setEvidenceOverlay('provenance')}>Provenance</button>
   </fieldset>
+
+  <fieldset class="historical-map-control" aria-label="Optional historical map image">
+    <legend>Historical map image · optional</legend>
+    <select
+      aria-label="Approved historical map image"
+      disabled={!historicalMaps.length || historicalMapLoading}
+      value={selectedHistoricalMapId}
+      onchange={selectHistoricalMap}
+    >
+      {#if historicalMaps.length}
+        {#each historicalMaps as historicalMap (historicalMap.map_id)}
+          <option value={historicalMap.map_id}>{historicalMap.label}</option>
+        {/each}
+      {:else}
+        <option>No rights-approved map in this release</option>
+      {/if}
+    </select>
+    <button
+      class:active={historicalMapVisible}
+      aria-pressed={historicalMapVisible}
+      disabled={!historicalMaps.length || historicalMapLoading}
+      onclick={toggleHistoricalMap}
+    >{historicalMapLoading ? 'Loading…' : historicalMapVisible ? 'Hide image' : 'Show image'}</button>
+  </fieldset>
+
+  {#if historicalMapError}
+    <p class="historical-map-error" role="alert">{historicalMapError}</p>
+  {/if}
+
+  {#if historicalMapVisible && activeHistoricalMap}
+    <section class="historical-map-card" aria-label="Historical map image details">
+      <p>Historical map image · source depiction</p>
+      <strong>{activeHistoricalMap.label}</strong>
+      <dl>
+        <div><dt>Depicted date</dt><dd>{activeHistoricalMap.depicted_date}</dd></div>
+        <div><dt>Provider</dt><dd>{activeHistoricalMap.providers.join(', ')}</dd></div>
+        <div><dt>Attribution</dt><dd>{activeHistoricalMap.required_statement}</dd></div>
+        <div><dt>Image licence</dt><dd>{activeHistoricalMap.image_rights.license_id}</dd></div>
+        <div><dt>Metadata licence</dt><dd>{activeHistoricalMap.metadata_rights.license_id}</dd></div>
+        <div><dt>Georeference licence</dt><dd>{activeHistoricalMap.georeference_rights.license_id}</dd></div>
+        <div><dt>Georeference confidence</dt><dd>{activeHistoricalMap.georeference_confidence.grade} · {activeHistoricalMap.georeference_confidence.rationale}</dd></div>
+      </dl>
+      <details>
+        <summary>Known limitations</summary>
+        <ul>
+          {#each activeHistoricalMap.known_limitations as limitation}<li>{limitation}</li>{/each}
+        </ul>
+      </details>
+      <p class="map-authority-warning">This scan records what the map depicts. History Joice does not treat it as geographically or politically authoritative, or as agreement with reviewed geometry or live OpenHistoricalMap context.</p>
+      <a href={activeHistoricalMap.manifest_id} target="_blank" rel="noreferrer">Open the approved IIIF manifest <span aria-hidden="true">↗</span></a>
+    </section>
+  {/if}
 
   {#if !selected && !loading}
     <section class="orientation" aria-labelledby="orientation-title">
@@ -2139,7 +2306,7 @@
       <button onclick={() => setYear(stepYear(selectedYear, 100))} aria-label="Go forward 100 years">+100</button>
     </div>
 
-    <p class="map-credit"><a href="https://www.openhistoricalmap.org/copyright" target="_blank" rel="noreferrer">© OpenHistoricalMap contributors</a><span> · physical geography </span><a href="https://www.naturalearthdata.com/about/terms-of-use/" target="_blank" rel="noreferrer">Natural Earth</a><span> · reviewed geometry </span><a href="https://seshatdatabank.info/" target="_blank" rel="noreferrer">Seshat</a><span> / </span><a href="https://github.com/JustusBuitelaar/cliopatria" target="_blank" rel="noreferrer">Cliopatria</a></p>
+    <p class="map-credit"><a href="https://www.openhistoricalmap.org/copyright" target="_blank" rel="noreferrer">© OpenHistoricalMap contributors</a><span> · modern reference geography </span><a href="https://www.naturalearthdata.com/about/terms-of-use/" target="_blank" rel="noreferrer">Natural Earth</a><span> · reviewed geometry </span><a href="https://seshatdatabank.info/" target="_blank" rel="noreferrer">Seshat</a><span> / </span><a href="https://github.com/JustusBuitelaar/cliopatria" target="_blank" rel="noreferrer">Cliopatria</a></p>
   </section>
 
   <p class="sr-only" aria-live="polite">{mapAnnouncement}</p>
@@ -2152,6 +2319,7 @@
           <p>Each shape preserves a source’s interpretation and date interval. Control could overlap, change seasonally, or be understood differently by another source. The interface never interpolates a new boundary between dated geometries.</p>
           <p>Hatched cells mean this release has no mapped coverage for that place and year. They do not mean nobody lived there or nothing happened there.</p>
           <p>OpenHistoricalMap supplies live, contributor-built historical detail and labels. The quiet History Joice layer remains a separate reviewed reconstruction; overlapping geometries are not merged or presented as agreement.</p>
+          <p>Natural Earth land and physical water are modern reference geography for orientation. An optional historical map image remains a separately attributed source depiction, never a substitute for reviewed reconstruction geometry.</p>
           <p>The thematic lenses are non-exclusive discovery views. They use reviewed theme tags or explicit source feature types; a record may appear in several lenses, and an empty lens means this release has no classified record rather than no history.</p>
           <h3>Visual key</h3>
           <ul class="visual-key">
@@ -2267,6 +2435,25 @@
   .overlay-control button { min-height: 32px; padding: 0 10px; border: 0; border-left: 1px solid rgba(61, 71, 68, .2); background: transparent; color: #4d5855; cursor: pointer; font: 9px 'DM Mono', monospace; }
   .overlay-control button.active { background: #596b67; color: #fffdf7; }
   .overlay-control button:disabled { opacity: .45; cursor: wait; }
+  .historical-map-control { position: absolute; z-index: 6; top: 289px; left: 24px; display: flex; align-items: stretch; max-width: min(560px, calc(100vw - 48px)); margin: 0; padding: 0; border: 1px solid rgba(102, 72, 49, .48); background: rgba(255, 250, 239, .96); }
+  .historical-map-control legend { display: flex; align-items: center; padding: 0 9px; color: #75533b; font: 8px 'DM Mono', monospace; text-transform: uppercase; }
+  .historical-map-control select { min-width: 190px; max-width: 290px; min-height: 32px; padding: 0 28px 0 8px; border: 0; border-left: 1px solid rgba(102, 72, 49, .22); border-radius: 0; background: transparent; color: #493d35; font: 9px 'DM Mono', monospace; text-overflow: ellipsis; }
+  .historical-map-control button { min-height: 32px; padding: 0 10px; border: 0; border-left: 1px solid rgba(102, 72, 49, .22); background: transparent; color: #493d35; cursor: pointer; font: 9px 'DM Mono', monospace; }
+  .historical-map-control button.active { background: #75533b; color: #fffdf7; }
+  .historical-map-control button:disabled, .historical-map-control select:disabled { opacity: .5; cursor: not-allowed; }
+  .historical-map-card { position: absolute; z-index: 6; top: 331px; left: 24px; width: min(360px, calc(100vw - 48px)); max-height: calc(100dvh - var(--timeline-height) - 348px); overflow-y: auto; padding: 14px 15px; border: 1px solid rgba(102, 72, 49, .5); border-top: 2px solid #8c6245; background: rgba(255, 251, 241, .97); box-shadow: 0 12px 30px rgba(37, 28, 22, .1); }
+  .historical-map-card > p:first-child { margin: 0 0 5px; color: #79583f; font: 8px 'DM Mono', monospace; letter-spacing: .05em; text-transform: uppercase; }
+  .historical-map-card > strong { display: block; font: 20px/1.15 'Instrument Serif', Georgia, serif; font-weight: 500; }
+  .historical-map-card dl { margin: 11px 0; border-top: 1px solid #d7cbbd; }
+  .historical-map-card dl div { display: grid; grid-template-columns: 112px 1fr; gap: 9px; padding: 6px 0; border-bottom: 1px solid #e0d7cd; }
+  .historical-map-card dt { color: #766a61; font: 7px/1.35 'DM Mono', monospace; text-transform: uppercase; }
+  .historical-map-card dd { margin: 0; color: #403832; font-size: 9px; line-height: 1.45; }
+  .historical-map-card details { color: #4f443c; font-size: 9px; line-height: 1.5; }
+  .historical-map-card summary { cursor: pointer; font: 8px 'DM Mono', monospace; text-transform: uppercase; }
+  .historical-map-card ul { margin: 8px 0; padding-left: 18px; }
+  .historical-map-card .map-authority-warning { margin: 11px 0; padding: 9px; border-left: 2px solid #8c6245; background: #eee5d9; color: #4d4139; font-size: 9px; line-height: 1.5; }
+  .historical-map-card a { color: #594534; font-size: 9px; font-weight: 600; text-underline-offset: 2px; }
+  .historical-map-error { position: absolute; z-index: 7; top: 331px; left: 24px; max-width: 360px; margin: 0; padding: 9px 12px; border: 1px solid #9d5041; background: #f4e8e2; color: #692e27; font-size: 9px; }
 
   .orientation { position: absolute; z-index: 4; left: 24px; bottom: calc(var(--timeline-height) + 12px); width: 254px; padding: 12px 14px 13px; border: 1px solid rgba(61, 71, 68, .22); border-top: 1px solid #9b4960; background: rgba(255, 253, 247, .94); box-shadow: 0 10px 28px rgba(28, 37, 34, .05); }
   .orientation > p, .eyebrow, .section-label { margin: 0 0 8px; color: #754259; font: 10px/1.25 'DM Mono', monospace; letter-spacing: .045em; }
@@ -2496,6 +2683,11 @@
     .overlay-control { top: 264px; left: 15px; max-width: calc(100vw - 30px); }
     .overlay-control legend { padding-inline: 7px; font-size: 7px; }
     .overlay-control button { min-height: 28px; padding-inline: 7px; font-size: 7px; }
+    .historical-map-control { top: 302px; left: 15px; max-width: calc(100vw - 30px); }
+    .historical-map-control legend { padding-inline: 7px; font-size: 7px; }
+    .historical-map-control select { min-width: 130px; max-width: 210px; min-height: 28px; font-size: 7px; }
+    .historical-map-control button { min-height: 28px; padding-inline: 7px; font-size: 7px; }
+    .historical-map-card, .historical-map-error { top: 338px; left: 15px; width: min(340px, calc(100vw - 30px)); max-height: calc(100dvh - 480px); }
     .orientation { display: none; }
     .orientation > span { font-size: 10px; }
     .map-legend, .reading .map-legend { right: auto; bottom: 130px; left: 7px; max-width: calc(100vw - 58px); gap: 9px; }
@@ -2540,6 +2732,10 @@
     .layer-control { top: 221px; left: 8px; }
     .layer-control button { padding-inline: 7px; }
     .overlay-control { top: 261px; left: 8px; }
+    .historical-map-control { top: 299px; left: 8px; max-width: calc(100vw - 16px); }
+    .historical-map-control legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .historical-map-control select { min-width: 0; max-width: calc(100vw - 100px); }
+    .historical-map-card, .historical-map-error { top: 335px; left: 8px; width: calc(100vw - 16px); }
     .orientation { bottom: 132px; }
     .orientation > span { display: block; }
     .map-legend { bottom: 130px; }

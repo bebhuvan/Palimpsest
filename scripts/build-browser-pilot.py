@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import hashlib
 import shutil
+import struct
+import zlib
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -11,6 +13,7 @@ from pydantic import HttpUrl
 from history_pipeline.artifacts import build_artifacts, compute_build_id
 from history_pipeline.curated import load_curated_records
 from history_pipeline.models import (
+    ArtifactFile,
     BuildManifest,
     Confidence,
     ConfidenceGrade,
@@ -20,12 +23,18 @@ from history_pipeline.models import (
     HistoricalDossier,
     HistoricalEntity,
     HistoricalFeature,
+    HistoricalMapMetadata,
+    HistoricalMapRendering,
     HistoricalTheme,
     LatestPointer,
     RawSnapshot,
+    ReleaseRightsApproval,
     ReviewStatus,
+    RightsReference,
+    RightsScope,
     SourceReference,
     SpatialMeaning,
+    TransformationStep,
 )
 from history_pipeline.storage import sha256_file
 from history_pipeline.themes import (
@@ -102,6 +111,43 @@ def write_json(path: Path, value: object) -> None:
     )
 
 
+def historical_map_fixture_png(width: int = 320, height: int = 192) -> bytes:
+    """Create a deterministic, test-only parchment raster without external assets."""
+
+    rows = bytearray()
+    for y in range(height):
+        rows.append(0)
+        for x in range(width):
+            grid = x % 40 in {0, 1} or y % 32 in {0, 1}
+            diagonal = abs((x * 3 // 5 + 28) - y) < 3
+            border = x < 5 or y < 5 or x >= width - 5 or y >= height - 5
+            if border:
+                color = (83, 58, 40)
+            elif diagonal:
+                color = (83, 118, 124)
+            elif grid:
+                color = (166, 137, 99)
+            else:
+                variation = (x * 7 + y * 11) % 13
+                color = (226 - variation, 208 - variation, 170 - variation // 2)
+            rows.extend(color)
+
+    def chunk(kind: bytes, payload: bytes) -> bytes:
+        return (
+            struct.pack(">I", len(payload))
+            + kind
+            + payload
+            + struct.pack(">I", zlib.crc32(kind + payload) & 0xFFFFFFFF)
+        )
+
+    return (
+        b"\x89PNG\r\n\x1a\n"
+        + chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0))
+        + chunk(b"IDAT", zlib.compress(bytes(rows), level=9))
+        + chunk(b"IEND", b"")
+    )
+
+
 def main() -> None:
     geometry_source = source(
         "browser-pilot",
@@ -126,6 +172,113 @@ def main() -> None:
         url="https://en.wikipedia.org/wiki/History",
         license_id="CC-BY-SA-4.0",
         record_id="100",
+    )
+    map_metadata_source = source(
+        "browser-map-metadata",
+        title="Deterministic IIIF historical-map fixture",
+        publisher="History Joice test suite",
+        url="https://example.org/history-joice/iiif/manifest",
+        license_id="CC0-1.0",
+        record_id="fixture-manifest-v1",
+    )
+    map_georeference_source = source(
+        "browser-map-georef",
+        title="Deterministic IIIF georeference fixture",
+        publisher="History Joice test suite",
+        url="https://example.org/history-joice/iiif/georeference",
+        license_id="CC-BY-4.0",
+        record_id="fixture-georeference-v1",
+    )
+    map_image = historical_map_fixture_png()
+    map_image_checksum = hashlib.sha256(map_image).hexdigest()
+    map_rendering = HistoricalMapRendering(
+        image_path="historical-maps/browser-fixture-map.png",
+        image_checksum_sha256=map_image_checksum,
+        coordinates=[(12, 30), (32, 30), (32, 20), (12, 20)],
+    )
+    historical_map = HistoricalMapMetadata(
+        map_id="map:0123456789abcdef",
+        manifest_id=HttpUrl("https://example.org/history-joice/iiif/manifest"),
+        canvas_id=HttpUrl("https://example.org/history-joice/iiif/canvas"),
+        annotation_id=HttpUrl(
+            "https://example.org/history-joice/iiif/georeference"
+        ),
+        label="Browser fixture map sheet",
+        depicted_date="circa 1750",
+        providers=["History Joice test suite"],
+        required_statement=(
+            "Synthetic historical-map image © History Joice test suite; test use only."
+        ),
+        metadata_rights=RightsReference(
+            scope=RightsScope.METADATA,
+            license_id="CC0-1.0",
+            attribution="History Joice test suite",
+        ),
+        image_rights=RightsReference(
+            scope=RightsScope.MEDIA,
+            license_id="PDM-1.0",
+            attribution="History Joice test suite synthetic fixture",
+        ),
+        georeference_rights=RightsReference(
+            scope=RightsScope.GEOREFERENCE,
+            license_id="CC-BY-4.0",
+            attribution="History Joice test suite georeference fixture",
+        ),
+        georeference_confidence=Confidence(
+            grade=ConfidenceGrade.C,
+            rationale=(
+                "Deterministic test control points exercise the renderer; they are not "
+                "historical evidence."
+            ),
+        ),
+        known_limitations=[
+            "This is a synthetic browser-test image, not a historical institution scan.",
+            "The quadrilateral tests release wiring, not cartographic accuracy.",
+        ],
+        release_rights_approvals=[
+            ReleaseRightsApproval(
+                scope=RightsScope.METADATA,
+                status="approved",
+                decision_id="rights:browser-map:metadata",
+                reviewed_by="History Joice test suite",
+                reviewed_at=GENERATED_AT,
+                rationale="Synthetic fixture metadata is approved for deterministic tests.",
+            ),
+            ReleaseRightsApproval(
+                scope=RightsScope.MEDIA,
+                status="approved",
+                decision_id="rights:browser-map:media",
+                reviewed_by="History Joice test suite",
+                reviewed_at=GENERATED_AT,
+                rationale="Synthetic fixture pixels are approved for deterministic tests.",
+            ),
+            ReleaseRightsApproval(
+                scope=RightsScope.GEOREFERENCE,
+                status="approved",
+                decision_id="rights:browser-map:georeference",
+                reviewed_by="History Joice test suite",
+                reviewed_at=GENERATED_AT,
+                rationale="Synthetic fixture georeference is approved for deterministic tests.",
+            ),
+        ],
+        rendering=map_rendering,
+        source_refs=[map_metadata_source, map_georeference_source],
+        lineage=[
+            TransformationStep(
+                operation="generate_deterministic_historical_map_fixture",
+                tool="scripts.build-browser-pilot",
+                tool_version="1.0.0",
+                input_record_ids=[
+                    "fixture-manifest-v1",
+                    "fixture-georeference-v1",
+                ],
+                parameters={
+                    "test_fixture": True,
+                    "authoritative_geography": False,
+                    "iiif_georeference_compatible": True,
+                },
+            )
+        ],
     )
     enriched = feature(
         "browser-pilot:enriched-place:50:150:aaaa",
@@ -267,6 +420,19 @@ def main() -> None:
         maximum_year=2026,
         language_fallbacks=("en",),
         sources=[],
+        historical_maps=[historical_map],
+    )
+    map_image_path = work / map_rendering.image_path
+    map_image_path.parent.mkdir(parents=True, exist_ok=True)
+    map_image_path.write_bytes(map_image)
+    artifacts.append(
+        ArtifactFile(
+            path=map_rendering.image_path,
+            media_type="image/png",
+            bytes=len(map_image),
+            checksum_sha256=map_image_checksum,
+            cache_control="public, max-age=31536000, immutable",
+        )
     )
     artifacts.extend(
         build_pmtiles(
@@ -282,7 +448,7 @@ def main() -> None:
         )
     )
     build_id = compute_build_id(
-        b"history-joice-browser-pilot-v2",
+        b"history-joice-browser-pilot-v3",
         [artifact.checksum_sha256 for artifact in artifacts],
     )
     build_dir = OUTPUT / "builds" / build_id
@@ -297,6 +463,8 @@ def main() -> None:
             geometry_source,
             wikidata_source,
             wikipedia_source,
+            map_metadata_source,
+            map_georeference_source,
             curated_features[0].source_refs[0],
         ],
         artifacts=artifacts,

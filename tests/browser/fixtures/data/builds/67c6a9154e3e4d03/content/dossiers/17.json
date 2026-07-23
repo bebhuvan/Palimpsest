@@ -1,19 +1,20 @@
 {
-  "wikipedia:en:100": {
-    "content_checksum_sha256": "7ad243b0e55fb81e6111ffa5eb7861ae2c221d3551772a4b7a27acd10de6bb50",
+  "wikipedia:en:101": {
+    "content_checksum_sha256": "bf683fe5acaa2eac3bb4a7e8cefee21c98e4be39ce2060d4dbf7f18aabc25378",
     "content_role": "tertiary_summary",
-    "dossier_id": "wikipedia:en:100",
+    "dossier_id": "wikipedia:en:101",
+    "dossier_kind": "source_extract",
     "entity_ids": [
-      "wikidata:Q100"
+      "wikidata:Q101"
     ],
-    "extract": "This saved browser-pilot introduction verifies that revision-pinned tertiary summaries reach the reading sidebar.",
+    "extract": "A saved introduction for the related browser-pilot event.",
     "language": "en",
-    "page_id": 100,
+    "page_id": 101,
     "redirects_from": [],
     "requested_titles": [
-      "Enriched Pilot Place"
+      "Pilot Context Event"
     ],
-    "revision_id": 1000,
+    "revision_id": 1010,
     "revision_timestamp": "2026-07-23T06:00:00Z",
     "source_ref": {
       "checksum_sha256": null,
@@ -21,14 +22,14 @@
       "license_id": "CC-BY-SA-4.0",
       "modified": false,
       "publisher": "Wikimedia Foundation and Wikipedia contributors",
-      "record_id": "100",
+      "record_id": "101",
       "retrieved_at": "2026-07-23T06:00:00Z",
       "source_id": "wikipedia",
       "title": "Wikipedia browser-pilot introduction",
       "url": "https://en.wikipedia.org/wiki/History",
       "version": "browser-pilot-v1"
     },
-    "title": "Enriched Pilot Place",
-    "url": "https://en.wikipedia.org/wiki/History"
+    "title": "Pilot Context Event",
+    "url": "https://en.wikipedia.org/wiki/Historical_event"
   }
 }

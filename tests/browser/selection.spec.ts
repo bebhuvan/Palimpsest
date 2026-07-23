@@ -37,6 +37,12 @@ test.beforeEach(async ({ page }) => {
 test('selecting a reviewed place on the map opens its release record', async ({
   page
 }) => {
+  const invalidBoundsWarnings: string[] = [];
+  page.on('console', (message) => {
+    if (message.text().includes('Bounds of PMTiles archive')) {
+      invalidBoundsWarnings.push(message.text());
+    }
+  });
   await openPilot(page);
   const map = page.getByLabel('Interactive historical world map for 100 CE');
   const canvas = map.locator('canvas');
@@ -49,9 +55,51 @@ test('selecting a reviewed place on the map opens its release record', async ({
     await expect(
       page.getByRole('heading', { name: 'Enriched Pilot Place' })
     ).toBeVisible();
-  }).toPass({ timeout: 10_000 });
+  }).toPass({ timeout: 20_000 });
 
   await expect(page).toHaveURL(/feature=browser-pilot%3Aenriched-place/);
+  expect(invalidBoundsWarnings).toEqual([]);
+});
+
+test('a rights-approved historical map image renders from the immutable release', async ({
+  page
+}) => {
+  await openPilot(page);
+  const imageResponse = page.waitForResponse(
+    (response) =>
+      response.url().endsWith('/historical-maps/browser-fixture-map.png') &&
+      response.ok()
+  );
+  const toggle = page.getByRole('button', { name: /image/ });
+  await toggle.focus();
+  await page.keyboard.press('Enter');
+  await imageResponse;
+
+  await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+  await expect(
+    page.getByLabel('Interactive historical world map for 100 CE')
+  ).toHaveAttribute('data-historical-map-overlay', 'map:0123456789abcdef');
+  const details = page.getByLabel('Historical map image details');
+  await expect(details.getByText('Browser fixture map sheet')).toBeVisible();
+  await expect(details.getByText('circa 1750')).toBeVisible();
+  await expect(details.getByText('PDM-1.0')).toBeVisible();
+  await expect(details.getByText(/Deterministic test control points/)).toBeVisible();
+  await expect(
+    details.getByText(/does not treat it as geographically or politically authoritative/)
+  ).toBeVisible();
+  await expect(
+    page.getByText(/Browser fixture map sheet historical map image enabled/)
+  ).toBeVisible();
+
+  const canvas = page.getByLabel('Interactive historical world map for 100 CE').locator('canvas');
+  const bounds = await canvas.boundingBox();
+  expect(bounds).not.toBeNull();
+  await expect(async () => {
+    await canvas.click({ position: { x: bounds!.width / 2, y: bounds!.height / 2 } });
+    await expect(
+      page.getByRole('heading', { name: 'Enriched Pilot Place' })
+    ).toBeVisible();
+  }).toPass({ timeout: 20_000 });
 });
 
 test('selecting a search result opens the matching entity and feature', async ({

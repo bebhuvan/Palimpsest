@@ -185,7 +185,7 @@ def build_artifacts(
     artifacts.extend(_build_causal_artifacts(causal, output_dir))
     artifacts.extend(_build_theme_artifacts(thematic_assertions, output_dir))
     artifacts.extend(_build_assertion_artifacts(evidence_assertions, output_dir))
-    artifacts.extend(_build_layer_catalog(sources, output_dir))
+    artifacts.extend(_build_layer_catalog(sources, historical_maps, output_dir))
     artifacts.extend(
         _build_chronology_artifacts(
             periods,
@@ -993,14 +993,33 @@ def _build_assertion_artifacts(
 
 
 def _build_layer_catalog(
-    sources: list[SourceConfig], output_dir: Path
+    sources: list[SourceConfig],
+    historical_maps: list[HistoricalMapMetadata],
+    output_dir: Path,
 ) -> list[ArtifactFile]:
     reviewed_map_sources = sorted(
         source.id
         for source in sources
         if source.enabled and "historical_geometry" in {role.value for role in source.roles}
     )
+    historical_image_sources = sorted(
+        {
+            reference.source_id
+            for historical_map in historical_maps
+            if historical_map.rendering is not None
+            for reference in historical_map.source_refs
+        }
+    )
     layers = [
+        LayerDefinition(
+            layer_id="layer:map:modern-reference-geography",
+            role=LayerRole.MAP_SOURCE,
+            labels={"en": "Modern reference geography"},
+            description=(
+                "Contemporary Natural Earth land and physical water used only for "
+                "orientation, not as historical or political authority."
+            ),
+        ),
         LayerDefinition(
             layer_id="layer:map:reviewed-release",
             role=LayerRole.MAP_SOURCE,
@@ -1015,6 +1034,16 @@ def _build_layer_catalog(
             description=(
                 "Live contributor context kept separate from immutable release geometry."
             ),
+        ),
+        LayerDefinition(
+            layer_id="layer:map:historical-images",
+            role=LayerRole.MAP_SOURCE,
+            labels={"en": "Historical map images (optional)"},
+            description=(
+                "Rights-approved scanned-map depictions rendered as an optional image "
+                "overlay; they are neither canonical geometry nor geographic authority."
+            ),
+            source_ids=historical_image_sources,
         ),
         *[
             LayerDefinition(

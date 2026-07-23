@@ -56,10 +56,12 @@ must never read as a bordered polity.
 
 The default map composition is, from bottom to top:
 
-1. bundled, low-resolution Natural Earth land plus quiet, label-free physical water;
+1. bundled, low-resolution Natural Earth land plus quiet, label-free physical water, labelled as
+   modern reference geography;
 2. live OpenHistoricalMap contributor detail;
-3. the release's reviewed History Joice PMTiles reconstruction;
-4. OpenHistoricalMap historical labels.
+3. an optional rights-approved historical map image, disabled by default;
+4. the release's reviewed History Joice PMTiles reconstruction;
+5. OpenHistoricalMap historical labels.
 
 OpenHistoricalMap is context, not a source in the immutable History Joice release. Its geometry
 must not be merged with the reviewed PMTiles or used to overwrite canonical confidence,
@@ -87,6 +89,14 @@ these records into causal claims.
 Map-source controls, thematic lenses and evidence overlays remain separate controls. A confidence
 overlay styles one declared confidence axis; a provenance overlay styles source identity/licence.
 Neither changes the active thematic lens, source visibility, chronology or underlying data.
+
+The historical-map-image control is another map-source control, not a thematic or evidence
+overlay. It lists only `HistoricalMapMetadata` records from the immutable release that have three
+distinct approved rights decisions, a release-local image artifact with a matching checksum,
+explicit render coordinates and known limitations. The UI exposes depicted date, provider,
+attribution, metadata/image/georeference licences, georeference confidence and limitations.
+Scanned depictions are not selectable canonical geometry and must not intercept reviewed/OHM map
+clicks. No URL supplied by a visitor may become a map source.
 
 Lens rendering never replaces source geometry. Matching polygons retain their sourced extent,
 matching routes retain their line geometry, and matching places/events retain a representative

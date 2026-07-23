@@ -79,6 +79,11 @@ controls from a stable local vocabulary while using the catalog to verify semant
 Knowledge lens with a provenance overlay therefore means “foreground Knowledge-classified
 records, then expose their sources”; it does not create a new synthetic historical layer.
 
+The map-source vocabulary separately names modern reference geography, immutable reviewed
+reconstruction geometry, live OpenHistoricalMap context, and optional rights-approved historical
+map images. An image scan is a depicted source surface rather than reconstruction geometry, and
+neither overlap nor alignment makes it politically or geographically authoritative.
+
 ## Schema 1.9 to 1.10 migration
 
 1. Continue accepting 1.9 `HistoricalEntity` records. Derive `entity_kind` without changing

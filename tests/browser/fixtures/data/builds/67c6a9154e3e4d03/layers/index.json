@@ -2,6 +2,17 @@
   "layers": [
     {
       "confidence_axis": null,
+      "description": "Contemporary Natural Earth land and physical water used only for orientation, not as historical or political authority.",
+      "labels": {
+        "en": "Modern reference geography"
+      },
+      "layer_id": "layer:map:modern-reference-geography",
+      "role": "map_source",
+      "source_ids": [],
+      "theme": null
+    },
+    {
+      "confidence_axis": null,
       "description": "Immutable, source-backed geometry published in this release.",
       "labels": {
         "en": "Reviewed release geometry"
@@ -20,6 +31,20 @@
       "layer_id": "layer:map:openhistoricalmap",
       "role": "map_source",
       "source_ids": [],
+      "theme": null
+    },
+    {
+      "confidence_axis": null,
+      "description": "Rights-approved scanned-map depictions rendered as an optional image overlay; they are neither canonical geometry nor geographic authority.",
+      "labels": {
+        "en": "Historical map images (optional)"
+      },
+      "layer_id": "layer:map:historical-images",
+      "role": "map_source",
+      "source_ids": [
+        "browser-map-georef",
+        "browser-map-metadata"
+      ],
       "theme": null
     },
     {

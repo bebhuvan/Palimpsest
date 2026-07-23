@@ -145,8 +145,11 @@ licence, attribution and normalization lineage. A proposed match is not an ident
 
 Historical-map metadata retains the IIIF Manifest, Canvas and georeference Annotation identifiers,
 depicted date, provider and required attribution. Metadata, image and georeference rights are
-separate fields. The artifact contains no image pixels and is not a browser-side proxy for a IIIF
-service.
+separate fields. Metadata-only records contain no image pixels and remain non-renderable. An
+optional rendering descriptor may name a checksummed release-local raster, four reviewed WGS84
+corners, known limitations, and three separate release rights approvals. This is additive within
+schema 1.10: older clients ignore the optional fields, and arbitrary visitor or remote image URLs
+are not part of the contract.
 
 ## Stable identity and content roles
 

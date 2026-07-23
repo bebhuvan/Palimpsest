@@ -229,6 +229,7 @@ class IiifMapAdapter:
                     "alignment has not been independently verified by History Joice"
                 ),
             ),
+            known_limitations=list(source.limitations),
             source_refs=[
                 source_reference(
                     source,

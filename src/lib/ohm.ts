@@ -178,14 +178,14 @@ export function historyMapStyle(year: number, lens: HistoricalLens = 'all'): Sty
       'physical-land': {
         type: 'geojson',
         data: '/world-land.geojson',
-        attribution: 'Physical land: Natural Earth (public domain)'
+        attribution: 'Modern reference geography — physical land: Natural Earth (public domain)'
       },
       'physical-water': {
         type: 'vector',
         tiles: [NATURAL_EARTH_TILES],
         minzoom: 0,
         maxzoom: 20,
-        attribution: 'Physical water: Natural Earth'
+        attribution: 'Modern reference geography — physical water: Natural Earth'
       },
       ohm: {
         type: 'vector',

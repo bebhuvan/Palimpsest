@@ -1,5 +1,21 @@
 [
   {
+    "citation": "History Joice test suite, Deterministic IIIF georeference fixture",
+    "license_id": "CC-BY-4.0",
+    "publisher": "History Joice test suite",
+    "source_id": "browser-map-georef",
+    "title": "Deterministic IIIF georeference fixture",
+    "url": "https://example.org/history-joice/iiif/georeference"
+  },
+  {
+    "citation": "History Joice test suite, Deterministic IIIF historical-map fixture",
+    "license_id": "CC0-1.0",
+    "publisher": "History Joice test suite",
+    "source_id": "browser-map-metadata",
+    "title": "Deterministic IIIF historical-map fixture",
+    "url": "https://example.org/history-joice/iiif/manifest"
+  },
+  {
     "citation": "History Joice test suite, Browser pilot reviewed geometry",
     "license_id": "CC0-1.0",
     "publisher": "History Joice test suite",

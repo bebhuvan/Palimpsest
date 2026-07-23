@@ -8,7 +8,8 @@ const contentTypes = {
   '.json': 'application/json',
   '.ndjson': 'application/x-ndjson',
   '.parquet': 'application/vnd.apache.parquet',
-  '.pmtiles': 'application/vnd.pmtiles'
+  '.pmtiles': 'application/vnd.pmtiles',
+  '.png': 'image/png'
 };
 
 export async function assertNoBundledData(

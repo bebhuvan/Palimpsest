@@ -19,8 +19,8 @@ is an editorial publishing decision, not a code deployment side effect.
 
 The checked-in JSON schemas are:
 
-- `ApprovedEvidenceBundle`: revision-pinned sources, exact document text and approved character
-  ranges, plus copies of the reviewed schema 1.10 assertions;
+- `ApprovedEvidenceBundle`: revision-pinned sources, exact source-field text, JSON Pointer field
+  paths and approved character ranges, plus copies of the schema 1.10 assertions;
 - `DossierDraftContent`: the strict payload a model may return;
 - `DossierDraft`: the payload plus prompt version and checksum, model identifier, evidence-bundle
   checksum, output checksum, generation timestamp and optional provider response ID;
@@ -39,6 +39,8 @@ Validation fails the operation unless all of the following hold:
 - the claim's entity set exactly matches the entities in those assertions;
 - every supporting assertion is covered by a passage from one of its own sources;
 - every citation lies within its approved passage and its quoted text matches the source document;
+- every pilot passage and source revision resolves through its recorded JSON Pointer to the exact
+  value in the checksummed source snapshot;
 - source revision, snapshot checksum, licence and attribution remain unchanged;
 - bundle and output hashes, and the derived draft ID, recompute exactly.
 
@@ -68,24 +70,26 @@ review metadata, evidence or licensing therefore creates a different immutable d
 
 `data/editorial/copernicus-1543/` contains:
 
-- `evidence.txt`, whose five passages exactly match the five reviewed assertion rationales in
-  `data/curation/knowledge-1543.yml`;
 - `evidence-bundle.json`, retaining Library of Congress item `92516339`, its source revision,
-  PDM licence, attribution and snapshot checksum;
+  PDM licence, attribution and snapshot checksum, with exact values from `/item/title`,
+  `/item/creators/0/title`, `/item/notes/0/note` and `/item/created_published`;
 - `model-output.json`, a deterministic schema-constrained output fixture;
-- `draft.json` and `reviewed-draft.json`, which make the state transition auditable;
-- `published/<content-id>.json`, the immutable generated editorial dossier.
+- `draft.json`, a validated `machine_drafted` record with no review metadata.
 
-The pilot does not add another historical source. Its evidence passages are the already reviewed
-Library of Congress metadata rationales, not an attempt to reproduce or silently expand the
-catalog record. Run:
+The build reads `data/raw/loc_copernicus/catalog-record.json`, verifies its SHA-256 checksum, pins
+the provider revision from `/item/modified`, and rejects any extracted passage that differs from
+its recorded source field. Assertion rationales remain editorial metadata and are never represented
+as verbatim Library of Congress text. The ignored raw snapshot must be restored from the private
+snapshot store before rebuilding the pilot. Run:
 
 ```bash
 make build-dossier-pilot
 ```
 
-The command recomputes the bundle, draft, review and publication from the curated 1543 contracts.
-It refuses to replace a published pilot if the content for the same ID differs.
+The command recomputes only the evidence bundle and machine draft. It never creates review
+metadata, applies an editorial licence or publishes prose. Tests exercise review, rejection and
+publication transitions with an explicitly named simulated reviewer and temporary output paths;
+those records are not fixtures and cannot enter a production release.
 
 ## Real generation and offline ingestion
 
@@ -149,6 +153,11 @@ uv run history-data dossier-publish \
   --output-dir /tmp/published-dossiers
 ```
 
+Published editorial dossiers are not yet automatically added to the global History Joice release
+artifacts. A future release-integration step must preserve the separate dossier kind, evidence and
+editorial licensing fields and pass the normal immutable-release verifier; until then, publication
+creates only the explicitly requested editorial dossier file.
+
 ## Licensing and attribution workflow
 
 Upstream evidence is never relicensed. Each evidence document preserves its `SourceReference`,
@@ -158,8 +167,8 @@ passages remain associated with that source.
 Generated editorial prose has a separate `editorial_license_id` and
 `editorial_attribution`. Before public publication, an editor must confirm that History Joice has
 the right to apply that licence, that any quoted material is permitted, and that provider terms
-allow the intended use. The pilot records `CC-BY-4.0` for its small History Joice-authored fixture;
-that does not change the Library of Congress item's `PDM-1.0` status.
+allow the intended use. The machine-only pilot applies no editorial licence and publishes nothing;
+the Library of Congress source remains `PDM-1.0`.
 
 Source extracts and generated dossiers also remain machine-distinguishable:
 `HistoricalDossier.dossier_kind` is `source_extract` (including existing Wikipedia records), while

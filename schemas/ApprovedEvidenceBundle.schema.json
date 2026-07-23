@@ -216,6 +216,11 @@
           "title": "Source Revision Id",
           "type": "string"
         },
+        "source_revision_field_path": {
+          "pattern": "^/(?:[^/~]|~[01])+(?:/(?:[^/~]|~[01])+)*$",
+          "title": "Source Revision Field Path",
+          "type": "string"
+        },
         "attribution": {
           "minLength": 1,
           "title": "Attribution",
@@ -243,6 +248,7 @@
       "required": [
         "source_ref",
         "source_revision_id",
+        "source_revision_field_path",
         "attribution",
         "text",
         "text_sha256",
@@ -258,6 +264,11 @@
         "passage_id": {
           "pattern": "^passage:[a-z0-9][a-z0-9:_-]+$",
           "title": "Passage Id",
+          "type": "string"
+        },
+        "source_field_path": {
+          "pattern": "^/(?:[^/~]|~[01])+(?:/(?:[^/~]|~[01])+)*$",
+          "title": "Source Field Path",
           "type": "string"
         },
         "assertion_ids": {
@@ -291,6 +302,7 @@
       },
       "required": [
         "passage_id",
+        "source_field_path",
         "assertion_ids",
         "start_char",
         "end_char",

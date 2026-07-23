@@ -5,7 +5,7 @@
   "claims": [
     {
       "claim_id": "draft-claim:copernicus-authorship",
-      "text": "The catalog record identifies Nicolaus Copernicus as the creator of the 1543 work De revolutionibus.",
+      "text": "The Library of Congress record names Nicolaus Copernicus as creator and associates him with De revolutionibus in its publication note.",
       "entity_ids": [
         "historyjoice:person:nicolaus-copernicus",
         "historyjoice:work:de-revolutionibus"
@@ -19,16 +19,23 @@
       "citations": [
         {
           "source_id": "loc_copernicus",
-          "passage_id": "passage:copernicus-authorship",
-          "start_char": 0,
-          "end_char": 69,
-          "quote": "The catalog record identifies Copernicus as creator of the 1543 work."
+          "passage_id": "passage:loc-item-creator-0",
+          "start_char": 130,
+          "end_char": 162,
+          "quote": "Copernicus, Nicolaus, 1473-1543."
+        },
+        {
+          "source_id": "loc_copernicus",
+          "passage_id": "passage:loc-item-publication-note-0",
+          "start_char": 163,
+          "end_char": 274,
+          "quote": "Title page in: De revolutionibus orbium coelestium / Nicolaus Copernicus. Norimbergae : Apud I. Petreium, 1543."
         }
       ]
     },
     {
       "claim_id": "draft-claim:publication",
-      "text": "The evidence records the work's publication in Nuremberg in 1543 and names Johannes Petreius's workshop as its printer.",
+      "text": "The publication note places De revolutionibus in Nuremberg in 1543 and names I. Petreius in the imprint.",
       "entity_ids": [
         "historyjoice:event:de-revolutionibus-publication",
         "historyjoice:institution:petreius-workshop",
@@ -46,30 +53,23 @@
       "citations": [
         {
           "source_id": "loc_copernicus",
-          "passage_id": "passage:publication-work",
-          "start_char": 70,
-          "end_char": 137,
-          "quote": "The title page belongs to the work and records publication in 1543."
+          "passage_id": "passage:loc-item-publication-note-0",
+          "start_char": 163,
+          "end_char": 274,
+          "quote": "Title page in: De revolutionibus orbium coelestium / Nicolaus Copernicus. Norimbergae : Apud I. Petreium, 1543."
         },
         {
           "source_id": "loc_copernicus",
-          "passage_id": "passage:publication-printer",
-          "start_char": 138,
-          "end_char": 205,
-          "quote": "The catalog note transcribes the imprint as Apud I. Petreium, 1543."
-        },
-        {
-          "source_id": "loc_copernicus",
-          "passage_id": "passage:publication-place",
-          "start_char": 206,
-          "end_char": 279,
-          "quote": "The catalog note identifies Norimbergae (Nuremberg) as the imprint place."
+          "passage_id": "passage:loc-item-created-published",
+          "start_char": 275,
+          "end_char": 291,
+          "quote": "[published 1543]"
         }
       ]
     },
     {
       "claim_id": "draft-claim:subject",
-      "text": "The Library of Congress description presents the title page as stating a sun-centred model.",
+      "text": "The catalog title describes the title page as stating that the sun, rather than Earth, is the center of the universe.",
       "entity_ids": [
         "historyjoice:work:de-revolutionibus"
       ],
@@ -82,10 +82,10 @@
       "citations": [
         {
           "source_id": "loc_copernicus",
-          "passage_id": "passage:heliocentric-subject",
-          "start_char": 280,
-          "end_char": 360,
-          "quote": "The Library of Congress describes the title page as stating a sun-centred model."
+          "passage_id": "passage:loc-item-title",
+          "start_char": 0,
+          "end_char": 129,
+          "quote": "[Title page of De revolutionibus orbium coelstium, with statement that the sun, and not the earth, is the center of our universe]"
         }
       ]
     }

@@ -800,6 +800,7 @@ class EvidencePassage(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     passage_id: str = Field(pattern=r"^passage:[a-z0-9][a-z0-9:_-]+$")
+    source_field_path: str = Field(pattern=r"^/(?:[^/~]|~[01])+(?:/(?:[^/~]|~[01])+)*$")
     assertion_ids: list[str] = Field(min_length=1)
     start_char: int = Field(ge=0)
     end_char: int = Field(gt=0)
@@ -824,6 +825,9 @@ class EvidenceDocument(BaseModel):
 
     source_ref: SourceReference
     source_revision_id: str = Field(min_length=1)
+    source_revision_field_path: str = Field(
+        pattern=r"^/(?:[^/~]|~[01])+(?:/(?:[^/~]|~[01])+)*$"
+    )
     attribution: str = Field(min_length=1)
     text: str = Field(min_length=1)
     text_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")

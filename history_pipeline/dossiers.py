@@ -20,6 +20,7 @@ from history_pipeline.models import (
     EditorialState,
     EvidenceAssertion,
     EvidenceCitation,
+    EvidenceDocument,
     HumanDossierReview,
     PublishedEditorialDossier,
 )
@@ -35,6 +36,40 @@ def canonical_json_bytes(value: Any) -> bytes:
 
 def canonical_sha256(value: Any) -> str:
     return hashlib.sha256(canonical_json_bytes(value)).hexdigest()
+
+
+def _resolve_json_pointer(value: Any, pointer: str) -> Any:
+    current = value
+    for raw_token in pointer.removeprefix("/").split("/"):
+        token = raw_token.replace("~1", "/").replace("~0", "~")
+        if isinstance(current, dict) and token in current:
+            current = current[token]
+        elif isinstance(current, list) and token.isdigit() and int(token) < len(current):
+            current = current[int(token)]
+        else:
+            raise ValueError(f"Evidence source field does not resolve: {pointer}")
+    return current
+
+
+def validate_evidence_document_snapshot(
+    document: EvidenceDocument,
+    snapshot_bytes: bytes,
+) -> None:
+    expected_checksum = document.source_ref.checksum_sha256
+    if expected_checksum is None:
+        raise ValueError("Evidence documents require a source snapshot checksum")
+    if hashlib.sha256(snapshot_bytes).hexdigest() != expected_checksum:
+        raise ValueError("Evidence document snapshot checksum does not match its source")
+    snapshot = orjson.loads(snapshot_bytes)
+    revision = _resolve_json_pointer(snapshot, document.source_revision_field_path)
+    if revision != document.source_revision_id:
+        raise ValueError("Evidence source revision field does not match its revision ID")
+    for passage in document.passages:
+        value = _resolve_json_pointer(snapshot, passage.source_field_path)
+        if value != passage.text:
+            raise ValueError(
+                f"Evidence passage differs from exact source field: {passage.passage_id}"
+            )
 
 
 def _openai_output_schema() -> dict[str, Any]:

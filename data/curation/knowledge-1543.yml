@@ -33,7 +33,7 @@ features:
         url: https://www.loc.gov/pictures/item/92516339/
         license_id: PDM-1.0
         retrieved_at: 2026-07-23T06:47:37.559216Z
-        version: catalog record accessed 2026-07-23
+        version: "2016-04-20T03:54:53Z"
         checksum_sha256: b469f51efe363b4b149a61cb1c1f1ce2eadeb2636b2d4ed9df22d884ac50a0dd
         citation: "Library of Congress, item 92516339, title page from the 1543 Nuremberg edition."
     entity_ids:

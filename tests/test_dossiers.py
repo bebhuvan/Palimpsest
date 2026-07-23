@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import subprocess
-import sys
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -21,6 +19,7 @@ from history_pipeline.dossiers import (
     reject_draft,
     review_draft,
     validate_draft,
+    validate_evidence_document_snapshot,
     validate_published_dossier,
     write_json,
 )
@@ -33,7 +32,6 @@ from history_pipeline.models import (
     EvidenceDocument,
     EvidencePassage,
     HistoricalDossier,
-    PublishedEditorialDossier,
 )
 
 PILOT = Path("data/editorial/copernicus-1543")
@@ -65,7 +63,7 @@ def _ingest(
     )
 
 
-def test_copernicus_pilot_is_reproducible_and_source_pinned(tmp_path: Path) -> None:
+def test_copernicus_pilot_is_machine_only_and_source_pinned() -> None:
     bundle, curated, draft = _pilot()
     validate_draft(draft, bundle, curated)
     assert draft.generation.evidence_bundle_sha256 == canonical_sha256(bundle)
@@ -74,24 +72,30 @@ def test_copernicus_pilot_is_reproducible_and_source_pinned(tmp_path: Path) -> N
     assert draft.generation.model_identifier == "fixture:deterministic-dossier-v1"
     [document] = bundle.sources
     assert document.source_revision_id == document.source_ref.version
+    assert document.source_revision_field_path == "/item/modified"
     assert document.source_ref.license_id == "PDM-1.0"
     assert document.attribution == document.source_ref.citation
-
-    output = tmp_path / "pilot"
-    subprocess.run(
-        [
-            sys.executable,
-            "scripts/build-dossier-pilot.py",
-            "--output",
-            str(output),
-        ],
-        check=True,
+    exact_fields = {
+        passage.source_field_path: passage.text for passage in document.passages
+    }
+    assert exact_fields == {
+        "/item/title": (
+            "[Title page of De revolutionibus orbium coelstium, with statement that "
+            "the sun, and not the earth, is the center of our universe]"
+        ),
+        "/item/creators/0/title": "Copernicus, Nicolaus, 1473-1543.",
+        "/item/notes/0/note": (
+            "Title page in: De revolutionibus orbium coelestium / Nicolaus Copernicus. "
+            "Norimbergae : Apud I. Petreium, 1543."
+        ),
+        "/item/created_published": "[published 1543]",
+    }
+    assert all(
+        assertion.confidence.rationale not in document.text
+        for assertion in bundle.assertions
     )
-    assert (output / "draft.json").read_bytes() == (PILOT / "draft.json").read_bytes()
-    published = list((output / "published").glob("*.json"))
-    assert len(published) == 1
-    assert published[0].read_bytes() == next((PILOT / "published").glob("*.json")).read_bytes()
-    validate_published_dossier(read_json_model(published[0], PublishedEditorialDossier))
+    assert not (PILOT / "reviewed-draft.json").exists()
+    assert not list((PILOT / "published").glob("*.json"))
 
 
 def test_invalid_citation_span_fails_closed() -> None:
@@ -100,6 +104,33 @@ def test_invalid_citation_span_fails_closed() -> None:
     raw["claims"][0]["citations"][0]["quote"] = "Unsupported replacement"
     with pytest.raises(ValueError, match="quote does not match"):
         _ingest(raw, bundle, curated)
+
+
+def test_source_field_provenance_must_match_the_revision_pinned_snapshot() -> None:
+    bundle, _curated, _draft = _pilot()
+    document = bundle.sources[0]
+    passages = {passage.source_field_path: passage.text for passage in document.passages}
+    snapshot = json.dumps(
+        {
+            "item": {
+                "title": passages["/item/title"],
+                "creators": [{"title": passages["/item/creators/0/title"]}],
+                "notes": [{"note": passages["/item/notes/0/note"]}],
+                "created_published": passages["/item/created_published"],
+                "modified": document.source_revision_id,
+                "summary": "",
+            }
+        },
+        separators=(",", ":"),
+    ).encode()
+    raw = document.model_dump(mode="json")
+    raw["source_ref"]["checksum_sha256"] = hashlib.sha256(snapshot).hexdigest()
+    exact_document = EvidenceDocument.model_validate(raw)
+    validate_evidence_document_snapshot(exact_document, snapshot)
+    raw["passages"][0]["source_field_path"] = "/item/summary"
+    wrong_field = EvidenceDocument.model_validate(raw)
+    with pytest.raises(ValueError, match="differs from exact source field"):
+        validate_evidence_document_snapshot(wrong_field, snapshot)
 
 
 def test_unknown_assertion_and_entity_or_date_mismatch_fail_closed() -> None:
@@ -177,6 +208,7 @@ def test_explicit_conflicting_evidence_is_verified_not_resolved() -> None:
                 *[item.model_dump(mode="json") for item in document.passages],
                 EvidencePassage(
                     passage_id="passage:subject-conflict",
+                    source_field_path="/test/subject-conflict",
                     assertion_ids=[conflict.assertion_id],
                     start_char=start,
                     end_char=start + len(conflict_text),
@@ -197,7 +229,11 @@ def test_explicit_conflicting_evidence_is_verified_not_resolved() -> None:
             "sources": [expanded_document.model_dump(mode="json")],
         }
     )
-    existing = document.passages[-1]
+    existing = next(
+        passage
+        for passage in document.passages
+        if original.assertion_id in passage.assertion_ids
+    )
     content = {
         "result": "conflicting_evidence",
         "title": None,
@@ -235,7 +271,7 @@ def test_explicit_conflicting_evidence_is_verified_not_resolved() -> None:
             draft,
             expanded_bundle,
             expanded_curated,
-            reviewed_by="Reviewer",
+            reviewed_by="Simulated test reviewer",
             reviewed_at=datetime.now(UTC),
             notes="Conflict retained.",
         )
@@ -248,7 +284,7 @@ def test_review_rejection_and_immutable_publication_states(tmp_path: Path) -> No
         bundle,
         curated,
         reason="Editorially unsuitable.",
-        rejected_by="Reviewer",
+        rejected_by="Simulated test reviewer",
         rejected_at=datetime(2026, 7, 23, 7, 20, tzinfo=UTC),
     )
     assert rejected.editorial_state == EditorialState.REJECTED
@@ -266,9 +302,9 @@ def test_review_rejection_and_immutable_publication_states(tmp_path: Path) -> No
         draft,
         bundle,
         curated,
-        reviewed_by="Reviewer",
+        reviewed_by="Simulated test reviewer",
         reviewed_at=datetime(2026, 7, 23, 7, 30, tzinfo=UTC),
-        notes="Every claim checked against its cited passage.",
+        notes="Test-only simulated review of every cited claim.",
     )
     published = publish_reviewed_draft(
         reviewed,
@@ -278,6 +314,7 @@ def test_review_rejection_and_immutable_publication_states(tmp_path: Path) -> No
         editorial_attribution="History Joice",
         published_at=datetime(2026, 7, 23, 8, 0, tzinfo=UTC),
     )
+    validate_published_dossier(published)
     assert published.editorial_state == EditorialState.PUBLISHED
     assert published.dossier_kind == "generated_editorial"
     source_extract = HistoricalDossier.model_validate(

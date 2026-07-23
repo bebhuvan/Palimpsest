@@ -115,11 +115,11 @@ make build-dossier-pilot
 ```
 
 This ingests a saved schema-constrained model output without an API call, verifies every claim
-against the approved schema 1.10 assertions and exact evidence spans, records a human-review state,
-and reproduces a content-addressed published dossier under
-`data/editorial/copernicus-1543/published/`. Real generation is an explicit build-time CLI action
-requiring `OPENAI_API_KEY` and a `--model` identifier; the browser application contains no LLM
-client or credential. See the [editorial dossier pipeline](docs/editorial-dossier-pipeline.md).
+against the approved schema 1.10 assertions and exact, revision-pinned Library of Congress fields,
+and stops at `machine_drafted`. Human review and publication remain explicit editorial commands
+and are simulated only inside tests. Real generation is an explicit build-time CLI action requiring
+`OPENAI_API_KEY` and a `--model` identifier; the browser application contains no LLM client or
+credential. See the [editorial dossier pipeline](docs/editorial-dossier-pipeline.md).
 
 Reviewed labels come from first-class historical-name attestations rather than a timeless display
 string. Search and map labels choose the attestation active in the selected year and disclose when

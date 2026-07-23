@@ -1,0 +1,370 @@
+{
+  "$defs": {
+    "AssertionEvidenceBasis": {
+      "enum": [
+        "primary_source_metadata",
+        "authority_metadata",
+        "scholarly_assertion",
+        "reviewed_editorial_link"
+      ],
+      "title": "AssertionEvidenceBasis",
+      "type": "string"
+    },
+    "AssertionObject": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/AssertionObjectKind"
+        },
+        "entity_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Entity Id"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "year": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Year"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "AssertionObject",
+      "type": "object"
+    },
+    "AssertionObjectKind": {
+      "enum": [
+        "entity",
+        "text",
+        "year"
+      ],
+      "title": "AssertionObjectKind",
+      "type": "string"
+    },
+    "Confidence": {
+      "additionalProperties": false,
+      "properties": {
+        "grade": {
+          "$ref": "#/$defs/ConfidenceGrade"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "grade",
+        "rationale"
+      ],
+      "title": "Confidence",
+      "type": "object"
+    },
+    "ConfidenceGrade": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "unknown"
+      ],
+      "title": "ConfidenceGrade",
+      "type": "string"
+    },
+    "DatePrecision": {
+      "enum": [
+        "exact",
+        "year",
+        "decade",
+        "century",
+        "range",
+        "unknown"
+      ],
+      "title": "DatePrecision",
+      "type": "string"
+    },
+    "ReviewStatus": {
+      "enum": [
+        "unreviewed",
+        "provisional",
+        "verified",
+        "contested",
+        "rejected"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    },
+    "SourceReference": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "pattern": "^[a-z0-9][a-z0-9_-]+$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "record_id": {
+          "title": "Record Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "publisher": {
+          "title": "Publisher",
+          "type": "string"
+        },
+        "url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Url",
+          "type": "string"
+        },
+        "license_id": {
+          "title": "License Id",
+          "type": "string"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        },
+        "checksum_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Checksum Sha256"
+        },
+        "citation": {
+          "title": "Citation",
+          "type": "string"
+        },
+        "modified": {
+          "default": false,
+          "title": "Modified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source_id",
+        "record_id",
+        "title",
+        "publisher",
+        "url",
+        "license_id",
+        "retrieved_at",
+        "citation"
+      ],
+      "title": "SourceReference",
+      "type": "object"
+    },
+    "TemporalUncertainty": {
+      "additionalProperties": false,
+      "description": "Uncertainty envelope around the canonical rendering interval.\n\nThe four bounds describe what a source permits; they are not samples to average.\n``valid_from``/``valid_to`` on the feature remain the interval used for map filtering.",
+      "properties": {
+        "earliest_start": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Earliest Start"
+        },
+        "latest_start": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latest Start"
+        },
+        "earliest_end": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Earliest End"
+        },
+        "latest_end": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latest End"
+        },
+        "circa": {
+          "default": false,
+          "title": "Circa",
+          "type": "boolean"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rationale"
+      ],
+      "title": "TemporalUncertainty",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "One evidence-backed structured fact, never generated narrative prose.",
+  "properties": {
+    "assertion_id": {
+      "pattern": "^assertion:[a-z0-9][a-z0-9:_-]+$",
+      "title": "Assertion Id",
+      "type": "string"
+    },
+    "representation": {
+      "const": "structured_sourced_assertion",
+      "default": "structured_sourced_assertion",
+      "title": "Representation",
+      "type": "string"
+    },
+    "subject_entity_ids": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Subject Entity Ids",
+      "type": "array"
+    },
+    "feature_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Feature Ids",
+      "type": "array"
+    },
+    "predicate": {
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "title": "Predicate",
+      "type": "string"
+    },
+    "object": {
+      "$ref": "#/$defs/AssertionObject"
+    },
+    "valid_from": {
+      "title": "Valid From",
+      "type": "integer"
+    },
+    "valid_to": {
+      "title": "Valid To",
+      "type": "integer"
+    },
+    "date_precision": {
+      "$ref": "#/$defs/DatePrecision"
+    },
+    "temporal_uncertainty": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TemporalUncertainty"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "confidence": {
+      "$ref": "#/$defs/Confidence"
+    },
+    "evidence_basis": {
+      "$ref": "#/$defs/AssertionEvidenceBasis"
+    },
+    "review_status": {
+      "$ref": "#/$defs/ReviewStatus",
+      "default": "provisional"
+    },
+    "source_refs": {
+      "items": {
+        "$ref": "#/$defs/SourceReference"
+      },
+      "minItems": 1,
+      "title": "Source Refs",
+      "type": "array"
+    }
+  },
+  "required": [
+    "assertion_id",
+    "subject_entity_ids",
+    "predicate",
+    "object",
+    "valid_from",
+    "valid_to",
+    "date_precision",
+    "confidence",
+    "evidence_basis",
+    "source_refs"
+  ],
+  "title": "EvidenceAssertion",
+  "type": "object"
+}

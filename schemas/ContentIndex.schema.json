@@ -1,0 +1,135 @@
+{
+  "$defs": {
+    "ContentCollections": {
+      "additionalProperties": false,
+      "properties": {
+        "feature_links": {
+          "$ref": "#/$defs/ContentShardContract"
+        },
+        "entities": {
+          "$ref": "#/$defs/ContentShardContract"
+        },
+        "dossiers": {
+          "$ref": "#/$defs/ContentShardContract"
+        }
+      },
+      "required": [
+        "feature_links",
+        "entities",
+        "dossiers"
+      ],
+      "title": "ContentCollections",
+      "type": "object"
+    },
+    "ContentLanguagePolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "selection": {
+          "const": "requested-language-then-configured-fallback",
+          "default": "requested-language-then-configured-fallback",
+          "title": "Selection",
+          "type": "string"
+        },
+        "available": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Available",
+          "type": "array"
+        },
+        "fallback_order": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Fallback Order",
+          "type": "array"
+        },
+        "no_indiscriminate_duplication": {
+          "default": true,
+          "title": "No Indiscriminate Duplication",
+          "type": "boolean"
+        }
+      },
+      "title": "ContentLanguagePolicy",
+      "type": "object"
+    },
+    "ContentShardContract": {
+      "additionalProperties": false,
+      "properties": {
+        "path_template": {
+          "pattern": "^content/(links|entities|dossiers)/\\{shard\\}\\.json$",
+          "title": "Path Template",
+          "type": "string"
+        },
+        "count": {
+          "minimum": 0,
+          "title": "Count",
+          "type": "integer"
+        },
+        "shards": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Shards",
+          "type": "array"
+        }
+      },
+      "required": [
+        "path_template",
+        "count"
+      ],
+      "title": "ContentShardContract",
+      "type": "object"
+    },
+    "ContentSharding": {
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "const": "sha256",
+          "default": "sha256",
+          "title": "Algorithm",
+          "type": "string"
+        },
+        "encoding": {
+          "const": "utf-8",
+          "default": "utf-8",
+          "title": "Encoding",
+          "type": "string"
+        },
+        "prefix_length": {
+          "const": 2,
+          "default": 2,
+          "title": "Prefix Length",
+          "type": "integer"
+        }
+      },
+      "title": "ContentSharding",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "sharding": {
+      "$ref": "#/$defs/ContentSharding"
+    },
+    "collections": {
+      "$ref": "#/$defs/ContentCollections"
+    },
+    "language_policy": {
+      "$ref": "#/$defs/ContentLanguagePolicy"
+    }
+  },
+  "required": [
+    "sharding",
+    "collections",
+    "language_policy"
+  ],
+  "title": "ContentIndex",
+  "type": "object"
+}

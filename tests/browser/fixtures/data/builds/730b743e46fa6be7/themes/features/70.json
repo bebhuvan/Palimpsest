@@ -1,0 +1,11 @@
+{
+  "browser-pilot:missing-dossier-place:50:150:bbbb": {
+    "assertion_ids": [
+      "theme:33344706922fd76a"
+    ],
+    "feature_id": "browser-pilot:missing-dossier-place:50:150:bbbb",
+    "themes": [
+      "power"
+    ]
+  }
+}

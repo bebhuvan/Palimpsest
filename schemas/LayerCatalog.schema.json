@@ -1,0 +1,123 @@
+{
+  "$defs": {
+    "HistoricalTheme": {
+      "description": "Broad, non-exclusive discovery lenses attached by a reviewed source mapping.",
+      "enum": [
+        "power",
+        "belief",
+        "knowledge",
+        "culture",
+        "trade"
+      ],
+      "title": "HistoricalTheme",
+      "type": "string"
+    },
+    "LayerDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "layer_id": {
+          "pattern": "^layer:[a-z0-9][a-z0-9:_-]+$",
+          "title": "Layer Id",
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/$defs/LayerRole"
+        },
+        "labels": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "minProperties": 1,
+          "title": "Labels",
+          "type": "object"
+        },
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "source_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Ids",
+          "type": "array"
+        },
+        "theme": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/HistoricalTheme"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "confidence_axis": {
+          "anyOf": [
+            {
+              "enum": [
+                "temporal",
+                "spatial",
+                "interpretive"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence Axis"
+        }
+      },
+      "required": [
+        "layer_id",
+        "role",
+        "labels",
+        "description"
+      ],
+      "title": "LayerDefinition",
+      "type": "object"
+    },
+    "LayerRole": {
+      "enum": [
+        "map_source",
+        "thematic_lens",
+        "confidence_overlay",
+        "provenance_overlay"
+      ],
+      "title": "LayerRole",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "semantics": {
+      "const": "orthogonal-map-sources-lenses-and-evidence-overlays",
+      "default": "orthogonal-map-sources-lenses-and-evidence-overlays",
+      "title": "Semantics",
+      "type": "string"
+    },
+    "layers": {
+      "items": {
+        "$ref": "#/$defs/LayerDefinition"
+      },
+      "minItems": 1,
+      "title": "Layers",
+      "type": "array"
+    }
+  },
+  "required": [
+    "layers"
+  ],
+  "title": "LayerCatalog",
+  "type": "object"
+}

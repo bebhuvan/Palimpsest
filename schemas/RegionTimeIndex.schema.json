@@ -1,0 +1,165 @@
+{
+  "$defs": {
+    "ContentSharding": {
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "const": "sha256",
+          "default": "sha256",
+          "title": "Algorithm",
+          "type": "string"
+        },
+        "encoding": {
+          "const": "utf-8",
+          "default": "utf-8",
+          "title": "Encoding",
+          "type": "string"
+        },
+        "prefix_length": {
+          "const": 2,
+          "default": 2,
+          "title": "Prefix Length",
+          "type": "integer"
+        }
+      },
+      "title": "ContentSharding",
+      "type": "object"
+    },
+    "RegionTimeBand": {
+      "additionalProperties": false,
+      "properties": {
+        "band_id": {
+          "pattern": "^band-[0-9]{2}$",
+          "title": "Band Id",
+          "type": "string"
+        },
+        "valid_from": {
+          "title": "Valid From",
+          "type": "integer"
+        },
+        "valid_to": {
+          "title": "Valid To",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "band_id",
+        "valid_from",
+        "valid_to"
+      ],
+      "title": "RegionTimeBand",
+      "type": "object"
+    },
+    "RegionTimeCollection": {
+      "additionalProperties": false,
+      "properties": {
+        "path_template": {
+          "const": "region-time/buckets/{shard}.json",
+          "default": "region-time/buckets/{shard}.json",
+          "title": "Path Template",
+          "type": "string"
+        },
+        "count": {
+          "minimum": 0,
+          "title": "Count",
+          "type": "integer"
+        },
+        "shards": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Shards",
+          "type": "array"
+        }
+      },
+      "required": [
+        "count"
+      ],
+      "title": "RegionTimeCollection",
+      "type": "object"
+    },
+    "RegionTimeGrid": {
+      "additionalProperties": false,
+      "properties": {
+        "cell_degrees": {
+          "const": 10,
+          "default": 10,
+          "title": "Cell Degrees",
+          "type": "integer"
+        },
+        "longitude_origin": {
+          "const": -180,
+          "default": -180,
+          "title": "Longitude Origin",
+          "type": "integer"
+        },
+        "latitude_origin": {
+          "const": -90,
+          "default": -90,
+          "title": "Latitude Origin",
+          "type": "integer"
+        },
+        "semantics": {
+          "const": "discovery-grid-not-historical-regions",
+          "default": "discovery-grid-not-historical-regions",
+          "title": "Semantics",
+          "type": "string"
+        }
+      },
+      "title": "RegionTimeGrid",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "sharding": {
+      "$ref": "#/$defs/ContentSharding"
+    },
+    "grid": {
+      "$ref": "#/$defs/RegionTimeGrid"
+    },
+    "time_bands": {
+      "items": {
+        "$ref": "#/$defs/RegionTimeBand"
+      },
+      "title": "Time Bands",
+      "type": "array"
+    },
+    "buckets": {
+      "$ref": "#/$defs/RegionTimeCollection"
+    },
+    "maximum_results_per_selection": {
+      "default": 60,
+      "maximum": 200,
+      "minimum": 1,
+      "title": "Maximum Results Per Selection",
+      "type": "integer"
+    },
+    "inclusion_policy": {
+      "const": "reviewed-features-and-dated-coordinate-entities",
+      "default": "reviewed-features-and-dated-coordinate-entities",
+      "title": "Inclusion Policy",
+      "type": "string"
+    },
+    "causal_claims_excluded": {
+      "const": true,
+      "default": true,
+      "title": "Causal Claims Excluded",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "sharding",
+    "grid",
+    "time_bands",
+    "buckets"
+  ],
+  "title": "RegionTimeIndex",
+  "type": "object"
+}

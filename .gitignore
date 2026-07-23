@@ -1,0 +1,35 @@
+# JavaScript
+node_modules/
+.svelte-kit/
+build/
+static/data/
+playwright-report/
+test-results/
+
+# Python
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.py[cod]
+
+# Generated historical data
+data/raw/
+data/staged/
+data/cache/
+dist/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+.wrangler/
+.tools/
+
+# OS and editor
+.DS_Store
+.idea/
+.vscode/

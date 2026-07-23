@@ -1,0 +1,99 @@
+{
+  "$defs": {
+    "CausalCollections": {
+      "additionalProperties": false,
+      "properties": {
+        "claims": {
+          "$ref": "#/$defs/CausalShardContract"
+        },
+        "entities": {
+          "$ref": "#/$defs/CausalShardContract"
+        },
+        "paths": {
+          "$ref": "#/$defs/CausalShardContract"
+        }
+      },
+      "required": [
+        "claims",
+        "entities",
+        "paths"
+      ],
+      "title": "CausalCollections",
+      "type": "object"
+    },
+    "CausalShardContract": {
+      "additionalProperties": false,
+      "properties": {
+        "path_template": {
+          "pattern": "^causal/(claims|entities|paths)/\\{shard\\}\\.json$",
+          "title": "Path Template",
+          "type": "string"
+        },
+        "count": {
+          "minimum": 0,
+          "title": "Count",
+          "type": "integer"
+        },
+        "shards": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Shards",
+          "type": "array"
+        }
+      },
+      "required": [
+        "path_template",
+        "count"
+      ],
+      "title": "CausalShardContract",
+      "type": "object"
+    },
+    "ContentSharding": {
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "const": "sha256",
+          "default": "sha256",
+          "title": "Algorithm",
+          "type": "string"
+        },
+        "encoding": {
+          "const": "utf-8",
+          "default": "utf-8",
+          "title": "Encoding",
+          "type": "string"
+        },
+        "prefix_length": {
+          "const": 2,
+          "default": 2,
+          "title": "Prefix Length",
+          "type": "integer"
+        }
+      },
+      "title": "ContentSharding",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "sharding": {
+      "$ref": "#/$defs/ContentSharding"
+    },
+    "collections": {
+      "$ref": "#/$defs/CausalCollections"
+    }
+  },
+  "required": [
+    "sharding",
+    "collections"
+  ],
+  "title": "CausalIndex",
+  "type": "object"
+}

@@ -1,0 +1,53 @@
+{
+  "wikidata:Q101": {
+    "aliases": {},
+    "commons_categories": [],
+    "commons_images": [],
+    "context_depth": 1,
+    "coordinates": [],
+    "date_claims": [],
+    "date_precision": null,
+    "descriptions": {
+      "en": "A bounded related event loaded from a context shard."
+    },
+    "discovered_from_entity_ids": [
+      "wikidata:Q100"
+    ],
+    "discovery_predicates": [
+      "P793"
+    ],
+    "entity_id": "wikidata:Q101",
+    "entity_kind": "event",
+    "entity_type": "event",
+    "links": {
+      "wikidata": "https://www.wikidata.org/wiki/Q101"
+    },
+    "names": {
+      "en": "Pilot Context Event"
+    },
+    "redirects_from": [],
+    "relationships": [],
+    "review_status": "unreviewed",
+    "sitelinks": {},
+    "source_refs": [
+      {
+        "checksum_sha256": null,
+        "citation": "Wikimedia Foundation and Wikidata contributors, Wikidata browser-pilot entity projection",
+        "license_id": "CC0-1.0",
+        "modified": false,
+        "publisher": "Wikimedia Foundation and Wikidata contributors",
+        "record_id": "Q101",
+        "retrieved_at": "2026-07-23T06:00:00Z",
+        "source_id": "wikidata",
+        "title": "Wikidata browser-pilot entity projection",
+        "url": "https://www.wikidata.org/wiki/Q100",
+        "version": "browser-pilot-v1"
+      }
+    ],
+    "temporal_confidence": null,
+    "temporal_uncertainty": null,
+    "valid_from": 90,
+    "valid_to": 110,
+    "wikidata_id": "Q101"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "additionalProperties": false,
+  "description": "Small map-selection join record stored in a deterministic JSON shard.",
+  "properties": {
+    "feature_id": {
+      "title": "Feature Id",
+      "type": "string"
+    },
+    "primary_entity_id": {
+      "title": "Primary Entity Id",
+      "type": "string"
+    },
+    "entity_ids": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Entity Ids",
+      "type": "array"
+    },
+    "available_entity_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Available Entity Ids",
+      "type": "array"
+    },
+    "missing_entity_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Missing Entity Ids",
+      "type": "array"
+    },
+    "dossier_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Dossier Ids",
+      "type": "array"
+    },
+    "related_entity_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Related Entity Ids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "feature_id",
+    "primary_entity_id",
+    "entity_ids"
+  ],
+  "title": "FeatureContentLink",
+  "type": "object"
+}

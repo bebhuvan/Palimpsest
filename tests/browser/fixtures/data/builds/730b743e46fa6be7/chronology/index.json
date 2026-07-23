@@ -1,0 +1,100 @@
+{
+  "collections": {
+    "definitions": {
+      "count": 0,
+      "path_template": "chronology/definitions/{shard}.json",
+      "shards": []
+    },
+    "entities": {
+      "count": 0,
+      "path_template": "chronology/entities/{shard}.json",
+      "shards": []
+    }
+  },
+  "schema_version": "1.0.0",
+  "semantics": "attributed-competing-period-definitions",
+  "sharding": {
+    "algorithm": "sha256",
+    "encoding": "utf-8",
+    "prefix_length": 2
+  },
+  "time_bands": [
+    {
+      "band_id": "band-00",
+      "count": 0,
+      "path": "chronology/time/band-00.json",
+      "valid_from": -3400,
+      "valid_to": -2001
+    },
+    {
+      "band_id": "band-01",
+      "count": 0,
+      "path": "chronology/time/band-01.json",
+      "valid_from": -2000,
+      "valid_to": -1001
+    },
+    {
+      "band_id": "band-02",
+      "count": 0,
+      "path": "chronology/time/band-02.json",
+      "valid_from": -1000,
+      "valid_to": -1
+    },
+    {
+      "band_id": "band-03",
+      "count": 0,
+      "path": "chronology/time/band-03.json",
+      "valid_from": 1,
+      "valid_to": 499
+    },
+    {
+      "band_id": "band-04",
+      "count": 0,
+      "path": "chronology/time/band-04.json",
+      "valid_from": 500,
+      "valid_to": 999
+    },
+    {
+      "band_id": "band-05",
+      "count": 0,
+      "path": "chronology/time/band-05.json",
+      "valid_from": 1000,
+      "valid_to": 1499
+    },
+    {
+      "band_id": "band-06",
+      "count": 0,
+      "path": "chronology/time/band-06.json",
+      "valid_from": 1500,
+      "valid_to": 1799
+    },
+    {
+      "band_id": "band-07",
+      "count": 0,
+      "path": "chronology/time/band-07.json",
+      "valid_from": 1800,
+      "valid_to": 1885
+    },
+    {
+      "band_id": "band-08",
+      "count": 0,
+      "path": "chronology/time/band-08.json",
+      "valid_from": 1886,
+      "valid_to": 1945
+    },
+    {
+      "band_id": "band-09",
+      "count": 0,
+      "path": "chronology/time/band-09.json",
+      "valid_from": 1946,
+      "valid_to": 1999
+    },
+    {
+      "band_id": "band-10",
+      "count": 0,
+      "path": "chronology/time/band-10.json",
+      "valid_from": 2000,
+      "valid_to": 2026
+    }
+  ]
+}

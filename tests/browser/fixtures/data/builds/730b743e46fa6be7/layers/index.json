@@ -1,0 +1,127 @@
+{
+  "layers": [
+    {
+      "confidence_axis": null,
+      "description": "Immutable, source-backed geometry published in this release.",
+      "labels": {
+        "en": "Reviewed release geometry"
+      },
+      "layer_id": "layer:map:reviewed-release",
+      "role": "map_source",
+      "source_ids": [],
+      "theme": null
+    },
+    {
+      "confidence_axis": null,
+      "description": "Live contributor context kept separate from immutable release geometry.",
+      "labels": {
+        "en": "OpenHistoricalMap live context"
+      },
+      "layer_id": "layer:map:openhistoricalmap",
+      "role": "map_source",
+      "source_ids": [],
+      "theme": null
+    },
+    {
+      "confidence_axis": null,
+      "description": "Foregrounds records with a published thematic assertion.",
+      "labels": {
+        "en": "Power"
+      },
+      "layer_id": "layer:lens:power",
+      "role": "thematic_lens",
+      "source_ids": [],
+      "theme": "power"
+    },
+    {
+      "confidence_axis": null,
+      "description": "Foregrounds records with a published thematic assertion.",
+      "labels": {
+        "en": "Belief"
+      },
+      "layer_id": "layer:lens:belief",
+      "role": "thematic_lens",
+      "source_ids": [],
+      "theme": "belief"
+    },
+    {
+      "confidence_axis": null,
+      "description": "Foregrounds records with a published thematic assertion.",
+      "labels": {
+        "en": "Knowledge"
+      },
+      "layer_id": "layer:lens:knowledge",
+      "role": "thematic_lens",
+      "source_ids": [],
+      "theme": "knowledge"
+    },
+    {
+      "confidence_axis": null,
+      "description": "Foregrounds records with a published thematic assertion.",
+      "labels": {
+        "en": "Culture"
+      },
+      "layer_id": "layer:lens:culture",
+      "role": "thematic_lens",
+      "source_ids": [],
+      "theme": "culture"
+    },
+    {
+      "confidence_axis": null,
+      "description": "Foregrounds records with a published thematic assertion.",
+      "labels": {
+        "en": "Trade"
+      },
+      "layer_id": "layer:lens:trade",
+      "role": "thematic_lens",
+      "source_ids": [],
+      "theme": "trade"
+    },
+    {
+      "confidence_axis": "temporal",
+      "description": "Styles records by their temporal confidence grade.",
+      "labels": {
+        "en": "Temporal confidence"
+      },
+      "layer_id": "layer:confidence:temporal",
+      "role": "confidence_overlay",
+      "source_ids": [],
+      "theme": null
+    },
+    {
+      "confidence_axis": "spatial",
+      "description": "Styles records by their spatial confidence grade.",
+      "labels": {
+        "en": "Spatial confidence"
+      },
+      "layer_id": "layer:confidence:spatial",
+      "role": "confidence_overlay",
+      "source_ids": [],
+      "theme": null
+    },
+    {
+      "confidence_axis": "interpretive",
+      "description": "Styles records by their interpretive confidence grade.",
+      "labels": {
+        "en": "Interpretive confidence"
+      },
+      "layer_id": "layer:confidence:interpretive",
+      "role": "confidence_overlay",
+      "source_ids": [],
+      "theme": null
+    },
+    {
+      "confidence_axis": null,
+      "description": "Styles records by source identity while retaining licence metadata.",
+      "labels": {
+        "en": "Source provenance"
+      },
+      "layer_id": "layer:provenance:source",
+      "role": "provenance_overlay",
+      "source_ids": [],
+      "theme": null
+    }
+  ],
+  "schema_version": "1.0.0",
+  "semantics": "orthogonal-map-sources-lenses-and-evidence-overlays"
+}

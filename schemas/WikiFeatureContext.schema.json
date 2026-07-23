@@ -1,0 +1,128 @@
+{
+  "$defs": {
+    "WikiContextItem": {
+      "additionalProperties": false,
+      "properties": {
+        "context_entity_id": {
+          "title": "Context Entity Id",
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/$defs/WikiContextRole"
+        },
+        "relationship_types": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Relationship Types",
+          "type": "array"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Valid From"
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Valid To"
+        },
+        "source_strength": {
+          "enum": [
+            "referenced_statement",
+            "wikidata_statement"
+          ],
+          "title": "Source Strength",
+          "type": "string"
+        },
+        "score": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Score",
+          "type": "integer"
+        },
+        "selection_reasons": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Selection Reasons",
+          "type": "array"
+        },
+        "dossier_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Dossier Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "context_entity_id",
+        "role",
+        "relationship_types",
+        "source_strength",
+        "score",
+        "selection_reasons"
+      ],
+      "title": "WikiContextItem",
+      "type": "object"
+    },
+    "WikiContextRole": {
+      "enum": [
+        "person",
+        "event",
+        "institution",
+        "polity",
+        "place",
+        "theme",
+        "other"
+      ],
+      "title": "WikiContextRole",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "feature_id": {
+      "title": "Feature Id",
+      "type": "string"
+    },
+    "seed_entity_ids": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Seed Entity Ids",
+      "type": "array"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/WikiContextItem"
+      },
+      "title": "Items",
+      "type": "array"
+    }
+  },
+  "required": [
+    "feature_id",
+    "seed_entity_ids"
+  ],
+  "title": "WikiFeatureContext",
+  "type": "object"
+}

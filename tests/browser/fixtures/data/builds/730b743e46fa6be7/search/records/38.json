@@ -1,0 +1,46 @@
+{
+  "wikidata:Q100": {
+    "content_shard": "38",
+    "dossier_ids": [
+      "wikipedia:en:100"
+    ],
+    "entity_id": "wikidata:Q100",
+    "feature_ids": [
+      "browser-pilot:enriched-place:50:150:aaaa"
+    ],
+    "kind": "polity",
+    "latitude": 25.0,
+    "longitude": 17.0,
+    "name_attestations": [
+      {
+        "date_precision": "range",
+        "feature_id": "browser-pilot:enriched-place:50:150:aaaa",
+        "language": "en",
+        "name_id": "name:b662c43ec7ab9a88",
+        "name_kind": "unknown",
+        "perspective": null,
+        "primary": true,
+        "script": null,
+        "source_ids": [
+          "browser-pilot"
+        ],
+        "temporal_basis": "feature_interval",
+        "temporal_confidence": "B",
+        "text": "Enriched Pilot Place",
+        "valid_from": 50,
+        "valid_to": 150
+      }
+    ],
+    "names": {
+      "en": "Enriched Pilot Place"
+    },
+    "source_ids": [
+      "browser-pilot"
+    ],
+    "themes": [
+      "power"
+    ],
+    "valid_from": 50,
+    "valid_to": 150
+  }
+}

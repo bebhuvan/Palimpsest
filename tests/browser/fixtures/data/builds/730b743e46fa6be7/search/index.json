@@ -1,0 +1,161 @@
+{
+  "compression": "gzip",
+  "features": {
+    "count": 3,
+    "path_template": "search/features/{shard}.json",
+    "shards": [
+      "03",
+      "35",
+      "70"
+    ]
+  },
+  "minimum_query_length": 2,
+  "name_ngrams": {
+    "length": 2,
+    "paths": {
+      "ac": "search/names/f45de51cdef30991551e41e882dd7b5404799648a0a00753f44fc966e6153fc1.json.gz",
+      "at": "search/names/b1d6b91b67c2afa5e322988d9462638d354ddf8a1ef79dba987f815c22b4baee.json.gz",
+      "bl": "search/names/29d9489564c875d731108c8fbd8dfa3e698ca20be4c00878dda716de8c993b97.json.gz",
+      "bu": "search/names/9508394fe63a491fdcc07886367a676baac5e1207bfcc5ae13b08f37b3a31b49.json.gz",
+      "ca": "search/names/6959097001d10501ac7d54c0bdb8db61420f658f2922cc26e46d536119a31126.json.gz",
+      "ce": "search/names/e64c826b6b33f307cecf54ff843c5f9797c1056eb33f9dd60bc632f519712cb9.json.gz",
+      "ch": "search/names/343677762813eaeb65704cc8d9e96f7a444ba0cca92ff861af7f68648b3e6ef1.json.gz",
+      "de": "search/names/959a45d44e6fcf58361ed004681556fe50129f2109e817dec098c00c9e5d2578.json.gz",
+      "do": "search/names/ac0b52a2ae6ef99999bc08fb31e19188bf0085a4614204068e677e140e1458be.json.gz",
+      "ed": "search/names/9c1623f0d38e28e9594f2ef31a7ec909291c4fdb05a777dccd2e936a7f406011.json.gz",
+      "en": "search/names/dbd3a49d0d906b4ed9216b73330d2fb080ef2f758c12f3885068222e5e17151c.json.gz",
+      "er": "search/names/cc7e4412564ba8a761bd32ab4cc6086bac3c2c9e580367e0b0eb32a4316f9154.json.gz",
+      "ev": "search/names/67d35554c1f60638d6d72a0edc045450a841f7efabe0f9843b7e653499094538.json.gz",
+      "he": "search/names/372f7e2fd2d01ce2a1d71dc072acbba4c6fd25a1087cd7f153f4ec0ce37e1ede.json.gz",
+      "ib": "search/names/765dbb8c38a58a5dc019d7b3133dffb251d643cb291328ad8e86d4f05655e68b.json.gz",
+      "ic": "search/names/dae7f3a056377ab98e8eba07dd01c64c813dc392d02ecd4b7b3b728c6d1e21a8.json.gz",
+      "ie": "search/names/292c1980ba2805512acfef5d0cf8f43fba5c7b9b73a5a7afad1c37cfacad3c98.json.gz",
+      "il": "search/names/a0fb903525dc10dccaa4bd72bed4fe5b24ae8346b8a7343edce84172feb7085a.json.gz",
+      "io": "search/names/4021fadf187fd2c8277aad0fbc5e8fc4e7f1c75fbb38b6337160f125444790b2.json.gz",
+      "la": "search/names/b737ca7ee563ae80e457bb3d1dfe64edd2b4c015a8f88b6f87d5c113b68897fd.json.gz",
+      "li": "search/names/00a9e4255a5b63067b76cbfb9fd67f26bdb91be802d5ffcb177ec1b7a8d4c623.json.gz",
+      "lo": "search/names/9294ab38039f60d2ec53822fb46b52c663af7ea478f4d17bf43da44ede5e166c.json.gz",
+      "lu": "search/names/80c0fcbbfa9d03d861b22230e67c380afb545c12de43094f3985128625858361.json.gz",
+      "nd": "search/names/051603900bc7a27051b385299b0ef6c3dd2da3c6216845df7f501d9e4337cbcd.json.gz",
+      "ni": "search/names/4db03a277cfb9ef4c68b4c9780470eee479abacb5fd01b8a2c2b3cb955998e87.json.gz",
+      "nr": "search/names/6194e73eb25916046397e515de98f4e4357e06af9f3054d347ffe82aadfd8bf2.json.gz",
+      "of": "search/names/28391d3bc64ec15cbb090426b04aa6b7649c3cc85f11230bb0105e02d15e3624.json.gz",
+      "ol": "search/names/e20882595488fa4f5a9ecf837ef7e2d220e9898cac625f1163dba2c1c7ec56f7.json.gz",
+      "on": "search/names/b8d31e852725afb1e26d53bab6095b2bff1749c9275be13ed1c05a56ed31ec09.json.gz",
+      "os": "search/names/840a8dcfeae95966a870b0b5257997ce94cbc19dd979409d1671d2e93a9e0de6.json.gz",
+      "ot": "search/names/0a19b4727d1fbd3a43ba819816b0ec8fb670b37b9cab4c0327aa0a3f9d162443.json.gz",
+      "pi": "search/names/85b42e1702877c851eb7412fe958c8fb447c3207b4798fadab42ea8539046ce1.json.gz",
+      "pl": "search/names/3485639faf1591f3c16f295198e9389db5b33c949587ec48663597d4e00299d5.json.gz",
+      "pu": "search/names/4b4d5589e12d32d589355ac6b1416bf2928a3da86f58d6d1683440ac41b8102a.json.gz",
+      "re": "search/names/3ac1ecbd2220c6757eb9f289fee88c4068c6791c5b0affef7644e77adfc97b45.json.gz",
+      "ri": "search/names/396a14ab206e2b44e03c4e00393e948cce36a6b0f0d7489cb46d944b33ad51c8.json.gz",
+      "si": "search/names/97a62ad21d79c01cceb7767952acec4fec86bfe909b06e5f3f6963365cf91ab8.json.gz",
+      "ss": "search/names/a31fe9656fc8d3a459e623dc8204e6d0268f8df56d734dac3ca3262edb5db883.json.gz",
+      "ti": "search/names/cfccfcdeb2a5022c816b8c3e50353698c6994a2a7bea4b8ea6aef2fe56880f22.json.gz",
+      "ub": "search/names/ece134c3f8737a954710c0b89a9f70e8e59359f6a8ab4c19ae77cf1203d5c5bc.json.gz",
+      "un": "search/names/68bca10eea2ba33f6f15a6ab0c7df2a49051a6541f9118d468b0585d5d60398b.json.gz",
+      "us": "search/names/79adb2a2fce5c6ba215fe5f27f532d4e7edbac4b6a5e09e1ef3a08084a904621.json.gz",
+      "ut": "search/names/469cc643a19fb75901e5d331b8dc14befa8b98810b246c2fb22fff0c382dc39e.json.gz",
+      "vo": "search/names/3f98114b0f77b7da78bca527117c4f3126aafbba8b94b68b0bc3ccd13944258d.json.gz"
+    }
+  },
+  "normalization": "unicode-nfkd-lowercase-alphanumeric-spaces",
+  "pages": {
+    "count": 3,
+    "page_size": 250,
+    "pages": [
+      "0000"
+    ],
+    "path_template": "search/pages/{page}.json.gz"
+  },
+  "records": {
+    "count": 3,
+    "path_template": "search/records/{shard}.json",
+    "shards": [
+      "38",
+      "49",
+      "85"
+    ]
+  },
+  "schema_version": "1.0.0",
+  "semantics": "lazy-static-search-over-release-records",
+  "time_bands": [
+    {
+      "band_id": "band-00",
+      "count": 0,
+      "path": "search/time/band-00.json.gz",
+      "valid_from": -3400,
+      "valid_to": -2001
+    },
+    {
+      "band_id": "band-01",
+      "count": 0,
+      "path": "search/time/band-01.json.gz",
+      "valid_from": -2000,
+      "valid_to": -1001
+    },
+    {
+      "band_id": "band-02",
+      "count": 0,
+      "path": "search/time/band-02.json.gz",
+      "valid_from": -1000,
+      "valid_to": -1
+    },
+    {
+      "band_id": "band-03",
+      "count": 2,
+      "path": "search/time/band-03.json.gz",
+      "valid_from": 1,
+      "valid_to": 499
+    },
+    {
+      "band_id": "band-04",
+      "count": 0,
+      "path": "search/time/band-04.json.gz",
+      "valid_from": 500,
+      "valid_to": 999
+    },
+    {
+      "band_id": "band-05",
+      "count": 0,
+      "path": "search/time/band-05.json.gz",
+      "valid_from": 1000,
+      "valid_to": 1499
+    },
+    {
+      "band_id": "band-06",
+      "count": 1,
+      "path": "search/time/band-06.json.gz",
+      "valid_from": 1500,
+      "valid_to": 1799
+    },
+    {
+      "band_id": "band-07",
+      "count": 0,
+      "path": "search/time/band-07.json.gz",
+      "valid_from": 1800,
+      "valid_to": 1885
+    },
+    {
+      "band_id": "band-08",
+      "count": 0,
+      "path": "search/time/band-08.json.gz",
+      "valid_from": 1886,
+      "valid_to": 1945
+    },
+    {
+      "band_id": "band-09",
+      "count": 0,
+      "path": "search/time/band-09.json.gz",
+      "valid_from": 1946,
+      "valid_to": 1999
+    },
+    {
+      "band_id": "band-10",
+      "count": 0,
+      "path": "search/time/band-10.json.gz",
+      "valid_from": 2000,
+      "valid_to": 2026
+    }
+  ]
+}

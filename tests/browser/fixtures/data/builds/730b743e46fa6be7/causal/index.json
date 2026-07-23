@@ -1,0 +1,25 @@
+{
+  "collections": {
+    "claims": {
+      "count": 0,
+      "path_template": "causal/claims/{shard}.json",
+      "shards": []
+    },
+    "entities": {
+      "count": 0,
+      "path_template": "causal/entities/{shard}.json",
+      "shards": []
+    },
+    "paths": {
+      "count": 0,
+      "path_template": "causal/paths/{shard}.json",
+      "shards": []
+    }
+  },
+  "schema_version": "1.0.0",
+  "sharding": {
+    "algorithm": "sha256",
+    "encoding": "utf-8",
+    "prefix_length": 2
+  }
+}

@@ -1,0 +1,579 @@
+{
+  "$defs": {
+    "Confidence": {
+      "additionalProperties": false,
+      "properties": {
+        "grade": {
+          "$ref": "#/$defs/ConfidenceGrade"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "grade",
+        "rationale"
+      ],
+      "title": "Confidence",
+      "type": "object"
+    },
+    "ConfidenceGrade": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "unknown"
+      ],
+      "title": "ConfidenceGrade",
+      "type": "string"
+    },
+    "DatePrecision": {
+      "enum": [
+        "exact",
+        "year",
+        "decade",
+        "century",
+        "range",
+        "unknown"
+      ],
+      "title": "DatePrecision",
+      "type": "string"
+    },
+    "FeatureKind": {
+      "enum": [
+        "polity",
+        "cultural_region",
+        "settlement",
+        "archaeological_site",
+        "route",
+        "event",
+        "archival_map",
+        "social_group",
+        "mobile_group",
+        "cultural_network"
+      ],
+      "title": "FeatureKind",
+      "type": "string"
+    },
+    "HistoricalName": {
+      "additionalProperties": false,
+      "description": "A sourced name attestation with its own chronology and perspective.\n\nA name is not an identity key and does not inherit timeless validity merely because the\nassociated place or geometry spans a longer interval.",
+      "properties": {
+        "name_id": {
+          "pattern": "^name:[a-f0-9]{16}$",
+          "title": "Name Id",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "language": {
+          "minLength": 1,
+          "title": "Language",
+          "type": "string"
+        },
+        "script": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z][a-z]{3}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Script"
+        },
+        "name_kind": {
+          "$ref": "#/$defs/NameKind",
+          "default": "unknown"
+        },
+        "valid_from": {
+          "title": "Valid From",
+          "type": "integer"
+        },
+        "valid_to": {
+          "title": "Valid To",
+          "type": "integer"
+        },
+        "date_precision": {
+          "$ref": "#/$defs/DatePrecision"
+        },
+        "temporal_confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "primary": {
+          "default": false,
+          "title": "Primary",
+          "type": "boolean"
+        },
+        "perspective": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Perspective"
+        },
+        "temporal_basis": {
+          "default": "attested",
+          "enum": [
+            "attested",
+            "feature_interval"
+          ],
+          "title": "Temporal Basis",
+          "type": "string"
+        },
+        "source_refs": {
+          "items": {
+            "$ref": "#/$defs/SourceReference"
+          },
+          "minItems": 1,
+          "title": "Source Refs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name_id",
+        "text",
+        "language",
+        "valid_from",
+        "valid_to",
+        "date_precision",
+        "temporal_confidence",
+        "source_refs"
+      ],
+      "title": "HistoricalName",
+      "type": "object"
+    },
+    "HistoricalTheme": {
+      "description": "Broad, non-exclusive discovery lenses attached by a reviewed source mapping.",
+      "enum": [
+        "power",
+        "belief",
+        "knowledge",
+        "culture",
+        "trade"
+      ],
+      "title": "HistoricalTheme",
+      "type": "string"
+    },
+    "NameKind": {
+      "description": "How a historical name relates to the people and source using it.",
+      "enum": [
+        "endonym",
+        "exonym",
+        "official",
+        "conventional",
+        "transliterated",
+        "translated",
+        "short",
+        "unknown"
+      ],
+      "title": "NameKind",
+      "type": "string"
+    },
+    "ReviewStatus": {
+      "enum": [
+        "unreviewed",
+        "provisional",
+        "verified",
+        "contested",
+        "rejected"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    },
+    "SourceReference": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "pattern": "^[a-z0-9][a-z0-9_-]+$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "record_id": {
+          "title": "Record Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "publisher": {
+          "title": "Publisher",
+          "type": "string"
+        },
+        "url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Url",
+          "type": "string"
+        },
+        "license_id": {
+          "title": "License Id",
+          "type": "string"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        },
+        "checksum_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Checksum Sha256"
+        },
+        "citation": {
+          "title": "Citation",
+          "type": "string"
+        },
+        "modified": {
+          "default": false,
+          "title": "Modified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source_id",
+        "record_id",
+        "title",
+        "publisher",
+        "url",
+        "license_id",
+        "retrieved_at",
+        "citation"
+      ],
+      "title": "SourceReference",
+      "type": "object"
+    },
+    "SpatialMeaning": {
+      "enum": [
+        "legal_boundary",
+        "territorial_control",
+        "territorial_claim",
+        "occupation",
+        "tributary_relationship",
+        "cultural_region",
+        "influence_zone",
+        "location",
+        "route",
+        "mobility_range",
+        "seasonal_use",
+        "network",
+        "unknown"
+      ],
+      "title": "SpatialMeaning",
+      "type": "string"
+    },
+    "SpatialUncertainty": {
+      "additionalProperties": false,
+      "properties": {
+        "method": {
+          "enum": [
+            "source_geometry",
+            "accuracy_radius",
+            "bounding_extent",
+            "multiple_reconstructions",
+            "unknown"
+          ],
+          "title": "Method",
+          "type": "string"
+        },
+        "accuracy_meters": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Accuracy Meters"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "method",
+        "rationale"
+      ],
+      "title": "SpatialUncertainty",
+      "type": "object"
+    },
+    "TemporalUncertainty": {
+      "additionalProperties": false,
+      "description": "Uncertainty envelope around the canonical rendering interval.\n\nThe four bounds describe what a source permits; they are not samples to average.\n``valid_from``/``valid_to`` on the feature remain the interval used for map filtering.",
+      "properties": {
+        "earliest_start": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Earliest Start"
+        },
+        "latest_start": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latest Start"
+        },
+        "earliest_end": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Earliest End"
+        },
+        "latest_end": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latest End"
+        },
+        "circa": {
+          "default": false,
+          "title": "Circa",
+          "type": "boolean"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rationale"
+      ],
+      "title": "TemporalUncertainty",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Canonical JSON representation used at integration boundaries.\n\nGeometry uses RFC 7946 GeoJSON. Canonical analytical storage is GeoParquet.\nYears use historical notation: negative is BCE, positive is CE, and zero is invalid.",
+  "properties": {
+    "feature_id": {
+      "pattern": "^[a-z0-9][a-z0-9:_-]+$",
+      "title": "Feature Id",
+      "type": "string"
+    },
+    "kind": {
+      "$ref": "#/$defs/FeatureKind"
+    },
+    "spatial_meaning": {
+      "$ref": "#/$defs/SpatialMeaning"
+    },
+    "names": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "minProperties": 1,
+      "title": "Names",
+      "type": "object"
+    },
+    "name_attestations": {
+      "items": {
+        "$ref": "#/$defs/HistoricalName"
+      },
+      "title": "Name Attestations",
+      "type": "array"
+    },
+    "valid_from": {
+      "title": "Valid From",
+      "type": "integer"
+    },
+    "valid_to": {
+      "title": "Valid To",
+      "type": "integer"
+    },
+    "date_precision": {
+      "$ref": "#/$defs/DatePrecision"
+    },
+    "geometry": {
+      "additionalProperties": true,
+      "title": "Geometry",
+      "type": "object"
+    },
+    "temporal_confidence": {
+      "$ref": "#/$defs/Confidence"
+    },
+    "spatial_confidence": {
+      "$ref": "#/$defs/Confidence"
+    },
+    "interpretive_confidence": {
+      "$ref": "#/$defs/Confidence"
+    },
+    "review_status": {
+      "$ref": "#/$defs/ReviewStatus",
+      "default": "unreviewed"
+    },
+    "source_refs": {
+      "items": {
+        "$ref": "#/$defs/SourceReference"
+      },
+      "minItems": 1,
+      "title": "Source Refs",
+      "type": "array"
+    },
+    "themes": {
+      "items": {
+        "$ref": "#/$defs/HistoricalTheme"
+      },
+      "title": "Themes",
+      "type": "array"
+    },
+    "entity_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Entity Ids",
+      "type": "array"
+    },
+    "wikidata_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Wikidata Ids",
+      "type": "array"
+    },
+    "wikipedia_titles": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Wikipedia Titles",
+      "type": "object"
+    },
+    "min_display_zoom": {
+      "default": 0,
+      "maximum": 24,
+      "minimum": 0,
+      "title": "Min Display Zoom",
+      "type": "number"
+    },
+    "dispute_group": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Dispute Group"
+    },
+    "perspective": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Perspective"
+    },
+    "temporal_uncertainty": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TemporalUncertainty"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "spatial_uncertainty": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SpatialUncertainty"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "properties": {
+      "type": "object",
+      "additionalProperties": true,
+      "title": "Properties"
+    }
+  },
+  "required": [
+    "feature_id",
+    "kind",
+    "spatial_meaning",
+    "names",
+    "valid_from",
+    "valid_to",
+    "date_precision",
+    "geometry",
+    "temporal_confidence",
+    "spatial_confidence",
+    "interpretive_confidence",
+    "source_refs"
+  ],
+  "title": "HistoricalFeature",
+  "type": "object"
+}

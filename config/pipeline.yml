@@ -1,0 +1,243 @@
+minimum_year: -3400
+maximum_year: 2026
+raw_dir: data/raw
+staged_dir: data/staged
+cache_dir: data/cache
+dist_dir: dist/data
+causal_claims_path: data/curation/causal-claims.yml
+theme_rules_path: data/curation/theme-rules.yml
+curated_records_path: data/curation/knowledge-1543.yml
+user_agent_env: WIKIMEDIA_USER_AGENT
+
+tiles:
+  minimum_zoom: 0
+  maximum_zoom: 7
+  simplification: 2.0
+
+license_policy:
+  mode: noncommercial
+  require_explicit_license: true
+  allowed:
+    - CC0-1.0
+    - CC-BY-3.0
+    - CC-BY-4.0
+    - CC-BY-SA-4.0
+    - CC-BY-NC-4.0
+    - CC-BY-NC-SA-4.0
+    - ODbL-1.0
+    - PDDL-1.0
+    - PDM-1.0
+  denied:
+    - LicenseRef-Proprietary
+
+sources:
+  - id: loc_copernicus
+    adapter: curated
+    title: Copernicus 1543 title-page catalog record
+    publisher: Library of Congress
+    url: https://www.loc.gov/pictures/item/92516339/?fo=json
+    license_id: PDM-1.0
+    license_reviewed: true
+    license_notes: "The Library of Congress record states no known restrictions on publication; the 1543 source artifact is public domain."
+    roles: [primary_source, authority_metadata]
+    commercial_redistribution: allowed
+    expected_checksum_sha256: b469f51efe363b4b149a61cb1c1f1ce2eadeb2636b2d4ed9df22d884ac50a0dd
+    temporal_scope: "The 1543 Nuremberg edition of De revolutionibus only."
+    geographic_scope: "Nuremberg as the publication place named in the catalog record."
+    release_policy: "Curated metadata is versioned in data/curation/knowledge-1543.yml; re-review the catalog record before changing the slice."
+    limitations:
+      - "The catalog identifies Nuremberg but does not establish a workshop street address."
+      - "Annual publication precision must not be presented as an exact day."
+    citation: "Library of Congress, item 92516339"
+    version: catalog record accessed 2026-07-23
+    options:
+      snapshot_filename: catalog-record.json
+
+  - id: cliopatria
+    adapter: cliopatria
+    title: Cliopatria historical polity boundaries
+    publisher: Seshat Global History Databank
+    url: https://github.com/Seshat-Global-History-Databank/cliopatria/raw/v0.2.0/cliopatria.geojson.zip
+    license_id: CC-BY-4.0
+    license_reviewed: true
+    license_notes: "Repository states CC BY 4.0; preserve attribution and source snapshots."
+    roles: [historical_geometry, scholarly_assertion]
+    commercial_redistribution: allowed
+    temporal_scope: "Configured release covers historical polity intervals represented by Cliopatria."
+    geographic_scope: "Global, with uneven source density and reconstruction quality."
+    release_policy: "Use the immutable v0.2.0 release and retain the raw ZIP checksum."
+    limitations:
+      - "Polity polygons are reconstructions and must not be rendered as uncontested legal borders."
+    citation: "Seshat Global History Databank, Cliopatria dataset"
+    version: v0.2.0
+    member_name: cliopatria_polities_only.geojson
+    defaults:
+      kind: polity
+      spatial_meaning: territorial_control
+      date_precision: range
+      temporal_confidence: C
+      spatial_confidence: C
+      interpretive_confidence: C
+      review_status: provisional
+      min_display_zoom: 0
+
+  - id: wikidata
+    adapter: wikidata
+    title: Wikidata entity metadata
+    publisher: Wikimedia Foundation and Wikidata contributors
+    url: https://www.wikidata.org/w/api.php
+    license_id: CC0-1.0
+    license_reviewed: true
+    license_notes: "Wikidata structured data is CC0; retain item links and snapshot checksums."
+    roles: [authority_metadata]
+    commercial_redistribution: allowed
+    temporal_scope: "Only entities linked from accepted release features."
+    geographic_scope: "Follows accepted feature coverage."
+    release_policy: "Revision IDs and checksummed batched responses are preserved; only configured, capped depth-one relationships are followed."
+    limitations:
+      - "Community-authored claims can be incomplete, disputed, or present-day biased."
+    citation: "Wikidata contributors, Wikidata"
+    version: revision-pinned-items
+    enabled: true
+    options:
+      languages: [en]
+      sitelink_languages: [en]
+      batch_size: 50
+      relationship_depth: 1
+      predicates: [P31, P571, P576, P569, P570, P585, P580, P582, P155, P156, P36, P17, P131, P361, P463, P527, P150, P793, P112, P276, P19, P20, P710, P1344, P607, P106, P39, P135, P136, P921, P1269, P18, P625, P373]
+      expansion_predicates: [P155, P156, P36, P131, P361, P463, P527, P150, P793, P112, P276, P710, P1344, P607, P135, P921, P1269]
+      max_related_entities_per_seed: 40
+      max_related_entities_total: 2000
+      max_context_entities_per_feature: 40
+      temporal_margin_years: 50
+      role_quotas:
+        person: 12
+        event: 12
+        institution: 8
+        polity: 8
+        place: 8
+        theme: 8
+        other: 4
+
+  - id: pleiades
+    adapter: pleiades
+    title: Pleiades Gazetteer of Ancient Places
+    publisher: Ancient World Mapping Center and Institute for the Study of the Ancient World
+    url: https://codeload.github.com/isawnyu/pleiades.datasets/tar.gz/refs/tags/v4.1
+    license_id: CC-BY-3.0
+    license_reviewed: true
+    license_notes: "Pleiades numbered datasets and downloads page state CC BY 3.0; attribution is retained per record and release."
+    roles: [gazetteer, historical_geometry]
+    commercial_redistribution: allowed
+    expected_checksum_sha256: ca1aa8c080607638e1e0e782855876510045709dc1b79459a7f0a8221ace5e85
+    temporal_scope: "Ancient places with a bounded published attestation in the configured -3400 to 2026 window."
+    geographic_scope: "Ancient Mediterranean and connected regions; not global coverage."
+    release_policy: "Use the numbered v4.1 source archive; fail if its reviewed payload checksum changes."
+    limitations:
+      - "Place locations and date attestations vary in precision."
+      - "Representative points describe locations, not territorial extents."
+    citation: "Pleiades contributors, Pleiades Gazetteer of Ancient Places"
+    version: v4.1
+    enabled: true
+    options:
+      archive_format: tar.gz
+
+  - id: periodo
+    adapter: periodo
+    title: PeriodO scholarly period definitions
+    publisher: PeriodO contributors
+    url: https://data.perio.do/d.json
+    license_id: CC0-1.0
+    license_reviewed: true
+    license_notes: "PeriodO publishes its canonical period gazetteer in the public domain; the reviewed dataset-version-299 response is checksum pinned."
+    roles: [chronology, scholarly_assertion]
+    commercial_redistribution: allowed
+    citation: "PeriodO contributors, PeriodO: A gazetteer of scholarly definitions of historical periods"
+    version: dataset-version-299
+    expected_checksum_sha256: 5a2844dae25b5438044bf89a2aaabe96fa1a41fb64edbe559e1a8e9e76b3da46
+    enabled: true
+    temporal_scope: "Attributed definitions intersecting the configured -3400 to 2026 window."
+    geographic_scope: "Global but dependent on contributed scholarly authorities."
+    release_policy: "Fetch the canonical dataset only when it matches the reviewed SHA-256; update version and checksum through source review."
+    limitations:
+      - "Period names are scholarly definitions that may overlap or disagree."
+      - "Spatial coverage is descriptive or authority-linked, not boundary geometry."
+
+  - id: open_context
+    adapter: open_context
+    title: Curated archaeological records from Open Context
+    publisher: Open Context
+    url: https://opencontext.org/query/
+    license_id: CC-BY-4.0
+    license_reviewed: false
+    license_notes: "Disabled until each curated project query is checked for record licensing and sensitivity."
+    roles: [primary_source, gazetteer]
+    commercial_redistribution: unreviewed
+    temporal_scope: "Per curated project query."
+    geographic_scope: "Per curated project query."
+    release_policy: "Disabled until project-level licensing, sensitivity, coordinates, and stable query scope are reviewed."
+    limitations:
+      - "Record licences and sensitive-location rules vary by project."
+    citation: "Open Context contributors and individual project publishers"
+    version: live
+    enabled: false
+    defaults:
+      kind: archaeological_site
+      spatial_meaning: location
+      date_precision: range
+      temporal_confidence: B
+      spatial_confidence: C
+      interpretive_confidence: B
+      review_status: provisional
+      min_display_zoom: 7
+    options:
+      max_records: 1000
+      public_coordinate_decimals: 3
+      queries: []
+
+  - id: wikipedia
+    adapter: wikipedia
+    title: Wikipedia introductory extracts
+    publisher: Wikimedia Foundation and Wikipedia contributors
+    url: https://en.wikipedia.org/w/api.php
+    license_id: CC-BY-SA-4.0
+    license_reviewed: true
+    license_notes: "Extracts retain revision provenance, attribution, and CC BY-SA terms."
+    roles: [tertiary_summary]
+    commercial_redistribution: conditional
+    temporal_scope: "Only pages selected through accepted entity links."
+    geographic_scope: "Follows accepted entity coverage and configured languages."
+    release_policy: "Preserve canonical page IDs, redirects, revision IDs, timestamps, checksums, attribution, and licence."
+    limitations:
+      - "Wikipedia is a tertiary summary and never substitutes for primary or scholarly evidence."
+    citation: "Wikipedia contributors, English Wikipedia"
+    version: live
+    enabled: true
+    options:
+      language: en
+      fallback_languages: [en]
+      batch_size: 20
+      max_related_pages: 1500
+
+  - id: owid_population
+    adapter: owid
+    title: Population, long-run data
+    publisher: Our World in Data
+    url: https://ourworldindata.org/grapher/population
+    license_id: CC-BY-4.0
+    license_reviewed: true
+    license_notes: "Reviewed for this population chart only; re-audit before changing indicator_slug."
+    roles: [indicator]
+    commercial_redistribution: conditional
+    temporal_scope: "Years published by the reviewed population chart within the configured build window."
+    geographic_scope: "Country and aggregate series; mostly present-day geographic units."
+    release_policy: "Snapshot chart data and metadata together; re-review if the indicator slug or upstream attribution changes."
+    limitations:
+      - "Modern country observations must not be projected onto historical polity polygons."
+    citation: "HYDE; Gapminder; UN WPP, processed by Our World in Data"
+    version: live
+    indicator_slug: population
+    enabled: true
+    options:
+      spatial_mapping_valid: false
+      spatial_mapping_note: "Country observations use present-day boundaries and must not be projected onto historical polities."

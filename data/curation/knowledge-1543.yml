@@ -1,0 +1,208 @@
+schema_version: 1.0.0
+authored_by: History Joice editorial team
+reviewed_by: []
+
+features:
+  - feature_id: historyjoice:publication-de-revolutionibus:1543
+    kind: event
+    spatial_meaning: location
+    names:
+      en: Publication of De revolutionibus
+    valid_from: 1543
+    valid_to: 1543
+    date_precision: year
+    geometry:
+      type: Point
+      coordinates: [11.0767, 49.4521]
+    temporal_confidence:
+      grade: A
+      rationale: The Library of Congress catalogues the Nuremberg edition as published in 1543.
+    spatial_confidence:
+      grade: C
+      rationale: The point represents Nuremberg, the named publication place, not a known workshop address.
+    interpretive_confidence:
+      grade: B
+      rationale: The catalog record identifies Copernicus, the title page, Nuremberg, Petreius and 1543.
+    review_status: provisional
+    source_refs:
+      - &loc
+        source_id: loc_copernicus
+        record_id: "92516339"
+        title: Title page of De revolutionibus orbium coelestium
+        publisher: Library of Congress
+        url: https://www.loc.gov/pictures/item/92516339/
+        license_id: PDM-1.0
+        retrieved_at: 2026-07-23T06:47:37.559216Z
+        version: catalog record accessed 2026-07-23
+        checksum_sha256: b469f51efe363b4b149a61cb1c1f1ce2eadeb2636b2d4ed9df22d884ac50a0dd
+        citation: "Library of Congress, item 92516339, title page from the 1543 Nuremberg edition."
+    entity_ids:
+      - historyjoice:event:de-revolutionibus-publication
+      - historyjoice:work:de-revolutionibus
+      - historyjoice:person:nicolaus-copernicus
+      - historyjoice:institution:petreius-workshop
+      - historyjoice:place:nuremberg
+    min_display_zoom: 2
+    temporal_uncertainty:
+      earliest_start: 1543
+      latest_start: 1543
+      earliest_end: 1543
+      latest_end: 1543
+      circa: false
+      rationale: The source supports annual precision; no day is asserted.
+    spatial_uncertainty:
+      method: accuracy_radius
+      accuracy_meters: 5000
+      rationale: The representative city point must not be read as the printer's street address.
+    properties:
+      event_types: [publication]
+      knowledge_domains: [astronomy, heliocentrism]
+
+entities:
+  - entity_id: historyjoice:person:nicolaus-copernicus
+    entity_type: human
+    entity_kind: person
+    names:
+      en: Nicolaus Copernicus
+      la: Nicolaus Copernicus
+    valid_from: 1473
+    valid_to: 1543
+    date_precision: year
+    temporal_confidence:
+      grade: B
+      rationale: The Library of Congress catalog record identifies Copernicus as 1473–1543.
+    review_status: provisional
+    source_refs: [*loc]
+
+  - entity_id: historyjoice:event:de-revolutionibus-publication
+    entity_type: publication_event
+    entity_kind: event
+    names:
+      en: Publication of De revolutionibus
+    valid_from: 1543
+    valid_to: 1543
+    date_precision: year
+    temporal_confidence:
+      grade: A
+      rationale: The title page and catalog metadata identify the 1543 edition.
+    review_status: provisional
+    source_refs: [*loc]
+
+  - entity_id: historyjoice:institution:petreius-workshop
+    entity_type: printing_workshop
+    entity_kind: institution
+    names:
+      en: Johannes Petreius's printing workshop
+      la: Apud Ioh. Petreium
+    review_status: provisional
+    source_refs: [*loc]
+
+  - entity_id: historyjoice:work:de-revolutionibus
+    entity_type: written_work
+    entity_kind: work
+    names:
+      la: De revolutionibus orbium coelestium
+      en: On the Revolutions of the Heavenly Spheres
+    valid_from: 1543
+    valid_to: 1543
+    date_precision: year
+    temporal_confidence:
+      grade: A
+      rationale: This bounded slice represents the evidenced first edition in 1543.
+    review_status: provisional
+    source_refs: [*loc]
+
+  - entity_id: historyjoice:place:nuremberg
+    entity_type: human_settlement
+    entity_kind: place
+    names:
+      en: Nuremberg
+      de: Nürnberg
+    review_status: provisional
+    source_refs: [*loc]
+
+assertions:
+  - assertion_id: assertion:copernicus-authored-de-revolutionibus
+    subject_entity_ids: [historyjoice:work:de-revolutionibus]
+    feature_ids: [historyjoice:publication-de-revolutionibus:1543]
+    predicate: authored_by
+    object:
+      kind: entity
+      entity_id: historyjoice:person:nicolaus-copernicus
+    valid_from: 1543
+    valid_to: 1543
+    date_precision: year
+    confidence:
+      grade: A
+      rationale: The catalog record identifies Copernicus as creator of the 1543 work.
+    evidence_basis: primary_source_metadata
+    review_status: provisional
+    source_refs: [*loc]
+
+  - assertion_id: assertion:publication-event-published-work
+    subject_entity_ids: [historyjoice:event:de-revolutionibus-publication]
+    feature_ids: [historyjoice:publication-de-revolutionibus:1543]
+    predicate: published_work
+    object:
+      kind: entity
+      entity_id: historyjoice:work:de-revolutionibus
+    valid_from: 1543
+    valid_to: 1543
+    date_precision: year
+    confidence:
+      grade: A
+      rationale: The title page belongs to the work and records publication in 1543.
+    evidence_basis: primary_source_metadata
+    review_status: provisional
+    source_refs: [*loc]
+
+  - assertion_id: assertion:publication-event-printed-by-petreius
+    subject_entity_ids: [historyjoice:event:de-revolutionibus-publication]
+    feature_ids: [historyjoice:publication-de-revolutionibus:1543]
+    predicate: printed_by
+    object:
+      kind: entity
+      entity_id: historyjoice:institution:petreius-workshop
+    valid_from: 1543
+    valid_to: 1543
+    date_precision: year
+    confidence:
+      grade: A
+      rationale: The catalog note transcribes the imprint as Apud I. Petreium, 1543.
+    evidence_basis: primary_source_metadata
+    review_status: provisional
+    source_refs: [*loc]
+
+  - assertion_id: assertion:publication-event-occurred-in-nuremberg
+    subject_entity_ids: [historyjoice:event:de-revolutionibus-publication]
+    feature_ids: [historyjoice:publication-de-revolutionibus:1543]
+    predicate: publication_place
+    object:
+      kind: entity
+      entity_id: historyjoice:place:nuremberg
+    valid_from: 1543
+    valid_to: 1543
+    date_precision: year
+    confidence:
+      grade: A
+      rationale: The catalog note identifies Norimbergae (Nuremberg) as the imprint place.
+    evidence_basis: primary_source_metadata
+    review_status: provisional
+    source_refs: [*loc]
+
+  - assertion_id: assertion:de-revolutionibus-subject-heliocentric-astronomy
+    subject_entity_ids: [historyjoice:work:de-revolutionibus]
+    feature_ids: [historyjoice:publication-de-revolutionibus:1543]
+    predicate: main_subject
+    object:
+      kind: text
+      value: heliocentric astronomy
+    valid_from: 1543
+    valid_to: 1543
+    date_precision: year
+    confidence:
+      grade: B
+      rationale: The Library of Congress describes the title page as stating a sun-centred model.
+    evidence_basis: primary_source_metadata
+    review_status: provisional
+    source_refs: [*loc]

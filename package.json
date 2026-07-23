@@ -1,0 +1,35 @@
+{
+  "name": "history-joice",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "prepare": "svelte-kit sync",
+    "data:prepare": "node scripts/prepare-web-data.mjs",
+    "data:verify-origin": "node scripts/verify-data-origin.mjs",
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "test": "node --test tests/frontend/*.test.mjs",
+    "test:browser": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.1",
+    "@sveltejs/adapter-static": "3.0.10",
+    "@sveltejs/kit": "2.70.1",
+    "@sveltejs/vite-plugin-svelte": "7.2.0",
+    "@types/node": "22.20.1",
+    "svelte": "5.56.7",
+    "svelte-check": "4.7.3",
+    "typescript": "6.0.3",
+    "vite": "8.1.5"
+  },
+  "dependencies": {
+    "maplibre-gl": "5.24.0",
+    "pmtiles": "4.4.1"
+  },
+  "overrides": {
+    "cookie": "0.7.2"
+  }
+}

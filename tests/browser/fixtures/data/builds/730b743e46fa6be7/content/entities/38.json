@@ -1,0 +1,59 @@
+{
+  "wikidata:Q100": {
+    "aliases": {},
+    "commons_categories": [],
+    "commons_images": [],
+    "context_depth": 0,
+    "coordinates": [],
+    "date_claims": [],
+    "date_precision": null,
+    "descriptions": {
+      "en": "A fully enriched synthetic entity used to verify release joins."
+    },
+    "discovered_from_entity_ids": [],
+    "discovery_predicates": [],
+    "entity_id": "wikidata:Q100",
+    "entity_kind": "polity",
+    "entity_type": "historical_country",
+    "links": {
+      "wikidata": "https://www.wikidata.org/wiki/Q100"
+    },
+    "names": {
+      "en": "Enriched Pilot Place"
+    },
+    "redirects_from": [],
+    "relationships": [
+      {
+        "predicate": "P793",
+        "qualifiers": [],
+        "rank": "normal",
+        "references": [],
+        "relation_type": "significant_event",
+        "statement_id": null,
+        "target_entity_id": "wikidata:Q101"
+      }
+    ],
+    "review_status": "unreviewed",
+    "sitelinks": {},
+    "source_refs": [
+      {
+        "checksum_sha256": null,
+        "citation": "Wikimedia Foundation and Wikidata contributors, Wikidata browser-pilot entity projection",
+        "license_id": "CC0-1.0",
+        "modified": false,
+        "publisher": "Wikimedia Foundation and Wikidata contributors",
+        "record_id": "Q100",
+        "retrieved_at": "2026-07-23T06:00:00Z",
+        "source_id": "wikidata",
+        "title": "Wikidata browser-pilot entity projection",
+        "url": "https://www.wikidata.org/wiki/Q100",
+        "version": "browser-pilot-v1"
+      }
+    ],
+    "temporal_confidence": null,
+    "temporal_uncertainty": null,
+    "valid_from": 50,
+    "valid_to": 150,
+    "wikidata_id": "Q100"
+  }
+}

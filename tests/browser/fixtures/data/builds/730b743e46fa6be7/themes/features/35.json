@@ -1,0 +1,11 @@
+{
+  "browser-pilot:enriched-place:50:150:aaaa": {
+    "assertion_ids": [
+      "theme:b3957aecb0c65834"
+    ],
+    "feature_id": "browser-pilot:enriched-place:50:150:aaaa",
+    "themes": [
+      "power"
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "historyjoice:event:de-revolutionibus-publication": {
+    "content_shard": "85",
+    "dossier_ids": [],
+    "entity_id": "historyjoice:event:de-revolutionibus-publication",
+    "feature_ids": [
+      "historyjoice:publication-de-revolutionibus:1543"
+    ],
+    "kind": "event",
+    "latitude": 49.4521,
+    "longitude": 11.0767,
+    "name_attestations": [
+      {
+        "date_precision": "year",
+        "feature_id": "historyjoice:publication-de-revolutionibus:1543",
+        "language": "en",
+        "name_id": "name:d404551192a4a054",
+        "name_kind": "unknown",
+        "perspective": null,
+        "primary": true,
+        "script": null,
+        "source_ids": [
+          "loc_copernicus"
+        ],
+        "temporal_basis": "feature_interval",
+        "temporal_confidence": "A",
+        "text": "Publication of De revolutionibus",
+        "valid_from": 1543,
+        "valid_to": 1543
+      }
+    ],
+    "names": {
+      "en": "Publication of De revolutionibus"
+    },
+    "source_ids": [
+      "loc_copernicus"
+    ],
+    "themes": [
+      "culture",
+      "knowledge"
+    ],
+    "valid_from": 1543,
+    "valid_to": 1543
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "rules": [
+    {
+      "allowed": {
+        "origins": [
+          "https://history-joice.pages.dev",
+          "http://localhost:5173"
+        ],
+        "methods": ["GET", "HEAD"],
+        "headers": ["Range", "If-None-Match", "If-Modified-Since"]
+      },
+      "exposeHeaders": [
+        "Accept-Ranges",
+        "Content-Length",
+        "Content-Range",
+        "ETag",
+        "Last-Modified"
+      ],
+      "maxAgeSeconds": 3600
+    }
+  ]
+}

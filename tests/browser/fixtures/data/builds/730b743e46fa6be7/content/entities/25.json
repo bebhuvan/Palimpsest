@@ -1,0 +1,49 @@
+{
+  "historyjoice:person:nicolaus-copernicus": {
+    "aliases": {},
+    "commons_categories": [],
+    "commons_images": [],
+    "context_depth": 0,
+    "coordinates": [],
+    "date_claims": [],
+    "date_precision": "year",
+    "descriptions": {},
+    "discovered_from_entity_ids": [],
+    "discovery_predicates": [],
+    "entity_id": "historyjoice:person:nicolaus-copernicus",
+    "entity_kind": "person",
+    "entity_type": "human",
+    "links": {},
+    "names": {
+      "en": "Nicolaus Copernicus",
+      "la": "Nicolaus Copernicus"
+    },
+    "redirects_from": [],
+    "relationships": [],
+    "review_status": "provisional",
+    "sitelinks": {},
+    "source_refs": [
+      {
+        "checksum_sha256": "295aea5847ce5d9afa801bbd2f46ab4c45a437e5dacfc37b7157a284011a6aab",
+        "citation": "Library of Congress, item 92516339, title page from the 1543 Nuremberg edition.",
+        "license_id": "PDM-1.0",
+        "modified": false,
+        "publisher": "Library of Congress",
+        "record_id": "92516339",
+        "retrieved_at": "2026-07-23T06:00:00Z",
+        "source_id": "loc_copernicus",
+        "title": "Title page of De revolutionibus orbium coelestium",
+        "url": "https://www.loc.gov/pictures/item/92516339/",
+        "version": "browser-pilot-curated-snapshot-v1"
+      }
+    ],
+    "temporal_confidence": {
+      "grade": "B",
+      "rationale": "The Library of Congress catalog record identifies Copernicus as 1473–1543."
+    },
+    "temporal_uncertainty": null,
+    "valid_from": 1473,
+    "valid_to": 1543,
+    "wikidata_id": null
+  }
+}

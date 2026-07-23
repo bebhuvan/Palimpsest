@@ -1,0 +1,261 @@
+{
+  "$defs": {
+    "PeriodSpatialCoverage": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "entity_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Entity Id"
+        },
+        "source_uri": {
+          "anyOf": [
+            {
+              "format": "uri",
+              "maxLength": 2083,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Uri"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "title": "PeriodSpatialCoverage",
+      "type": "object"
+    },
+    "SourceReference": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "pattern": "^[a-z0-9][a-z0-9_-]+$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "record_id": {
+          "title": "Record Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "publisher": {
+          "title": "Publisher",
+          "type": "string"
+        },
+        "url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Url",
+          "type": "string"
+        },
+        "license_id": {
+          "title": "License Id",
+          "type": "string"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        },
+        "checksum_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Checksum Sha256"
+        },
+        "citation": {
+          "title": "Citation",
+          "type": "string"
+        },
+        "modified": {
+          "default": false,
+          "title": "Modified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source_id",
+        "record_id",
+        "title",
+        "publisher",
+        "url",
+        "license_id",
+        "retrieved_at",
+        "citation"
+      ],
+      "title": "SourceReference",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "A source-attributed definition of a named period, not a universal era.",
+  "properties": {
+    "period_id": {
+      "pattern": "^periodo:p[a-z0-9]+$",
+      "title": "Period Id",
+      "type": "string"
+    },
+    "authority_id": {
+      "pattern": "^periodo:p[a-z0-9]+$",
+      "title": "Authority Id",
+      "type": "string"
+    },
+    "labels": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "minProperties": 1,
+      "title": "Labels",
+      "type": "object"
+    },
+    "valid_from": {
+      "title": "Valid From",
+      "type": "integer"
+    },
+    "valid_to": {
+      "title": "Valid To",
+      "type": "integer"
+    },
+    "start_label": {
+      "title": "Start Label",
+      "type": "string"
+    },
+    "stop_label": {
+      "title": "Stop Label",
+      "type": "string"
+    },
+    "spatial_coverage": {
+      "items": {
+        "$ref": "#/$defs/PeriodSpatialCoverage"
+      },
+      "title": "Spatial Coverage",
+      "type": "array"
+    },
+    "spatial_coverage_description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Spatial Coverage Description"
+    },
+    "authority_citation": {
+      "minLength": 1,
+      "title": "Authority Citation",
+      "type": "string"
+    },
+    "authority_creators": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Authority Creators",
+      "type": "array"
+    },
+    "source_locator": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Locator"
+    },
+    "notes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Notes",
+      "type": "array"
+    },
+    "broader_period_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Broader Period Ids",
+      "type": "array"
+    },
+    "narrower_period_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Narrower Period Ids",
+      "type": "array"
+    },
+    "same_as": {
+      "items": {
+        "format": "uri",
+        "maxLength": 2083,
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Same As",
+      "type": "array"
+    },
+    "source_ref": {
+      "$ref": "#/$defs/SourceReference"
+    }
+  },
+  "required": [
+    "period_id",
+    "authority_id",
+    "labels",
+    "valid_from",
+    "valid_to",
+    "start_label",
+    "stop_label",
+    "authority_citation",
+    "source_ref"
+  ],
+  "title": "HistoricalPeriodDefinition",
+  "type": "object"
+}

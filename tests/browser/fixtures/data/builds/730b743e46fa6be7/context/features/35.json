@@ -1,0 +1,28 @@
+{
+  "browser-pilot:enriched-place:50:150:aaaa": {
+    "feature_id": "browser-pilot:enriched-place:50:150:aaaa",
+    "items": [
+      {
+        "context_entity_id": "wikidata:Q101",
+        "dossier_ids": [
+          "wikipedia:en:101"
+        ],
+        "relationship_types": [
+          "significant_event"
+        ],
+        "role": "event",
+        "score": 65,
+        "selection_reasons": [
+          "Wikidata relation: significant_event",
+          "Entity chronology intersects the mapped feature"
+        ],
+        "source_strength": "wikidata_statement",
+        "valid_from": 90,
+        "valid_to": 110
+      }
+    ],
+    "seed_entity_ids": [
+      "wikidata:Q100"
+    ]
+  }
+}

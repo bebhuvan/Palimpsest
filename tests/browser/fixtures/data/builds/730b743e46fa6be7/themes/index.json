@@ -1,0 +1,30 @@
+{
+  "collections": {
+    "assertions": {
+      "count": 4,
+      "path_template": "themes/assertions/{shard}.json",
+      "shards": [
+        "41",
+        "44",
+        "53",
+        "87"
+      ]
+    },
+    "features": {
+      "count": 3,
+      "path_template": "themes/features/{shard}.json",
+      "shards": [
+        "03",
+        "35",
+        "70"
+      ]
+    }
+  },
+  "schema_version": "1.0.0",
+  "semantics": "sourced-multi-label-thematic-assertions",
+  "sharding": {
+    "algorithm": "sha256",
+    "encoding": "utf-8",
+    "prefix_length": 2
+  }
+}

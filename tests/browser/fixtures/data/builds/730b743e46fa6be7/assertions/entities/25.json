@@ -1,0 +1,8 @@
+{
+  "historyjoice:person:nicolaus-copernicus": {
+    "assertion_ids": [
+      "assertion:copernicus-authored-de-revolutionibus"
+    ],
+    "subject_id": "historyjoice:person:nicolaus-copernicus"
+  }
+}

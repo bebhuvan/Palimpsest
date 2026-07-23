@@ -1,0 +1,429 @@
+{
+  "$defs": {
+    "CausalClaim": {
+      "additionalProperties": false,
+      "description": "An attributed historiographical argument, never an automatic KG fact.",
+      "properties": {
+        "claim_id": {
+          "pattern": "^claim:[a-z0-9][a-z0-9:_-]+$",
+          "title": "Claim Id",
+          "type": "string"
+        },
+        "cause_entity_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Cause Entity Ids",
+          "type": "array"
+        },
+        "effect_entity_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Effect Entity Ids",
+          "type": "array"
+        },
+        "relationship": {
+          "$ref": "#/$defs/CausalRelationship"
+        },
+        "mechanism_type": {
+          "pattern": "^[a-z][a-z0-9_-]+$",
+          "title": "Mechanism Type",
+          "type": "string"
+        },
+        "mechanism_summary": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "minProperties": 1,
+          "title": "Mechanism Summary",
+          "type": "object"
+        },
+        "cause_period": {
+          "$ref": "#/$defs/CausalTemporalAnchor"
+        },
+        "effect_period": {
+          "$ref": "#/$defs/CausalTemporalAnchor"
+        },
+        "evidence_basis": {
+          "$ref": "#/$defs/CausalEvidenceBasis"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "perspective": {
+          "minLength": 1,
+          "title": "Perspective",
+          "type": "string"
+        },
+        "source_refs": {
+          "items": {
+            "$ref": "#/$defs/CausalSourceReference"
+          },
+          "minItems": 1,
+          "title": "Source Refs",
+          "type": "array"
+        },
+        "authored_by": {
+          "minLength": 1,
+          "title": "Authored By",
+          "type": "string"
+        },
+        "reviewed_by": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reviewed By",
+          "type": "array"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus",
+          "default": "provisional"
+        },
+        "supporting_claim_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Supporting Claim Ids",
+          "type": "array"
+        },
+        "counterclaim_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Counterclaim Ids",
+          "type": "array"
+        },
+        "long_range_synthesis": {
+          "default": false,
+          "title": "Long Range Synthesis",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "claim_id",
+        "cause_entity_ids",
+        "effect_entity_ids",
+        "relationship",
+        "mechanism_type",
+        "mechanism_summary",
+        "cause_period",
+        "effect_period",
+        "evidence_basis",
+        "confidence",
+        "perspective",
+        "source_refs",
+        "authored_by"
+      ],
+      "title": "CausalClaim",
+      "type": "object"
+    },
+    "CausalEvidenceBasis": {
+      "enum": [
+        "scholarship",
+        "primary_and_scholarship"
+      ],
+      "title": "CausalEvidenceBasis",
+      "type": "string"
+    },
+    "CausalPath": {
+      "additionalProperties": false,
+      "properties": {
+        "path_id": {
+          "pattern": "^path:[a-z0-9][a-z0-9:_-]+$",
+          "title": "Path Id",
+          "type": "string"
+        },
+        "titles": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "minProperties": 1,
+          "title": "Titles",
+          "type": "object"
+        },
+        "summaries": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "minProperties": 1,
+          "title": "Summaries",
+          "type": "object"
+        },
+        "claim_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Claim Ids",
+          "type": "array"
+        },
+        "perspective": {
+          "minLength": 1,
+          "title": "Perspective",
+          "type": "string"
+        },
+        "authored_by": {
+          "minLength": 1,
+          "title": "Authored By",
+          "type": "string"
+        },
+        "reviewed_by": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reviewed By",
+          "type": "array"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus",
+          "default": "provisional"
+        }
+      },
+      "required": [
+        "path_id",
+        "titles",
+        "summaries",
+        "claim_ids",
+        "perspective",
+        "authored_by"
+      ],
+      "title": "CausalPath",
+      "type": "object"
+    },
+    "CausalRelationship": {
+      "description": "Interpretive relationships; deliberately separate from factual entity edges.",
+      "enum": [
+        "caused",
+        "contributed_to",
+        "enabled",
+        "constrained",
+        "accelerated",
+        "triggered",
+        "response_to",
+        "feedback_with"
+      ],
+      "title": "CausalRelationship",
+      "type": "string"
+    },
+    "CausalSourceReference": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "pattern": "^[a-z0-9][a-z0-9_-]+$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "record_id": {
+          "title": "Record Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "publisher": {
+          "title": "Publisher",
+          "type": "string"
+        },
+        "url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Url",
+          "type": "string"
+        },
+        "license_id": {
+          "title": "License Id",
+          "type": "string"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        },
+        "checksum_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Checksum Sha256"
+        },
+        "citation": {
+          "title": "Citation",
+          "type": "string"
+        },
+        "modified": {
+          "default": false,
+          "title": "Modified",
+          "type": "boolean"
+        },
+        "source_kind": {
+          "enum": [
+            "scholarship",
+            "primary_source"
+          ],
+          "title": "Source Kind",
+          "type": "string"
+        },
+        "license_reviewed": {
+          "default": false,
+          "title": "License Reviewed",
+          "type": "boolean"
+        },
+        "license_review_notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "License Review Notes"
+        }
+      },
+      "required": [
+        "source_id",
+        "record_id",
+        "title",
+        "publisher",
+        "url",
+        "license_id",
+        "retrieved_at",
+        "citation",
+        "source_kind"
+      ],
+      "title": "CausalSourceReference",
+      "type": "object"
+    },
+    "CausalTemporalAnchor": {
+      "additionalProperties": false,
+      "properties": {
+        "valid_from": {
+          "title": "Valid From",
+          "type": "integer"
+        },
+        "valid_to": {
+          "title": "Valid To",
+          "type": "integer"
+        },
+        "precision": {
+          "$ref": "#/$defs/DatePrecision"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "valid_from",
+        "valid_to",
+        "precision",
+        "rationale"
+      ],
+      "title": "CausalTemporalAnchor",
+      "type": "object"
+    },
+    "Confidence": {
+      "additionalProperties": false,
+      "properties": {
+        "grade": {
+          "$ref": "#/$defs/ConfidenceGrade"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "grade",
+        "rationale"
+      ],
+      "title": "Confidence",
+      "type": "object"
+    },
+    "ConfidenceGrade": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "unknown"
+      ],
+      "title": "ConfidenceGrade",
+      "type": "string"
+    },
+    "DatePrecision": {
+      "enum": [
+        "exact",
+        "year",
+        "decade",
+        "century",
+        "range",
+        "unknown"
+      ],
+      "title": "DatePrecision",
+      "type": "string"
+    },
+    "ReviewStatus": {
+      "enum": [
+        "unreviewed",
+        "provisional",
+        "verified",
+        "contested",
+        "rejected"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "claims": {
+      "items": {
+        "$ref": "#/$defs/CausalClaim"
+      },
+      "title": "Claims",
+      "type": "array"
+    },
+    "paths": {
+      "items": {
+        "$ref": "#/$defs/CausalPath"
+      },
+      "title": "Paths",
+      "type": "array"
+    }
+  },
+  "title": "CausalDataset",
+  "type": "object"
+}

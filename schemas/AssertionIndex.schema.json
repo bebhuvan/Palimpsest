@@ -1,0 +1,105 @@
+{
+  "$defs": {
+    "AssertionCollections": {
+      "additionalProperties": false,
+      "properties": {
+        "records": {
+          "$ref": "#/$defs/AssertionShardContract"
+        },
+        "entities": {
+          "$ref": "#/$defs/AssertionShardContract"
+        },
+        "features": {
+          "$ref": "#/$defs/AssertionShardContract"
+        }
+      },
+      "required": [
+        "records",
+        "entities",
+        "features"
+      ],
+      "title": "AssertionCollections",
+      "type": "object"
+    },
+    "AssertionShardContract": {
+      "additionalProperties": false,
+      "properties": {
+        "path_template": {
+          "pattern": "^assertions/(records|entities|features)/\\{shard\\}\\.json$",
+          "title": "Path Template",
+          "type": "string"
+        },
+        "count": {
+          "minimum": 0,
+          "title": "Count",
+          "type": "integer"
+        },
+        "shards": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Shards",
+          "type": "array"
+        }
+      },
+      "required": [
+        "path_template",
+        "count"
+      ],
+      "title": "AssertionShardContract",
+      "type": "object"
+    },
+    "ContentSharding": {
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "const": "sha256",
+          "default": "sha256",
+          "title": "Algorithm",
+          "type": "string"
+        },
+        "encoding": {
+          "const": "utf-8",
+          "default": "utf-8",
+          "title": "Encoding",
+          "type": "string"
+        },
+        "prefix_length": {
+          "const": 2,
+          "default": 2,
+          "title": "Prefix Length",
+          "type": "integer"
+        }
+      },
+      "title": "ContentSharding",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "semantics": {
+      "const": "structured-sourced-facts-not-generated-prose",
+      "default": "structured-sourced-facts-not-generated-prose",
+      "title": "Semantics",
+      "type": "string"
+    },
+    "sharding": {
+      "$ref": "#/$defs/ContentSharding"
+    },
+    "collections": {
+      "$ref": "#/$defs/AssertionCollections"
+    }
+  },
+  "required": [
+    "sharding",
+    "collections"
+  ],
+  "title": "AssertionIndex",
+  "type": "object"
+}

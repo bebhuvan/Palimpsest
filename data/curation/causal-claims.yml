@@ -1,0 +1,6 @@
+schema_version: 1.0.0
+
+# Causal claims are human-authored, source-backed historiographical arguments. Wikipedia and
+# Wikidata may identify candidates, but they are not sufficient evidence for a claim here.
+claims: []
+paths: []

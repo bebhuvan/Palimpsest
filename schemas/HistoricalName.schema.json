@@ -1,0 +1,241 @@
+{
+  "$defs": {
+    "Confidence": {
+      "additionalProperties": false,
+      "properties": {
+        "grade": {
+          "$ref": "#/$defs/ConfidenceGrade"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "grade",
+        "rationale"
+      ],
+      "title": "Confidence",
+      "type": "object"
+    },
+    "ConfidenceGrade": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "unknown"
+      ],
+      "title": "ConfidenceGrade",
+      "type": "string"
+    },
+    "DatePrecision": {
+      "enum": [
+        "exact",
+        "year",
+        "decade",
+        "century",
+        "range",
+        "unknown"
+      ],
+      "title": "DatePrecision",
+      "type": "string"
+    },
+    "NameKind": {
+      "description": "How a historical name relates to the people and source using it.",
+      "enum": [
+        "endonym",
+        "exonym",
+        "official",
+        "conventional",
+        "transliterated",
+        "translated",
+        "short",
+        "unknown"
+      ],
+      "title": "NameKind",
+      "type": "string"
+    },
+    "SourceReference": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "pattern": "^[a-z0-9][a-z0-9_-]+$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "record_id": {
+          "title": "Record Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "publisher": {
+          "title": "Publisher",
+          "type": "string"
+        },
+        "url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Url",
+          "type": "string"
+        },
+        "license_id": {
+          "title": "License Id",
+          "type": "string"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        },
+        "checksum_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Checksum Sha256"
+        },
+        "citation": {
+          "title": "Citation",
+          "type": "string"
+        },
+        "modified": {
+          "default": false,
+          "title": "Modified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source_id",
+        "record_id",
+        "title",
+        "publisher",
+        "url",
+        "license_id",
+        "retrieved_at",
+        "citation"
+      ],
+      "title": "SourceReference",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "A sourced name attestation with its own chronology and perspective.\n\nA name is not an identity key and does not inherit timeless validity merely because the\nassociated place or geometry spans a longer interval.",
+  "properties": {
+    "name_id": {
+      "pattern": "^name:[a-f0-9]{16}$",
+      "title": "Name Id",
+      "type": "string"
+    },
+    "text": {
+      "minLength": 1,
+      "title": "Text",
+      "type": "string"
+    },
+    "language": {
+      "minLength": 1,
+      "title": "Language",
+      "type": "string"
+    },
+    "script": {
+      "anyOf": [
+        {
+          "pattern": "^[A-Z][a-z]{3}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Script"
+    },
+    "name_kind": {
+      "$ref": "#/$defs/NameKind",
+      "default": "unknown"
+    },
+    "valid_from": {
+      "title": "Valid From",
+      "type": "integer"
+    },
+    "valid_to": {
+      "title": "Valid To",
+      "type": "integer"
+    },
+    "date_precision": {
+      "$ref": "#/$defs/DatePrecision"
+    },
+    "temporal_confidence": {
+      "$ref": "#/$defs/Confidence"
+    },
+    "primary": {
+      "default": false,
+      "title": "Primary",
+      "type": "boolean"
+    },
+    "perspective": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Perspective"
+    },
+    "temporal_basis": {
+      "default": "attested",
+      "enum": [
+        "attested",
+        "feature_interval"
+      ],
+      "title": "Temporal Basis",
+      "type": "string"
+    },
+    "source_refs": {
+      "items": {
+        "$ref": "#/$defs/SourceReference"
+      },
+      "minItems": 1,
+      "title": "Source Refs",
+      "type": "array"
+    }
+  },
+  "required": [
+    "name_id",
+    "text",
+    "language",
+    "valid_from",
+    "valid_to",
+    "date_precision",
+    "temporal_confidence",
+    "source_refs"
+  ],
+  "title": "HistoricalName",
+  "type": "object"
+}

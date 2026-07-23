@@ -1,0 +1,84 @@
+{
+  "$defs": {
+    "ContentSharding": {
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "const": "sha256",
+          "default": "sha256",
+          "title": "Algorithm",
+          "type": "string"
+        },
+        "encoding": {
+          "const": "utf-8",
+          "default": "utf-8",
+          "title": "Encoding",
+          "type": "string"
+        },
+        "prefix_length": {
+          "const": 2,
+          "default": 2,
+          "title": "Prefix Length",
+          "type": "integer"
+        }
+      },
+      "title": "ContentSharding",
+      "type": "object"
+    },
+    "WikiContextCollection": {
+      "additionalProperties": false,
+      "properties": {
+        "path_template": {
+          "const": "context/features/{shard}.json",
+          "default": "context/features/{shard}.json",
+          "title": "Path Template",
+          "type": "string"
+        },
+        "count": {
+          "minimum": 0,
+          "title": "Count",
+          "type": "integer"
+        },
+        "shards": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Shards",
+          "type": "array"
+        }
+      },
+      "required": [
+        "count"
+      ],
+      "title": "WikiContextCollection",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "sharding": {
+      "$ref": "#/$defs/ContentSharding"
+    },
+    "feature_contexts": {
+      "$ref": "#/$defs/WikiContextCollection"
+    },
+    "ranking_policy": {
+      "additionalProperties": true,
+      "title": "Ranking Policy",
+      "type": "object"
+    }
+  },
+  "required": [
+    "sharding",
+    "feature_contexts",
+    "ranking_policy"
+  ],
+  "title": "WikiContextIndex",
+  "type": "object"
+}

@@ -1,0 +1,143 @@
+{
+  "$defs": {
+    "ChronologyBandContract": {
+      "additionalProperties": false,
+      "properties": {
+        "band_id": {
+          "title": "Band Id",
+          "type": "string"
+        },
+        "valid_from": {
+          "title": "Valid From",
+          "type": "integer"
+        },
+        "valid_to": {
+          "title": "Valid To",
+          "type": "integer"
+        },
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "count": {
+          "minimum": 0,
+          "title": "Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "band_id",
+        "valid_from",
+        "valid_to",
+        "path",
+        "count"
+      ],
+      "title": "ChronologyBandContract",
+      "type": "object"
+    },
+    "ChronologyCollections": {
+      "additionalProperties": false,
+      "properties": {
+        "definitions": {
+          "$ref": "#/$defs/ChronologyShardContract"
+        },
+        "entities": {
+          "$ref": "#/$defs/ChronologyShardContract"
+        }
+      },
+      "required": [
+        "definitions",
+        "entities"
+      ],
+      "title": "ChronologyCollections",
+      "type": "object"
+    },
+    "ChronologyShardContract": {
+      "additionalProperties": false,
+      "properties": {
+        "path_template": {
+          "pattern": "^chronology/(definitions|entities)/\\{shard\\}\\.json$",
+          "title": "Path Template",
+          "type": "string"
+        },
+        "count": {
+          "minimum": 0,
+          "title": "Count",
+          "type": "integer"
+        },
+        "shards": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Shards",
+          "type": "array"
+        }
+      },
+      "required": [
+        "path_template",
+        "count"
+      ],
+      "title": "ChronologyShardContract",
+      "type": "object"
+    },
+    "ChronologySharding": {
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "const": "sha256",
+          "default": "sha256",
+          "title": "Algorithm",
+          "type": "string"
+        },
+        "encoding": {
+          "const": "utf-8",
+          "default": "utf-8",
+          "title": "Encoding",
+          "type": "string"
+        },
+        "prefix_length": {
+          "const": 2,
+          "default": 2,
+          "title": "Prefix Length",
+          "type": "integer"
+        }
+      },
+      "title": "ChronologySharding",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "semantics": {
+      "const": "attributed-competing-period-definitions",
+      "default": "attributed-competing-period-definitions",
+      "title": "Semantics",
+      "type": "string"
+    },
+    "sharding": {
+      "$ref": "#/$defs/ChronologySharding"
+    },
+    "collections": {
+      "$ref": "#/$defs/ChronologyCollections"
+    },
+    "time_bands": {
+      "items": {
+        "$ref": "#/$defs/ChronologyBandContract"
+      },
+      "title": "Time Bands",
+      "type": "array"
+    }
+  },
+  "required": [
+    "sharding",
+    "collections"
+  ],
+  "title": "ChronologyIndex",
+  "type": "object"
+}

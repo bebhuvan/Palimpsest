@@ -1,0 +1,1001 @@
+{
+  "artifacts": [
+    {
+      "bytes": 26684,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "8bf15bc5ebf7b968025c933982f977e81af67adc1ee24ba25f456ea0063ac656",
+      "media_type": "application/vnd.apache.parquet",
+      "path": "features/ancient.parquet"
+    },
+    {
+      "bytes": 29503,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "a1220f64ed5adeda07540fc9a97447a6b3ace71f9cf1347547d6d602446f6fec",
+      "media_type": "application/vnd.apache.parquet",
+      "path": "features/early-modern.parquet"
+    },
+    {
+      "bytes": 8159,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "039cd9001d9ae5adb71a96667084a75b19fbe50d909e2c8a35dd4d7657363d0f",
+      "media_type": "application/x-ndjson",
+      "path": "entities.ndjson"
+    },
+    {
+      "bytes": 1947,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "91c45a4175f695a66efe834913e72b55d45fb837e6abfead10184139341cc06f",
+      "media_type": "application/x-ndjson",
+      "path": "dossiers.ndjson"
+    },
+    {
+      "bytes": 837,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "a446a32a521249bfa26bccb9365f8fc364a083e85c8f0ef02eef535106ea0f4e",
+      "media_type": "application/json",
+      "path": "content/links/03.json"
+    },
+    {
+      "bytes": 407,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "5b916dc276a32995ee839d104ec06be4f7f08fcce65d60766383051ac92dab44",
+      "media_type": "application/json",
+      "path": "content/links/35.json"
+    },
+    {
+      "bytes": 364,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "8d145e6d8e8c33d12d561a02126e18dcfa95191bc366cf4bf5ce7f152e17d429",
+      "media_type": "application/json",
+      "path": "content/links/70.json"
+    },
+    {
+      "bytes": 1568,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "c5c53edbea0ca7ca077eabf23cebe4f1d6f28503bd0325ce3b48c3920d547e1b",
+      "media_type": "application/json",
+      "path": "content/entities/25.json"
+    },
+    {
+      "bytes": 1690,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "fe654b7ce5ef5e239d25450e21fdc61f438af9850fdaa88100477b4f5b36afa4",
+      "media_type": "application/json",
+      "path": "content/entities/38.json"
+    },
+    {
+      "bytes": 1594,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "7c2fa16fec4dd694b1ea2f76539718c4031aca5d169206788add2089759cb313",
+      "media_type": "application/json",
+      "path": "content/entities/6f.json"
+    },
+    {
+      "bytes": 1561,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "78fb409dfb4f0c65e925f2d7bfcf0c456bce4ba05d5fd16060228bc698328239",
+      "media_type": "application/json",
+      "path": "content/entities/85.json"
+    },
+    {
+      "bytes": 1413,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "81ccb31dd3de5ed718b6db1390aaa1905ac05f1e113df309d0944039e074b180",
+      "media_type": "application/json",
+      "path": "content/entities/87.json"
+    },
+    {
+      "bytes": 1461,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "e5c0617dc8d559b893731c81730475b45a32d202c6f5471f75eff286880f58e0",
+      "media_type": "application/json",
+      "path": "content/entities/8e.json"
+    },
+    {
+      "bytes": 1485,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "5741a452b634429bb0307f5c927f95cfebd2812f303eb2410e8b6e76769eb84a",
+      "media_type": "application/json",
+      "path": "content/entities/b6.json"
+    },
+    {
+      "bytes": 1179,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "cf9dad243bd90d375a856ab5772ed3906dd128901500e104e0b313ad54409116",
+      "media_type": "application/json",
+      "path": "content/dossiers/17.json"
+    },
+    {
+      "bytes": 1228,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f792f8bfd5326e9364efcb0d5a8d612a4bf4db8eb6ebd80a13a1150f1e4f37b4",
+      "media_type": "application/json",
+      "path": "content/dossiers/63.json"
+    },
+    {
+      "bytes": 906,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "db3293cb23629da398ec43547caafdde8a657f6dd9606265c48d11a95940d40f",
+      "media_type": "application/json",
+      "path": "content/index.json"
+    },
+    {
+      "bytes": 421,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "6a0f377c6ba9d235d6819822121998b1d61677d0cebb3a4cac064cdac13c6d5c",
+      "media_type": "application/json",
+      "path": "context/features/03.json"
+    },
+    {
+      "bytes": 690,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "b81e94536b6eafda42f24be9e6b09ef53d859c0bcb58b46d2857ab1423a750d6",
+      "media_type": "application/json",
+      "path": "context/features/35.json"
+    },
+    {
+      "bytes": 700,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "a0ece6fb86044123e8f8c2245fa6e63653f7698287205c78f30aec97d69845ec",
+      "media_type": "application/json",
+      "path": "context/index.json"
+    },
+    {
+      "bytes": 1565,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "6bab8b32ee4e183ea7a31ea3da788e7c80123e08ad61b78a44c45e0d51a821a7",
+      "media_type": "application/json",
+      "path": "region-time/buckets/25.json"
+    },
+    {
+      "bytes": 976,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "2d23c8f7b5eb2c77a626435bb18081cfe3789dc66fd6d2a32f9ff406909a4342",
+      "media_type": "application/json",
+      "path": "region-time/buckets/34.json"
+    },
+    {
+      "bytes": 924,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "854f833329ab175c80ff6ae66c5559e76bca1947147dc7323ffc3a517bbed8eb",
+      "media_type": "application/json",
+      "path": "region-time/buckets/df.json"
+    },
+    {
+      "bytes": 900,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "a80d01a97833b66d595cfd945e59275822e300a0b88f073f830b526c597a7d30",
+      "media_type": "application/json",
+      "path": "region-time/buckets/e0.json"
+    },
+    {
+      "bytes": 1601,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "4b07169dc6cff39f1da037974aaf7dac9da54618650e526ffd31c5f56b067da4",
+      "media_type": "application/json",
+      "path": "region-time/index.json"
+    },
+    {
+      "bytes": 492,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "8c6533b8324b310799546a5dac92b142931171d43ef19272df1b89844e2dcadb",
+      "media_type": "application/json",
+      "path": "causal/index.json"
+    },
+    {
+      "bytes": 1777,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "e67b2412807f819df48b6ed11c9a050e2497e554a68183faa2db9df281ced110",
+      "media_type": "application/json",
+      "path": "themes/assertions/41.json"
+    },
+    {
+      "bytes": 1383,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "9afbca1d6b9a87cc3c96f91d5da9fc987137374c9c54e8e833423c0e7d54af26",
+      "media_type": "application/json",
+      "path": "themes/assertions/44.json"
+    },
+    {
+      "bytes": 1369,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "578ebcb2bea3343403727cd2374f4e48d8b2bd4f2f4ec34e9d443d6c29be1bba",
+      "media_type": "application/json",
+      "path": "themes/assertions/53.json"
+    },
+    {
+      "bytes": 1785,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "6309177fcad118992872fc15c67bd8cd2ea5db5481044098c863e37e2fb25602",
+      "media_type": "application/json",
+      "path": "themes/assertions/87.json"
+    },
+    {
+      "bytes": 282,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "4e4129feaa929c762d9f949c8cff07edfea95b7a0d10f4f9fe566522670606ac",
+      "media_type": "application/json",
+      "path": "themes/features/03.json"
+    },
+    {
+      "bytes": 215,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "483efed7ff372a0b7ec7482f73d75193592d96971eddee316567be9930f4adf2",
+      "media_type": "application/json",
+      "path": "themes/features/35.json"
+    },
+    {
+      "bytes": 229,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "7e4b9ea49a20b944f7612e2ad336e5b2503cf99ca68919b9f31f2c93200a4ddf",
+      "media_type": "application/json",
+      "path": "themes/features/70.json"
+    },
+    {
+      "bytes": 557,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "0b2bf48aa6a73bdeb086b603e9a87a3e4242019c82a9638f401b69259214eab8",
+      "media_type": "application/json",
+      "path": "themes/index.json"
+    },
+    {
+      "bytes": 1532,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "b62456dcfd80ce01d0f9cce39f5d1ca4a1b009e1c68f725e822f0fccc3cf244e",
+      "media_type": "application/json",
+      "path": "assertions/records/05.json"
+    },
+    {
+      "bytes": 1533,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "704df27a8987e8657450d1ebb80bc23f386c08a3e70bf86b53e2452230bc3375",
+      "media_type": "application/json",
+      "path": "assertions/records/3d.json"
+    },
+    {
+      "bytes": 1530,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "20eb30fee82aa73630a349007aec97b01f4c399c6c6d38251d7be665dba7e1d2",
+      "media_type": "application/json",
+      "path": "assertions/records/63.json"
+    },
+    {
+      "bytes": 1517,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "fa490ccabd61600f58a55386d3e9c71c4e969ec2108248f17ef4b5082fce370a",
+      "media_type": "application/json",
+      "path": "assertions/records/6b.json"
+    },
+    {
+      "bytes": 1517,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "0f070529790240fff4b2dfc5e1f9ec7eb0cfba8c50a48ca16993ec956841025d",
+      "media_type": "application/json",
+      "path": "assertions/records/9a.json"
+    },
+    {
+      "bytes": 201,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "23e5c9cec6531cae30297ea94e643889d32da6a7f4a2d77f0ed86dd03d6de3ff",
+      "media_type": "application/json",
+      "path": "assertions/entities/25.json"
+    },
+    {
+      "bytes": 313,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "9e37969bfcf6a4002d722763f43a497d63148a18ede539d1d05ac65f5adbf91c",
+      "media_type": "application/json",
+      "path": "assertions/entities/6f.json"
+    },
+    {
+      "bytes": 330,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "350916c5dba6e6e30dcd51fc81ea3c37efbccd1b14ca923510374fac4d904e44",
+      "media_type": "application/json",
+      "path": "assertions/entities/85.json"
+    },
+    {
+      "bytes": 181,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "a58cda261654f9a34d63084eb40f7c85815d7674ebb9845911ac86d6700e960f",
+      "media_type": "application/json",
+      "path": "assertions/entities/87.json"
+    },
+    {
+      "bytes": 207,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "12316ba10986f0bc0e34a37dc85d3c3bf5aefcc85d455349a609f1c487493b45",
+      "media_type": "application/json",
+      "path": "assertions/entities/b6.json"
+    },
+    {
+      "bytes": 453,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "68b51359361f760e622ab583da68a69d2e5d1ae3893ea9986175aec74d12148e",
+      "media_type": "application/json",
+      "path": "assertions/features/03.json"
+    },
+    {
+      "bytes": 747,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "e511b209d3f979a6221f55d590cd020442fab953e8ff2b6a994a163b4a45444d",
+      "media_type": "application/json",
+      "path": "assertions/index.json"
+    },
+    {
+      "bytes": 3523,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "6c1c27923c0e96491fce1e32fbb9e44231f58209d682a6170ece694116cd7740",
+      "media_type": "application/json",
+      "path": "layers/index.json"
+    },
+    {
+      "bytes": 3,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "media_type": "application/json",
+      "path": "chronology/time/band-00.json"
+    },
+    {
+      "bytes": 3,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "media_type": "application/json",
+      "path": "chronology/time/band-01.json"
+    },
+    {
+      "bytes": 3,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "media_type": "application/json",
+      "path": "chronology/time/band-02.json"
+    },
+    {
+      "bytes": 3,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "media_type": "application/json",
+      "path": "chronology/time/band-03.json"
+    },
+    {
+      "bytes": 3,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "media_type": "application/json",
+      "path": "chronology/time/band-04.json"
+    },
+    {
+      "bytes": 3,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "media_type": "application/json",
+      "path": "chronology/time/band-05.json"
+    },
+    {
+      "bytes": 3,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "media_type": "application/json",
+      "path": "chronology/time/band-06.json"
+    },
+    {
+      "bytes": 3,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "media_type": "application/json",
+      "path": "chronology/time/band-07.json"
+    },
+    {
+      "bytes": 3,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "media_type": "application/json",
+      "path": "chronology/time/band-08.json"
+    },
+    {
+      "bytes": 3,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "media_type": "application/json",
+      "path": "chronology/time/band-09.json"
+    },
+    {
+      "bytes": 3,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "media_type": "application/json",
+      "path": "chronology/time/band-10.json"
+    },
+    {
+      "bytes": 2170,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "10cd56063f3fc3493ce4a14c0115e310642b7cf1ac4c1c19d5934195222fedad",
+      "media_type": "application/json",
+      "path": "chronology/index.json"
+    },
+    {
+      "bytes": 797,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "64ac98e472ffd0d31d86ed61f94235bcc4a6072854b501d74cb1fa53bf370c42",
+      "media_type": "application/json",
+      "path": "coverage.json"
+    },
+    {
+      "bytes": 2175,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "34e40132c4ac38d376e601e6272173953f5c97c29d2740c06f16db08be46e351",
+      "media_type": "application/json",
+      "path": "coverage-priorities.json"
+    },
+    {
+      "bytes": 2159,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "0235d26406b956394f2b39ae5de2a44be028e213364bf7496960d206c56958b6",
+      "media_type": "application/x-ndjson",
+      "path": "search.ndjson"
+    },
+    {
+      "bytes": 1036,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "cefdf835555cb7e0bf4a984b0bda7594c81e1908135ea5be2d88f960d5643b73",
+      "media_type": "application/json",
+      "path": "search/records/38.json"
+    },
+    {
+      "bytes": 1026,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "ea3742ff28d0c5ca37cc1fe95b1425eaf1891dbfb7eb7458fa30a67746f6fe49",
+      "media_type": "application/json",
+      "path": "search/records/49.json"
+    },
+    {
+      "bytes": 1147,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "c7b87083c607dc6cf57212be377f85487f1347cbab56134a6acbf0bdc4c8d63a",
+      "media_type": "application/json",
+      "path": "search/records/85.json"
+    },
+    {
+      "bytes": 108,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "325133b911514afe2e72d508643e3f80ba957481f38b6e3dc64b56247af53030",
+      "media_type": "application/json",
+      "path": "search/features/03.json"
+    },
+    {
+      "bytes": 66,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "a239c526be75d52b64a31e34ec7f751fab07dab453a818c8c18b70da24a5d7bd",
+      "media_type": "application/json",
+      "path": "search/features/35.json"
+    },
+    {
+      "bytes": 73,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "c055481ef92b69baf024a6019a14e19168fe4e00a1c2353510b0b2e05a1c0d32",
+      "media_type": "application/json",
+      "path": "search/features/70.json"
+    },
+    {
+      "bytes": 435,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "619a04fa3df9e344f505cc99eac16d7067fcd54a99647d4fd6423e0f5c4bd02e",
+      "media_type": "application/gzip",
+      "path": "search/names/f45de51cdef30991551e41e882dd7b5404799648a0a00753f44fc966e6153fc1.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/names/b1d6b91b67c2afa5e322988d9462638d354ddf8a1ef79dba987f815c22b4baee.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/names/29d9489564c875d731108c8fbd8dfa3e698ca20be4c00878dda716de8c993b97.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/names/9508394fe63a491fdcc07886367a676baac5e1207bfcc5ae13b08f37b3a31b49.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/names/6959097001d10501ac7d54c0bdb8db61420f658f2922cc26e46d536119a31126.json.gz"
+    },
+    {
+      "bytes": 435,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "619a04fa3df9e344f505cc99eac16d7067fcd54a99647d4fd6423e0f5c4bd02e",
+      "media_type": "application/gzip",
+      "path": "search/names/e64c826b6b33f307cecf54ff843c5f9797c1056eb33f9dd60bc632f519712cb9.json.gz"
+    },
+    {
+      "bytes": 362,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "b2e76cf712cb988643dd5d4aa0e24803c4c338166d0466d88486cefabfd2d581",
+      "media_type": "application/gzip",
+      "path": "search/names/343677762813eaeb65704cc8d9e96f7a444ba0cca92ff861af7f68648b3e6ef1.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/names/959a45d44e6fcf58361ed004681556fe50129f2109e817dec098c00c9e5d2578.json.gz"
+    },
+    {
+      "bytes": 358,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "b69da0a9c8ddd071c212d6100f1cf09e6aa00ec683f664effb52529dcf53d2fb",
+      "media_type": "application/gzip",
+      "path": "search/names/ac0b52a2ae6ef99999bc08fb31e19188bf0085a4614204068e677e140e1458be.json.gz"
+    },
+    {
+      "bytes": 435,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "619a04fa3df9e344f505cc99eac16d7067fcd54a99647d4fd6423e0f5c4bd02e",
+      "media_type": "application/gzip",
+      "path": "search/names/9c1623f0d38e28e9594f2ef31a7ec909291c4fdb05a777dccd2e936a7f406011.json.gz"
+    },
+    {
+      "bytes": 362,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "b2e76cf712cb988643dd5d4aa0e24803c4c338166d0466d88486cefabfd2d581",
+      "media_type": "application/gzip",
+      "path": "search/names/dbd3a49d0d906b4ed9216b73330d2fb080ef2f758c12f3885068222e5e17151c.json.gz"
+    },
+    {
+      "bytes": 358,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "b69da0a9c8ddd071c212d6100f1cf09e6aa00ec683f664effb52529dcf53d2fb",
+      "media_type": "application/gzip",
+      "path": "search/names/cc7e4412564ba8a761bd32ab4cc6086bac3c2c9e580367e0b0eb32a4316f9154.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/names/67d35554c1f60638d6d72a0edc045450a841f7efabe0f9843b7e653499094538.json.gz"
+    },
+    {
+      "bytes": 362,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "b2e76cf712cb988643dd5d4aa0e24803c4c338166d0466d88486cefabfd2d581",
+      "media_type": "application/gzip",
+      "path": "search/names/372f7e2fd2d01ce2a1d71dc072acbba4c6fd25a1087cd7f153f4ec0ce37e1ede.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/names/765dbb8c38a58a5dc019d7b3133dffb251d643cb291328ad8e86d4f05655e68b.json.gz"
+    },
+    {
+      "bytes": 533,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "0d1f79ac7c2c223da1353a43be88097d0d4d6b0ca77864bed35c8fa1ffe4c5f8",
+      "media_type": "application/gzip",
+      "path": "search/names/dae7f3a056377ab98e8eba07dd01c64c813dc392d02ecd4b7b3b728c6d1e21a8.json.gz"
+    },
+    {
+      "bytes": 358,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "b69da0a9c8ddd071c212d6100f1cf09e6aa00ec683f664effb52529dcf53d2fb",
+      "media_type": "application/gzip",
+      "path": "search/names/292c1980ba2805512acfef5d0cf8f43fba5c7b9b73a5a7afad1c37cfacad3c98.json.gz"
+    },
+    {
+      "bytes": 435,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "619a04fa3df9e344f505cc99eac16d7067fcd54a99647d4fd6423e0f5c4bd02e",
+      "media_type": "application/gzip",
+      "path": "search/names/a0fb903525dc10dccaa4bd72bed4fe5b24ae8346b8a7343edce84172feb7085a.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/names/4021fadf187fd2c8277aad0fbc5e8fc4e7f1c75fbb38b6337160f125444790b2.json.gz"
+    },
+    {
+      "bytes": 435,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "619a04fa3df9e344f505cc99eac16d7067fcd54a99647d4fd6423e0f5c4bd02e",
+      "media_type": "application/gzip",
+      "path": "search/names/b737ca7ee563ae80e457bb3d1dfe64edd2b4c015a8f88b6f87d5c113b68897fd.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/names/00a9e4255a5b63067b76cbfb9fd67f26bdb91be802d5ffcb177ec1b7a8d4c623.json.gz"
+    },
+    {
+      "bytes": 435,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "619a04fa3df9e344f505cc99eac16d7067fcd54a99647d4fd6423e0f5c4bd02e",
+      "media_type": "application/gzip",
+      "path": "search/names/9294ab38039f60d2ec53822fb46b52c663af7ea478f4d17bf43da44ede5e166c.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/names/80c0fcbbfa9d03d861b22230e67c380afb545c12de43094f3985128625858361.json.gz"
+    },
+    {
+      "bytes": 358,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "b69da0a9c8ddd071c212d6100f1cf09e6aa00ec683f664effb52529dcf53d2fb",
+      "media_type": "application/gzip",
+      "path": "search/names/051603900bc7a27051b385299b0ef6c3dd2da3c6216845df7f501d9e4337cbcd.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/names/4db03a277cfb9ef4c68b4c9780470eee479abacb5fd01b8a2c2b3cb955998e87.json.gz"
+    },
+    {
+      "bytes": 362,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "b2e76cf712cb988643dd5d4aa0e24803c4c338166d0466d88486cefabfd2d581",
+      "media_type": "application/gzip",
+      "path": "search/names/6194e73eb25916046397e515de98f4e4357e06af9f3054d347ffe82aadfd8bf2.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/names/28391d3bc64ec15cbb090426b04aa6b7649c3cc85f11230bb0105e02d15e3624.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/names/e20882595488fa4f5a9ecf837ef7e2d220e9898cac625f1163dba2c1c7ec56f7.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/names/b8d31e852725afb1e26d53bab6095b2bff1749c9275be13ed1c05a56ed31ec09.json.gz"
+    },
+    {
+      "bytes": 358,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "b69da0a9c8ddd071c212d6100f1cf09e6aa00ec683f664effb52529dcf53d2fb",
+      "media_type": "application/gzip",
+      "path": "search/names/840a8dcfeae95966a870b0b5257997ce94cbc19dd979409d1671d2e93a9e0de6.json.gz"
+    },
+    {
+      "bytes": 435,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "619a04fa3df9e344f505cc99eac16d7067fcd54a99647d4fd6423e0f5c4bd02e",
+      "media_type": "application/gzip",
+      "path": "search/names/0a19b4727d1fbd3a43ba819816b0ec8fb670b37b9cab4c0327aa0a3f9d162443.json.gz"
+    },
+    {
+      "bytes": 435,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "619a04fa3df9e344f505cc99eac16d7067fcd54a99647d4fd6423e0f5c4bd02e",
+      "media_type": "application/gzip",
+      "path": "search/names/85b42e1702877c851eb7412fe958c8fb447c3207b4798fadab42ea8539046ce1.json.gz"
+    },
+    {
+      "bytes": 435,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "619a04fa3df9e344f505cc99eac16d7067fcd54a99647d4fd6423e0f5c4bd02e",
+      "media_type": "application/gzip",
+      "path": "search/names/3485639faf1591f3c16f295198e9389db5b33c949587ec48663597d4e00299d5.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/names/4b4d5589e12d32d589355ac6b1416bf2928a3da86f58d6d1683440ac41b8102a.json.gz"
+    },
+    {
+      "bytes": 527,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "8019cbc46891bc778c0c6f9899f63e1d7efb7ff8a22eacb4e1f4902c79b0b229",
+      "media_type": "application/gzip",
+      "path": "search/names/3ac1ecbd2220c6757eb9f289fee88c4068c6791c5b0affef7644e77adfc97b45.json.gz"
+    },
+    {
+      "bytes": 362,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "b2e76cf712cb988643dd5d4aa0e24803c4c338166d0466d88486cefabfd2d581",
+      "media_type": "application/gzip",
+      "path": "search/names/396a14ab206e2b44e03c4e00393e948cce36a6b0f0d7489cb46d944b33ad51c8.json.gz"
+    },
+    {
+      "bytes": 358,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "b69da0a9c8ddd071c212d6100f1cf09e6aa00ec683f664effb52529dcf53d2fb",
+      "media_type": "application/gzip",
+      "path": "search/names/97a62ad21d79c01cceb7767952acec4fec86bfe909b06e5f3f6963365cf91ab8.json.gz"
+    },
+    {
+      "bytes": 358,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "b69da0a9c8ddd071c212d6100f1cf09e6aa00ec683f664effb52529dcf53d2fb",
+      "media_type": "application/gzip",
+      "path": "search/names/a31fe9656fc8d3a459e623dc8204e6d0268f8df56d734dac3ca3262edb5db883.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/names/cfccfcdeb2a5022c816b8c3e50353698c6994a2a7bea4b8ea6aef2fe56880f22.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/names/ece134c3f8737a954710c0b89a9f70e8e59359f6a8ab4c19ae77cf1203d5c5bc.json.gz"
+    },
+    {
+      "bytes": 358,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "b69da0a9c8ddd071c212d6100f1cf09e6aa00ec683f664effb52529dcf53d2fb",
+      "media_type": "application/gzip",
+      "path": "search/names/68bca10eea2ba33f6f15a6ab0c7df2a49051a6541f9118d468b0585d5d60398b.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/names/79adb2a2fce5c6ba215fe5f27f532d4e7edbac4b6a5e09e1ef3a08084a904621.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/names/469cc643a19fb75901e5d331b8dc14befa8b98810b246c2fb22fff0c382dc39e.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/names/3f98114b0f77b7da78bca527117c4f3126aafbba8b94b68b0bc3ccd13944258d.json.gz"
+    },
+    {
+      "bytes": 599,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "a263f7955b0cbac26f4b46ab9dd1d132a247ce930434bafbff591f8a1e548b04",
+      "media_type": "application/gzip",
+      "path": "search/pages/0000.json.gz"
+    },
+    {
+      "bytes": 22,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "64406e753d82e11c6bd63d1d04bb6aa083eefa0a46949bbfce994d556b989f0f",
+      "media_type": "application/gzip",
+      "path": "search/time/band-00.json.gz"
+    },
+    {
+      "bytes": 22,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "64406e753d82e11c6bd63d1d04bb6aa083eefa0a46949bbfce994d556b989f0f",
+      "media_type": "application/gzip",
+      "path": "search/time/band-01.json.gz"
+    },
+    {
+      "bytes": 22,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "64406e753d82e11c6bd63d1d04bb6aa083eefa0a46949bbfce994d556b989f0f",
+      "media_type": "application/gzip",
+      "path": "search/time/band-02.json.gz"
+    },
+    {
+      "bytes": 435,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "619a04fa3df9e344f505cc99eac16d7067fcd54a99647d4fd6423e0f5c4bd02e",
+      "media_type": "application/gzip",
+      "path": "search/time/band-03.json.gz"
+    },
+    {
+      "bytes": 22,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "64406e753d82e11c6bd63d1d04bb6aa083eefa0a46949bbfce994d556b989f0f",
+      "media_type": "application/gzip",
+      "path": "search/time/band-04.json.gz"
+    },
+    {
+      "bytes": 22,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "64406e753d82e11c6bd63d1d04bb6aa083eefa0a46949bbfce994d556b989f0f",
+      "media_type": "application/gzip",
+      "path": "search/time/band-05.json.gz"
+    },
+    {
+      "bytes": 378,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "f08ba13cb066da2b4bfc5f6422112df61d7472d253519f32ad99b00b1eb25feb",
+      "media_type": "application/gzip",
+      "path": "search/time/band-06.json.gz"
+    },
+    {
+      "bytes": 22,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "64406e753d82e11c6bd63d1d04bb6aa083eefa0a46949bbfce994d556b989f0f",
+      "media_type": "application/gzip",
+      "path": "search/time/band-07.json.gz"
+    },
+    {
+      "bytes": 22,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "64406e753d82e11c6bd63d1d04bb6aa083eefa0a46949bbfce994d556b989f0f",
+      "media_type": "application/gzip",
+      "path": "search/time/band-08.json.gz"
+    },
+    {
+      "bytes": 22,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "64406e753d82e11c6bd63d1d04bb6aa083eefa0a46949bbfce994d556b989f0f",
+      "media_type": "application/gzip",
+      "path": "search/time/band-09.json.gz"
+    },
+    {
+      "bytes": 22,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "64406e753d82e11c6bd63d1d04bb6aa083eefa0a46949bbfce994d556b989f0f",
+      "media_type": "application/gzip",
+      "path": "search/time/band-10.json.gz"
+    },
+    {
+      "bytes": 6850,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "2dd7c4e92c732b25fe649a4546a856c814298938d090e1da5762026b2109ac13",
+      "media_type": "application/json",
+      "path": "search/index.json"
+    },
+    {
+      "bytes": 1338,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "2bbbaeacc7880382634d9c584b298c58c98b1c835ee7722df615ec32c48b6da7",
+      "media_type": "application/json",
+      "path": "attribution.json"
+    },
+    {
+      "bytes": 97,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "9d1125a79370efdf948dc7c85a11f05f6439b3576d2805e140e1420b5bd5499b",
+      "media_type": "application/json",
+      "path": "quality.json"
+    },
+    {
+      "bytes": 49,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "4dce244d36379290bdb0e6ba7b685eb1c7bcaf674e87d69ef1ae6d1b7b424495",
+      "media_type": "application/json",
+      "path": "source-registry.json"
+    },
+    {
+      "bytes": 25186,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "71a3fe4eb47180a3956cd84b903c065563586f2d4bb2df53fd072b951992fd5f",
+      "media_type": "application/vnd.pmtiles",
+      "path": "tiles/ancient.pmtiles"
+    },
+    {
+      "bytes": 5860,
+      "cache_control": "public, max-age=31536000, immutable",
+      "checksum_sha256": "14ccf9ece9d83c7fb0385d307e446c718b8f565645953d64f46f879998460649",
+      "media_type": "application/vnd.pmtiles",
+      "path": "tiles/early-modern.pmtiles"
+    }
+  ],
+  "assertion_index_path": "assertions/index.json",
+  "attribution_path": "attribution.json",
+  "build_id": "730b743e46fa6be7",
+  "causal_index_path": "causal/index.json",
+  "chronology_index_path": "chronology/index.json",
+  "content_index_path": "content/index.json",
+  "coverage_path": "coverage.json",
+  "coverage_priorities_path": "coverage-priorities.json",
+  "generated_at": "2026-07-23T06:00:00Z",
+  "layer_catalog_path": "layers/index.json",
+  "maximum_year": 2026,
+  "minimum_year": -3400,
+  "quality_path": "quality.json",
+  "raw_snapshots": [
+    {
+      "bytes": 38,
+      "checksum_sha256": "295aea5847ce5d9afa801bbd2f46ab4c45a437e5dacfc37b7157a284011a6aab",
+      "etag": null,
+      "filename": "catalog-record.json",
+      "last_modified": null,
+      "object_key": "snapshots/loc_copernicus/295aea5847ce5d9afa801bbd2f46ab4c45a437e5dacfc37b7157a284011a6aab/catalog-record.json",
+      "original_url": "https://www.loc.gov/pictures/item/92516339/?fo=json",
+      "retrieved_at": "2026-07-23T06:00:00Z",
+      "source_id": "loc_copernicus"
+    }
+  ],
+  "region_time_index_path": "region-time/index.json",
+  "rejected_record_count": 0,
+  "schema_version": "1.10.0",
+  "search_index_path": "search/index.json",
+  "source_registry_path": "source-registry.json",
+  "sources": [
+    {
+      "checksum_sha256": null,
+      "citation": "History Joice test suite, Browser pilot reviewed geometry",
+      "license_id": "CC0-1.0",
+      "modified": false,
+      "publisher": "History Joice test suite",
+      "record_id": "geometry-v1",
+      "retrieved_at": "2026-07-23T06:00:00Z",
+      "source_id": "browser-pilot",
+      "title": "Browser pilot reviewed geometry",
+      "url": "https://example.org/history-joice/browser-pilot",
+      "version": "browser-pilot-v1"
+    },
+    {
+      "checksum_sha256": null,
+      "citation": "Wikimedia Foundation and Wikidata contributors, Wikidata browser-pilot entity projection",
+      "license_id": "CC0-1.0",
+      "modified": false,
+      "publisher": "Wikimedia Foundation and Wikidata contributors",
+      "record_id": "Q100",
+      "retrieved_at": "2026-07-23T06:00:00Z",
+      "source_id": "wikidata",
+      "title": "Wikidata browser-pilot entity projection",
+      "url": "https://www.wikidata.org/wiki/Q100",
+      "version": "browser-pilot-v1"
+    },
+    {
+      "checksum_sha256": null,
+      "citation": "Wikimedia Foundation and Wikipedia contributors, Wikipedia browser-pilot introduction",
+      "license_id": "CC-BY-SA-4.0",
+      "modified": false,
+      "publisher": "Wikimedia Foundation and Wikipedia contributors",
+      "record_id": "100",
+      "retrieved_at": "2026-07-23T06:00:00Z",
+      "source_id": "wikipedia",
+      "title": "Wikipedia browser-pilot introduction",
+      "url": "https://en.wikipedia.org/wiki/History",
+      "version": "browser-pilot-v1"
+    },
+    {
+      "checksum_sha256": "295aea5847ce5d9afa801bbd2f46ab4c45a437e5dacfc37b7157a284011a6aab",
+      "citation": "Library of Congress, item 92516339, title page from the 1543 Nuremberg edition.",
+      "license_id": "PDM-1.0",
+      "modified": false,
+      "publisher": "Library of Congress",
+      "record_id": "92516339",
+      "retrieved_at": "2026-07-23T06:00:00Z",
+      "source_id": "loc_copernicus",
+      "title": "Title page of De revolutionibus orbium coelestium",
+      "url": "https://www.loc.gov/pictures/item/92516339/",
+      "version": "browser-pilot-curated-snapshot-v1"
+    }
+  ],
+  "theme_index_path": "themes/index.json",
+  "wiki_context_index_path": "context/index.json"
+}

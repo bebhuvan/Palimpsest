@@ -1,0 +1,86 @@
+{
+  "$defs": {
+    "ConfidenceGrade": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "unknown"
+      ],
+      "title": "ConfidenceGrade",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "cell_id": {
+      "title": "Cell Id",
+      "type": "string"
+    },
+    "bounds": {
+      "maxItems": 4,
+      "minItems": 4,
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "title": "Bounds",
+      "type": "array"
+    },
+    "valid_from": {
+      "title": "Valid From",
+      "type": "integer"
+    },
+    "valid_to": {
+      "title": "Valid To",
+      "type": "integer"
+    },
+    "layer": {
+      "title": "Layer",
+      "type": "string"
+    },
+    "feature_count": {
+      "minimum": 0,
+      "title": "Feature Count",
+      "type": "integer"
+    },
+    "confidence_counts": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "propertyNames": {
+        "$ref": "#/$defs/ConfidenceGrade"
+      },
+      "title": "Confidence Counts",
+      "type": "object"
+    },
+    "reviewed_count": {
+      "minimum": 0,
+      "title": "Reviewed Count",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "cell_id",
+    "bounds",
+    "valid_from",
+    "valid_to",
+    "layer",
+    "feature_count",
+    "confidence_counts",
+    "reviewed_count"
+  ],
+  "title": "CoverageCell",
+  "type": "object"
+}

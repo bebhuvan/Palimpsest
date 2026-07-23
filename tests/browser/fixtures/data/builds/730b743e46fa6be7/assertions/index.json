@@ -1,0 +1,40 @@
+{
+  "collections": {
+    "entities": {
+      "count": 5,
+      "path_template": "assertions/entities/{shard}.json",
+      "shards": [
+        "25",
+        "6f",
+        "85",
+        "87",
+        "b6"
+      ]
+    },
+    "features": {
+      "count": 1,
+      "path_template": "assertions/features/{shard}.json",
+      "shards": [
+        "03"
+      ]
+    },
+    "records": {
+      "count": 5,
+      "path_template": "assertions/records/{shard}.json",
+      "shards": [
+        "05",
+        "3d",
+        "63",
+        "6b",
+        "9a"
+      ]
+    }
+  },
+  "schema_version": "1.0.0",
+  "semantics": "structured-sourced-facts-not-generated-prose",
+  "sharding": {
+    "algorithm": "sha256",
+    "encoding": "utf-8",
+    "prefix_length": 2
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "band-03|g10:20:11": {
+    "band_id": "band-03",
+    "bounds": [
+      20.0,
+      20.0,
+      30.0,
+      30.0
+    ],
+    "bucket_id": "band-03|g10:20:11",
+    "cell_id": "g10:20:11",
+    "entries": [
+      {
+        "dossier_ids": [
+          "wikipedia:en:100"
+        ],
+        "entity_id": "wikidata:Q100",
+        "entry_id": "feature:browser-pilot:enriched-place:50:150:aaaa",
+        "entry_type": "map_feature",
+        "feature_id": "browser-pilot:enriched-place:50:150:aaaa",
+        "kind": "polity",
+        "latitude": 25.0,
+        "longitude": 17.0,
+        "review_status": "verified",
+        "source_ids": [
+          "browser-pilot"
+        ],
+        "spatial_basis": "feature_geometry_intersection",
+        "temporal_confidence": "B",
+        "themes": [
+          "power"
+        ],
+        "valid_from": 50,
+        "valid_to": 150
+      },
+      {
+        "dossier_ids": [],
+        "entity_id": "wikidata:Q200",
+        "entry_id": "feature:browser-pilot:missing-dossier-place:50:150:bbbb",
+        "entry_type": "map_feature",
+        "feature_id": "browser-pilot:missing-dossier-place:50:150:bbbb",
+        "kind": "polity",
+        "latitude": 25.0,
+        "longitude": 27.0,
+        "review_status": "verified",
+        "source_ids": [
+          "browser-pilot"
+        ],
+        "spatial_basis": "feature_geometry_intersection",
+        "temporal_confidence": "B",
+        "themes": [
+          "power"
+        ],
+        "valid_from": 50,
+        "valid_to": 150
+      }
+    ],
+    "valid_from": 1,
+    "valid_to": 499
+  }
+}

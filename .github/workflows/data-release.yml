@@ -1,0 +1,93 @@
+name: Historical data release
+
+on:
+  schedule:
+    - cron: "17 3 * * 0"
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish the verified build to Cloudflare R2
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: historical-data-release
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      WIKIMEDIA_USER_AGENT: ${{ secrets.WIKIMEDIA_USER_AGENT }}
+      R2_BUCKET: ${{ secrets.R2_BUCKET }}
+      R2_SNAPSHOT_BUCKET: ${{ secrets.R2_SNAPSHOT_BUCKET }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          version: 0.11.16
+          enable-cache: true
+      - uses: actions/cache@v4
+        with:
+          path: data/raw
+          key: raw-${{ hashFiles('config/pipeline.yml') }}-${{ github.run_id }}
+          restore-keys: raw-${{ hashFiles('config/pipeline.yml') }}-
+      - uses: actions/cache@v4
+        with:
+          path: .tools
+          key: tippecanoe-${{ runner.os }}-${{ hashFiles('scripts/install-tippecanoe.sh') }}
+      - name: Validate release identity
+        run: |
+          test -n "$WIKIMEDIA_USER_AGENT"
+      - name: Install locked environment
+        run: uv sync --frozen --extra dev
+      - name: Run checks
+        run: make check
+      - name: Install pinned Tippecanoe
+        run: bash scripts/install-tippecanoe.sh
+      - name: Build and verify immutable release
+        run: |
+          /usr/bin/time -v -o build-metrics.txt uv run history-data build --enrich --tiles
+          uv run history-data verify-build --require-tiles
+          du -sh data/raw data/staged dist/data >> build-metrics.txt
+          {
+            echo '### Data release resource use'
+            echo '```text'
+            tail -n 30 build-metrics.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload verified build for inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: history-data-${{ github.run_id }}
+          path: dist/data
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload build resource metrics
+        uses: actions/upload-artifact@v4
+        with:
+          name: history-data-metrics-${{ github.run_id }}
+          path: build-metrics.txt
+          if-no-files-found: error
+          retention-days: 30
+      - name: Install current Wrangler for publication
+        if: github.event_name == 'schedule' || inputs.publish == true
+        run: npm install --global wrangler@latest
+      - name: Publish artifacts and snapshots atomically
+        if: github.event_name == 'schedule' || inputs.publish == true
+        run: |
+          test -n "$R2_BUCKET"
+          test -n "$R2_SNAPSHOT_BUCKET"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          test -n "$CLOUDFLARE_API_TOKEN"
+          uv run history-data publish-r2 \
+            --bucket "$R2_BUCKET" \
+            --snapshot-bucket "$R2_SNAPSHOT_BUCKET"

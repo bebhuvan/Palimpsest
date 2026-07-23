@@ -1,0 +1,13 @@
+{
+  "historyjoice:publication-de-revolutionibus:1543": {
+    "feature_id": "historyjoice:publication-de-revolutionibus:1543",
+    "items": [],
+    "seed_entity_ids": [
+      "historyjoice:event:de-revolutionibus-publication",
+      "historyjoice:institution:petreius-workshop",
+      "historyjoice:person:nicolaus-copernicus",
+      "historyjoice:place:nuremberg",
+      "historyjoice:work:de-revolutionibus"
+    ]
+  }
+}

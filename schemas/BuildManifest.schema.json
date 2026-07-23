@@ -1,0 +1,329 @@
+{
+  "$defs": {
+    "ArtifactFile": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "media_type": {
+          "title": "Media Type",
+          "type": "string"
+        },
+        "bytes": {
+          "minimum": 0,
+          "title": "Bytes",
+          "type": "integer"
+        },
+        "checksum_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Checksum Sha256",
+          "type": "string"
+        },
+        "cache_control": {
+          "title": "Cache Control",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "media_type",
+        "bytes",
+        "checksum_sha256",
+        "cache_control"
+      ],
+      "title": "ArtifactFile",
+      "type": "object"
+    },
+    "RawSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "filename": {
+          "title": "Filename",
+          "type": "string"
+        },
+        "original_url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Original Url",
+          "type": "string"
+        },
+        "object_key": {
+          "title": "Object Key",
+          "type": "string"
+        },
+        "bytes": {
+          "minimum": 0,
+          "title": "Bytes",
+          "type": "integer"
+        },
+        "checksum_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Checksum Sha256",
+          "type": "string"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "etag": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Etag"
+        },
+        "last_modified": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Modified"
+        }
+      },
+      "required": [
+        "source_id",
+        "filename",
+        "original_url",
+        "object_key",
+        "bytes",
+        "checksum_sha256",
+        "retrieved_at"
+      ],
+      "title": "RawSnapshot",
+      "type": "object"
+    },
+    "SourceReference": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "pattern": "^[a-z0-9][a-z0-9_-]+$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "record_id": {
+          "title": "Record Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "publisher": {
+          "title": "Publisher",
+          "type": "string"
+        },
+        "url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Url",
+          "type": "string"
+        },
+        "license_id": {
+          "title": "License Id",
+          "type": "string"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        },
+        "checksum_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Checksum Sha256"
+        },
+        "citation": {
+          "title": "Citation",
+          "type": "string"
+        },
+        "modified": {
+          "default": false,
+          "title": "Modified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source_id",
+        "record_id",
+        "title",
+        "publisher",
+        "url",
+        "license_id",
+        "retrieved_at",
+        "citation"
+      ],
+      "title": "SourceReference",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "1.10.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "build_id": {
+      "title": "Build Id",
+      "type": "string"
+    },
+    "generated_at": {
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "minimum_year": {
+      "title": "Minimum Year",
+      "type": "integer"
+    },
+    "maximum_year": {
+      "title": "Maximum Year",
+      "type": "integer"
+    },
+    "sources": {
+      "items": {
+        "$ref": "#/$defs/SourceReference"
+      },
+      "title": "Sources",
+      "type": "array"
+    },
+    "raw_snapshots": {
+      "items": {
+        "$ref": "#/$defs/RawSnapshot"
+      },
+      "title": "Raw Snapshots",
+      "type": "array"
+    },
+    "artifacts": {
+      "items": {
+        "$ref": "#/$defs/ArtifactFile"
+      },
+      "title": "Artifacts",
+      "type": "array"
+    },
+    "rejected_record_count": {
+      "minimum": 0,
+      "title": "Rejected Record Count",
+      "type": "integer"
+    },
+    "coverage_path": {
+      "title": "Coverage Path",
+      "type": "string"
+    },
+    "attribution_path": {
+      "title": "Attribution Path",
+      "type": "string"
+    },
+    "quality_path": {
+      "default": "quality.json",
+      "title": "Quality Path",
+      "type": "string"
+    },
+    "content_index_path": {
+      "default": "content/index.json",
+      "title": "Content Index Path",
+      "type": "string"
+    },
+    "causal_index_path": {
+      "default": "causal/index.json",
+      "title": "Causal Index Path",
+      "type": "string"
+    },
+    "chronology_index_path": {
+      "default": "chronology/index.json",
+      "title": "Chronology Index Path",
+      "type": "string"
+    },
+    "source_registry_path": {
+      "default": "source-registry.json",
+      "title": "Source Registry Path",
+      "type": "string"
+    },
+    "coverage_priorities_path": {
+      "default": "coverage-priorities.json",
+      "title": "Coverage Priorities Path",
+      "type": "string"
+    },
+    "wiki_context_index_path": {
+      "default": "context/index.json",
+      "title": "Wiki Context Index Path",
+      "type": "string"
+    },
+    "region_time_index_path": {
+      "default": "region-time/index.json",
+      "title": "Region Time Index Path",
+      "type": "string"
+    },
+    "theme_index_path": {
+      "default": "themes/index.json",
+      "title": "Theme Index Path",
+      "type": "string"
+    },
+    "search_index_path": {
+      "default": "search/index.json",
+      "title": "Search Index Path",
+      "type": "string"
+    },
+    "assertion_index_path": {
+      "default": "assertions/index.json",
+      "title": "Assertion Index Path",
+      "type": "string"
+    },
+    "layer_catalog_path": {
+      "default": "layers/index.json",
+      "title": "Layer Catalog Path",
+      "type": "string"
+    }
+  },
+  "required": [
+    "build_id",
+    "minimum_year",
+    "maximum_year",
+    "sources",
+    "artifacts",
+    "rejected_record_count",
+    "coverage_path",
+    "attribution_path"
+  ],
+  "title": "BuildManifest",
+  "type": "object"
+}

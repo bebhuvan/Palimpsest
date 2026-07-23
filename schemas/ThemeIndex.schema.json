@@ -1,0 +1,101 @@
+{
+  "$defs": {
+    "ContentSharding": {
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "const": "sha256",
+          "default": "sha256",
+          "title": "Algorithm",
+          "type": "string"
+        },
+        "encoding": {
+          "const": "utf-8",
+          "default": "utf-8",
+          "title": "Encoding",
+          "type": "string"
+        },
+        "prefix_length": {
+          "const": 2,
+          "default": 2,
+          "title": "Prefix Length",
+          "type": "integer"
+        }
+      },
+      "title": "ContentSharding",
+      "type": "object"
+    },
+    "ThemeCollections": {
+      "additionalProperties": false,
+      "properties": {
+        "assertions": {
+          "$ref": "#/$defs/ThemeShardContract"
+        },
+        "features": {
+          "$ref": "#/$defs/ThemeShardContract"
+        }
+      },
+      "required": [
+        "assertions",
+        "features"
+      ],
+      "title": "ThemeCollections",
+      "type": "object"
+    },
+    "ThemeShardContract": {
+      "additionalProperties": false,
+      "properties": {
+        "path_template": {
+          "pattern": "^themes/(assertions|features)/\\{shard\\}\\.json$",
+          "title": "Path Template",
+          "type": "string"
+        },
+        "count": {
+          "minimum": 0,
+          "title": "Count",
+          "type": "integer"
+        },
+        "shards": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Shards",
+          "type": "array"
+        }
+      },
+      "required": [
+        "path_template",
+        "count"
+      ],
+      "title": "ThemeShardContract",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "semantics": {
+      "const": "sourced-multi-label-thematic-assertions",
+      "default": "sourced-multi-label-thematic-assertions",
+      "title": "Semantics",
+      "type": "string"
+    },
+    "sharding": {
+      "$ref": "#/$defs/ContentSharding"
+    },
+    "collections": {
+      "$ref": "#/$defs/ThemeCollections"
+    }
+  },
+  "required": [
+    "sharding",
+    "collections"
+  ],
+  "title": "ThemeIndex",
+  "type": "object"
+}

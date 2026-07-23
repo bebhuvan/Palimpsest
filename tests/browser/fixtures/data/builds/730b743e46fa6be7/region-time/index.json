@@ -1,0 +1,84 @@
+{
+  "buckets": {
+    "count": 4,
+    "path_template": "region-time/buckets/{shard}.json",
+    "shards": [
+      "25",
+      "34",
+      "df",
+      "e0"
+    ]
+  },
+  "causal_claims_excluded": true,
+  "grid": {
+    "cell_degrees": 10,
+    "latitude_origin": -90,
+    "longitude_origin": -180,
+    "semantics": "discovery-grid-not-historical-regions"
+  },
+  "inclusion_policy": "reviewed-features-and-dated-coordinate-entities",
+  "maximum_results_per_selection": 60,
+  "schema_version": "1.0.0",
+  "sharding": {
+    "algorithm": "sha256",
+    "encoding": "utf-8",
+    "prefix_length": 2
+  },
+  "time_bands": [
+    {
+      "band_id": "band-00",
+      "valid_from": -3400,
+      "valid_to": -2001
+    },
+    {
+      "band_id": "band-01",
+      "valid_from": -2000,
+      "valid_to": -1001
+    },
+    {
+      "band_id": "band-02",
+      "valid_from": -1000,
+      "valid_to": -1
+    },
+    {
+      "band_id": "band-03",
+      "valid_from": 1,
+      "valid_to": 499
+    },
+    {
+      "band_id": "band-04",
+      "valid_from": 500,
+      "valid_to": 999
+    },
+    {
+      "band_id": "band-05",
+      "valid_from": 1000,
+      "valid_to": 1499
+    },
+    {
+      "band_id": "band-06",
+      "valid_from": 1500,
+      "valid_to": 1799
+    },
+    {
+      "band_id": "band-07",
+      "valid_from": 1800,
+      "valid_to": 1885
+    },
+    {
+      "band_id": "band-08",
+      "valid_from": 1886,
+      "valid_to": 1945
+    },
+    {
+      "band_id": "band-09",
+      "valid_from": 1946,
+      "valid_to": 1999
+    },
+    {
+      "band_id": "band-10",
+      "valid_from": 2000,
+      "valid_to": 2026
+    }
+  ]
+}

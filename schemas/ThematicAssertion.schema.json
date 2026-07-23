@@ -1,0 +1,280 @@
+{
+  "$defs": {
+    "Confidence": {
+      "additionalProperties": false,
+      "properties": {
+        "grade": {
+          "$ref": "#/$defs/ConfidenceGrade"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "grade",
+        "rationale"
+      ],
+      "title": "Confidence",
+      "type": "object"
+    },
+    "ConfidenceGrade": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "unknown"
+      ],
+      "title": "ConfidenceGrade",
+      "type": "string"
+    },
+    "FeatureKind": {
+      "enum": [
+        "polity",
+        "cultural_region",
+        "settlement",
+        "archaeological_site",
+        "route",
+        "event",
+        "archival_map",
+        "social_group",
+        "mobile_group",
+        "cultural_network"
+      ],
+      "title": "FeatureKind",
+      "type": "string"
+    },
+    "HistoricalTheme": {
+      "description": "Broad, non-exclusive discovery lenses attached by a reviewed source mapping.",
+      "enum": [
+        "power",
+        "belief",
+        "knowledge",
+        "culture",
+        "trade"
+      ],
+      "title": "HistoricalTheme",
+      "type": "string"
+    },
+    "ReviewStatus": {
+      "enum": [
+        "unreviewed",
+        "provisional",
+        "verified",
+        "contested",
+        "rejected"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    },
+    "SourceReference": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "pattern": "^[a-z0-9][a-z0-9_-]+$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "record_id": {
+          "title": "Record Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "publisher": {
+          "title": "Publisher",
+          "type": "string"
+        },
+        "url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Url",
+          "type": "string"
+        },
+        "license_id": {
+          "title": "License Id",
+          "type": "string"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        },
+        "checksum_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Checksum Sha256"
+        },
+        "citation": {
+          "title": "Citation",
+          "type": "string"
+        },
+        "modified": {
+          "default": false,
+          "title": "Modified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source_id",
+        "record_id",
+        "title",
+        "publisher",
+        "url",
+        "license_id",
+        "retrieved_at",
+        "citation"
+      ],
+      "title": "SourceReference",
+      "type": "object"
+    },
+    "ThemeClassificationBasis": {
+      "description": "The bounded evidence that permits a thematic classification.",
+      "enum": [
+        "explicit_source_type",
+        "explicit_source_relation",
+        "reviewed_editorial"
+      ],
+      "title": "ThemeClassificationBasis",
+      "type": "string"
+    },
+    "ThemeRole": {
+      "description": "How strongly a thematic assertion should affect discovery and rendering.",
+      "enum": [
+        "primary",
+        "secondary",
+        "contextual"
+      ],
+      "title": "ThemeRole",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "A sourced, time-bounded explanation for one feature appearing in a lens.",
+  "properties": {
+    "assertion_id": {
+      "pattern": "^theme:[a-f0-9]{16}$",
+      "title": "Assertion Id",
+      "type": "string"
+    },
+    "subject_id": {
+      "title": "Subject Id",
+      "type": "string"
+    },
+    "subject_kind": {
+      "$ref": "#/$defs/FeatureKind"
+    },
+    "feature_ids": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Feature Ids",
+      "type": "array"
+    },
+    "entity_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Entity Ids",
+      "type": "array"
+    },
+    "theme": {
+      "$ref": "#/$defs/HistoricalTheme"
+    },
+    "subtheme": {
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "title": "Subtheme",
+      "type": "string"
+    },
+    "role": {
+      "$ref": "#/$defs/ThemeRole"
+    },
+    "valid_from": {
+      "title": "Valid From",
+      "type": "integer"
+    },
+    "valid_to": {
+      "title": "Valid To",
+      "type": "integer"
+    },
+    "classification_basis": {
+      "$ref": "#/$defs/ThemeClassificationBasis"
+    },
+    "rule_id": {
+      "pattern": "^theme-rule:[a-z0-9][a-z0-9_-]+$",
+      "title": "Rule Id",
+      "type": "string"
+    },
+    "matched_values": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Matched Values",
+      "type": "array"
+    },
+    "confidence": {
+      "$ref": "#/$defs/Confidence"
+    },
+    "review_status": {
+      "$ref": "#/$defs/ReviewStatus"
+    },
+    "rationale": {
+      "minLength": 1,
+      "title": "Rationale",
+      "type": "string"
+    },
+    "source_refs": {
+      "items": {
+        "$ref": "#/$defs/SourceReference"
+      },
+      "minItems": 1,
+      "title": "Source Refs",
+      "type": "array"
+    }
+  },
+  "required": [
+    "assertion_id",
+    "subject_id",
+    "subject_kind",
+    "feature_ids",
+    "theme",
+    "subtheme",
+    "role",
+    "valid_from",
+    "valid_to",
+    "classification_basis",
+    "rule_id",
+    "confidence",
+    "review_status",
+    "rationale",
+    "source_refs"
+  ],
+  "title": "ThematicAssertion",
+  "type": "object"
+}

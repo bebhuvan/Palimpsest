@@ -1,0 +1,749 @@
+{
+  "$defs": {
+    "Confidence": {
+      "additionalProperties": false,
+      "properties": {
+        "grade": {
+          "$ref": "#/$defs/ConfidenceGrade"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "grade",
+        "rationale"
+      ],
+      "title": "Confidence",
+      "type": "object"
+    },
+    "ConfidenceGrade": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "unknown"
+      ],
+      "title": "ConfidenceGrade",
+      "type": "string"
+    },
+    "DatePrecision": {
+      "enum": [
+        "exact",
+        "year",
+        "decade",
+        "century",
+        "range",
+        "unknown"
+      ],
+      "title": "DatePrecision",
+      "type": "string"
+    },
+    "EntityCoordinate": {
+      "additionalProperties": false,
+      "properties": {
+        "latitude": {
+          "maximum": 90,
+          "minimum": -90,
+          "title": "Latitude",
+          "type": "number"
+        },
+        "longitude": {
+          "maximum": 180,
+          "minimum": -180,
+          "title": "Longitude",
+          "type": "number"
+        },
+        "precision": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Precision"
+        },
+        "globe": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Globe"
+        },
+        "rank": {
+          "default": "normal",
+          "enum": [
+            "preferred",
+            "normal",
+            "deprecated"
+          ],
+          "title": "Rank",
+          "type": "string"
+        }
+      },
+      "required": [
+        "latitude",
+        "longitude"
+      ],
+      "title": "EntityCoordinate",
+      "type": "object"
+    },
+    "EntityDateClaim": {
+      "additionalProperties": false,
+      "properties": {
+        "predicate": {
+          "pattern": "^P[1-9][0-9]*$",
+          "title": "Predicate",
+          "type": "string"
+        },
+        "time": {
+          "title": "Time",
+          "type": "string"
+        },
+        "year": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Year"
+        },
+        "precision": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Precision"
+        },
+        "calendar_model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Calendar Model"
+        },
+        "before": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Before",
+          "type": "integer"
+        },
+        "after": {
+          "default": 0,
+          "minimum": 0,
+          "title": "After",
+          "type": "integer"
+        },
+        "rank": {
+          "default": "normal",
+          "enum": [
+            "preferred",
+            "normal",
+            "deprecated"
+          ],
+          "title": "Rank",
+          "type": "string"
+        },
+        "statement_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Statement Id"
+        },
+        "qualifiers": {
+          "items": {
+            "$ref": "#/$defs/WikidataSnak"
+          },
+          "title": "Qualifiers",
+          "type": "array"
+        },
+        "references": {
+          "items": {
+            "$ref": "#/$defs/WikidataReference"
+          },
+          "title": "References",
+          "type": "array"
+        }
+      },
+      "required": [
+        "predicate",
+        "time"
+      ],
+      "title": "EntityDateClaim",
+      "type": "object"
+    },
+    "EntityKind": {
+      "description": "Stable product-level identity classes, independent of source vocabularies.",
+      "enum": [
+        "person",
+        "event",
+        "institution",
+        "work",
+        "artifact",
+        "route",
+        "place",
+        "polity",
+        "concept",
+        "other"
+      ],
+      "title": "EntityKind",
+      "type": "string"
+    },
+    "EntityRelationship": {
+      "additionalProperties": false,
+      "properties": {
+        "predicate": {
+          "pattern": "^P[1-9][0-9]*$",
+          "title": "Predicate",
+          "type": "string"
+        },
+        "relation_type": {
+          "title": "Relation Type",
+          "type": "string"
+        },
+        "target_entity_id": {
+          "pattern": "^wikidata:Q[1-9][0-9]*$",
+          "title": "Target Entity Id",
+          "type": "string"
+        },
+        "rank": {
+          "default": "normal",
+          "enum": [
+            "preferred",
+            "normal",
+            "deprecated"
+          ],
+          "title": "Rank",
+          "type": "string"
+        },
+        "statement_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Statement Id"
+        },
+        "qualifiers": {
+          "items": {
+            "$ref": "#/$defs/WikidataSnak"
+          },
+          "title": "Qualifiers",
+          "type": "array"
+        },
+        "references": {
+          "items": {
+            "$ref": "#/$defs/WikidataReference"
+          },
+          "title": "References",
+          "type": "array"
+        }
+      },
+      "required": [
+        "predicate",
+        "relation_type",
+        "target_entity_id"
+      ],
+      "title": "EntityRelationship",
+      "type": "object"
+    },
+    "ReviewStatus": {
+      "enum": [
+        "unreviewed",
+        "provisional",
+        "verified",
+        "contested",
+        "rejected"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    },
+    "SourceReference": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "pattern": "^[a-z0-9][a-z0-9_-]+$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "record_id": {
+          "title": "Record Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "publisher": {
+          "title": "Publisher",
+          "type": "string"
+        },
+        "url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Url",
+          "type": "string"
+        },
+        "license_id": {
+          "title": "License Id",
+          "type": "string"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        },
+        "checksum_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Checksum Sha256"
+        },
+        "citation": {
+          "title": "Citation",
+          "type": "string"
+        },
+        "modified": {
+          "default": false,
+          "title": "Modified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source_id",
+        "record_id",
+        "title",
+        "publisher",
+        "url",
+        "license_id",
+        "retrieved_at",
+        "citation"
+      ],
+      "title": "SourceReference",
+      "type": "object"
+    },
+    "TemporalUncertainty": {
+      "additionalProperties": false,
+      "description": "Uncertainty envelope around the canonical rendering interval.\n\nThe four bounds describe what a source permits; they are not samples to average.\n``valid_from``/``valid_to`` on the feature remain the interval used for map filtering.",
+      "properties": {
+        "earliest_start": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Earliest Start"
+        },
+        "latest_start": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latest Start"
+        },
+        "earliest_end": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Earliest End"
+        },
+        "latest_end": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latest End"
+        },
+        "circa": {
+          "default": false,
+          "title": "Circa",
+          "type": "boolean"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rationale"
+      ],
+      "title": "TemporalUncertainty",
+      "type": "object"
+    },
+    "WikidataReference": {
+      "additionalProperties": false,
+      "properties": {
+        "reference_hash": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reference Hash"
+        },
+        "snaks": {
+          "items": {
+            "$ref": "#/$defs/WikidataSnak"
+          },
+          "title": "Snaks",
+          "type": "array"
+        }
+      },
+      "title": "WikidataReference",
+      "type": "object"
+    },
+    "WikidataSnak": {
+      "additionalProperties": false,
+      "description": "A bounded normalized qualifier/reference snak from one Wikidata statement.",
+      "properties": {
+        "predicate": {
+          "pattern": "^P[1-9][0-9]*$",
+          "title": "Predicate",
+          "type": "string"
+        },
+        "datatype": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Datatype"
+        },
+        "value": {
+          "title": "Value"
+        }
+      },
+      "required": [
+        "predicate",
+        "value"
+      ],
+      "title": "WikidataSnak",
+      "type": "object"
+    },
+    "WikipediaSitelink": {
+      "additionalProperties": false,
+      "properties": {
+        "language": {
+          "minLength": 1,
+          "title": "Language",
+          "type": "string"
+        },
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "language",
+        "title",
+        "url"
+      ],
+      "title": "WikipediaSitelink",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "entity_id": {
+      "title": "Entity Id",
+      "type": "string"
+    },
+    "entity_type": {
+      "title": "Entity Type",
+      "type": "string"
+    },
+    "entity_kind": {
+      "$ref": "#/$defs/EntityKind",
+      "default": "other"
+    },
+    "names": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Names",
+      "type": "object"
+    },
+    "aliases": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Aliases",
+      "type": "object"
+    },
+    "valid_from": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Valid From"
+    },
+    "valid_to": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Valid To"
+    },
+    "date_precision": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DatePrecision"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "temporal_uncertainty": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TemporalUncertainty"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "temporal_confidence": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Confidence"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "review_status": {
+      "$ref": "#/$defs/ReviewStatus",
+      "default": "unreviewed"
+    },
+    "wikidata_id": {
+      "anyOf": [
+        {
+          "pattern": "^Q[1-9][0-9]*$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Wikidata Id"
+    },
+    "descriptions": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Descriptions",
+      "type": "object"
+    },
+    "links": {
+      "additionalProperties": {
+        "format": "uri",
+        "maxLength": 2083,
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Links",
+      "type": "object"
+    },
+    "sitelinks": {
+      "additionalProperties": {
+        "$ref": "#/$defs/WikipediaSitelink"
+      },
+      "title": "Sitelinks",
+      "type": "object"
+    },
+    "date_claims": {
+      "items": {
+        "$ref": "#/$defs/EntityDateClaim"
+      },
+      "title": "Date Claims",
+      "type": "array"
+    },
+    "relationships": {
+      "items": {
+        "$ref": "#/$defs/EntityRelationship"
+      },
+      "title": "Relationships",
+      "type": "array"
+    },
+    "commons_images": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Commons Images",
+      "type": "array"
+    },
+    "commons_categories": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Commons Categories",
+      "type": "array"
+    },
+    "coordinates": {
+      "items": {
+        "$ref": "#/$defs/EntityCoordinate"
+      },
+      "title": "Coordinates",
+      "type": "array"
+    },
+    "redirects_from": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Redirects From",
+      "type": "array"
+    },
+    "context_depth": {
+      "default": 0,
+      "enum": [
+        0,
+        1
+      ],
+      "title": "Context Depth",
+      "type": "integer"
+    },
+    "discovered_from_entity_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Discovered From Entity Ids",
+      "type": "array"
+    },
+    "discovery_predicates": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Discovery Predicates",
+      "type": "array"
+    },
+    "source_refs": {
+      "items": {
+        "$ref": "#/$defs/SourceReference"
+      },
+      "minItems": 1,
+      "title": "Source Refs",
+      "type": "array"
+    }
+  },
+  "required": [
+    "entity_id",
+    "entity_type",
+    "names",
+    "source_refs"
+  ],
+  "title": "HistoricalEntity",
+  "type": "object"
+}

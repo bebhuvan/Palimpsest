@@ -1,0 +1,34 @@
+{
+  "wikipedia:en:100": {
+    "content_checksum_sha256": "7ad243b0e55fb81e6111ffa5eb7861ae2c221d3551772a4b7a27acd10de6bb50",
+    "content_role": "tertiary_summary",
+    "dossier_id": "wikipedia:en:100",
+    "entity_ids": [
+      "wikidata:Q100"
+    ],
+    "extract": "This saved browser-pilot introduction verifies that revision-pinned tertiary summaries reach the reading sidebar.",
+    "language": "en",
+    "page_id": 100,
+    "redirects_from": [],
+    "requested_titles": [
+      "Enriched Pilot Place"
+    ],
+    "revision_id": 1000,
+    "revision_timestamp": "2026-07-23T06:00:00Z",
+    "source_ref": {
+      "checksum_sha256": null,
+      "citation": "Wikimedia Foundation and Wikipedia contributors, Wikipedia browser-pilot introduction",
+      "license_id": "CC-BY-SA-4.0",
+      "modified": false,
+      "publisher": "Wikimedia Foundation and Wikipedia contributors",
+      "record_id": "100",
+      "retrieved_at": "2026-07-23T06:00:00Z",
+      "source_id": "wikipedia",
+      "title": "Wikipedia browser-pilot introduction",
+      "url": "https://en.wikipedia.org/wiki/History",
+      "version": "browser-pilot-v1"
+    },
+    "title": "Enriched Pilot Place",
+    "url": "https://en.wikipedia.org/wiki/History"
+  }
+}

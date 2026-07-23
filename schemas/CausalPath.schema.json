@@ -1,0 +1,78 @@
+{
+  "$defs": {
+    "ReviewStatus": {
+      "enum": [
+        "unreviewed",
+        "provisional",
+        "verified",
+        "contested",
+        "rejected"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "path_id": {
+      "pattern": "^path:[a-z0-9][a-z0-9:_-]+$",
+      "title": "Path Id",
+      "type": "string"
+    },
+    "titles": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "minProperties": 1,
+      "title": "Titles",
+      "type": "object"
+    },
+    "summaries": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "minProperties": 1,
+      "title": "Summaries",
+      "type": "object"
+    },
+    "claim_ids": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Claim Ids",
+      "type": "array"
+    },
+    "perspective": {
+      "minLength": 1,
+      "title": "Perspective",
+      "type": "string"
+    },
+    "authored_by": {
+      "minLength": 1,
+      "title": "Authored By",
+      "type": "string"
+    },
+    "reviewed_by": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reviewed By",
+      "type": "array"
+    },
+    "review_status": {
+      "$ref": "#/$defs/ReviewStatus",
+      "default": "provisional"
+    }
+  },
+  "required": [
+    "path_id",
+    "titles",
+    "summaries",
+    "claim_ids",
+    "perspective",
+    "authored_by"
+  ],
+  "title": "CausalPath",
+  "type": "object"
+}

@@ -1,0 +1,181 @@
+schema_version: 1.0.0
+authored_by: History Joice editorial team
+reviewed_by: []
+rules:
+  - rule_id: theme-rule:polity-power
+    feature_kinds: [polity]
+    theme: power
+    subtheme: governance
+    role: primary
+    classification_basis: explicit_source_type
+    confidence:
+      grade: B
+      rationale: The source record is explicitly normalized as a polity.
+    review_status: provisional
+    rationale: Polities are institutions and territories through which authority is exercised.
+
+  - rule_id: theme-rule:trade-route-types
+    feature_kinds: [route]
+    property_path: properties.route_types
+    match_any: [trade_route, caravan_route, merchant_route, commercial_shipping]
+    theme: trade
+    subtheme: exchange_routes
+    role: primary
+    classification_basis: explicit_source_type
+    confidence:
+      grade: B
+      rationale: The route has an explicit structured exchange-related type.
+    review_status: provisional
+    rationale: The route is explicitly identified as infrastructure for trade or commercial exchange.
+
+  - rule_id: theme-rule:cultural-region-culture
+    feature_kinds: [cultural_region, social_group, mobile_group, cultural_network]
+    theme: culture
+    subtheme: social_worlds
+    role: primary
+    classification_basis: explicit_source_type
+    confidence:
+      grade: B
+      rationale: The structured feature kind explicitly describes a cultural or social formation.
+    review_status: provisional
+    rationale: The feature represents a cultural region, network, or social group rather than a political boundary.
+
+  - rule_id: theme-rule:event-power-types
+    feature_kinds: [event]
+    property_path: properties.event_types
+    match_any: [battle, war, coup, election, treaty, coronation, revolt, revolution, conquest]
+    theme: power
+    subtheme: political_events
+    role: primary
+    classification_basis: explicit_source_type
+    confidence:
+      grade: B
+      rationale: The event has an explicit structured political or conflict type.
+    review_status: provisional
+    rationale: The event directly concerns authority, government, organized conflict, or political settlement.
+
+  - rule_id: theme-rule:event-belief-types
+    feature_kinds: [event]
+    property_path: properties.event_types
+    match_any: [religious_council, pilgrimage, ritual, reformation, schism, canonization]
+    theme: belief
+    subtheme: religious_events
+    role: primary
+    classification_basis: explicit_source_type
+    confidence:
+      grade: B
+      rationale: The event has an explicit structured religious type.
+    review_status: provisional
+    rationale: The event directly concerns religious practice, institutions, doctrine, or sacred observance.
+
+  - rule_id: theme-rule:event-knowledge-types
+    feature_kinds: [event]
+    property_path: properties.event_types
+    match_any: [discovery, invention, publication, scientific_expedition, experiment, academic_foundation]
+    theme: knowledge
+    subtheme: knowledge_events
+    role: primary
+    classification_basis: explicit_source_type
+    confidence:
+      grade: B
+      rationale: The event has an explicit structured knowledge-production type.
+    review_status: provisional
+    rationale: The event directly concerns creating, testing, teaching, or circulating knowledge.
+
+  - rule_id: theme-rule:event-culture-types
+    feature_kinds: [event]
+    property_path: properties.event_types
+    match_any: [festival, performance, exhibition, artistic_movement, cultural_founding, publication]
+    theme: culture
+    subtheme: cultural_events
+    role: primary
+    classification_basis: explicit_source_type
+    confidence:
+      grade: B
+      rationale: The event has an explicit structured cultural type.
+    review_status: provisional
+    rationale: The event directly concerns public culture, art, performance, commemoration, or publishing.
+
+  - rule_id: theme-rule:event-trade-types
+    feature_kinds: [event]
+    property_path: properties.event_types
+    match_any: [trade_fair, commercial_treaty, market_opening, market_crash, trade_embargo]
+    theme: trade
+    subtheme: exchange_events
+    role: primary
+    classification_basis: explicit_source_type
+    confidence:
+      grade: B
+      rationale: The event has an explicit structured trade or market type.
+    review_status: provisional
+    rationale: The event directly concerns markets, commercial agreements, or constraints on exchange.
+
+  - rule_id: theme-rule:pleiades-power-types
+    source_ids: [pleiades]
+    property_path: properties.place_types
+    match_any: [palace, fort, fortification, citadel, battlefield, administrative]
+    theme: power
+    subtheme: institutions_and_conflict
+    role: primary
+    classification_basis: explicit_source_type
+    confidence:
+      grade: B
+      rationale: A matching Pleiades place type is present in the structured source record.
+    review_status: provisional
+    rationale: The explicit place type identifies an institution or site of authority, administration, or organized conflict.
+
+  - rule_id: theme-rule:pleiades-belief-types
+    source_ids: [pleiades]
+    property_path: properties.place_types
+    match_any: [temple, sanctuary, shrine, church, mosque, synagogue, monastery, cemetery, sacred]
+    theme: belief
+    subtheme: religious_places
+    role: primary
+    classification_basis: explicit_source_type
+    confidence:
+      grade: B
+      rationale: A matching Pleiades place type is present in the structured source record.
+    review_status: provisional
+    rationale: The explicit place type identifies a religious, sacred, or funerary place.
+
+  - rule_id: theme-rule:pleiades-knowledge-types
+    source_ids: [pleiades]
+    property_path: properties.place_types
+    match_any: [academy, library, school, university, observatory]
+    theme: knowledge
+    subtheme: knowledge_institutions
+    role: primary
+    classification_basis: explicit_source_type
+    confidence:
+      grade: B
+      rationale: A matching Pleiades place type is present in the structured source record.
+    review_status: provisional
+    rationale: The explicit place type identifies an institution associated with preserving, teaching, or producing knowledge.
+
+  - rule_id: theme-rule:pleiades-culture-types
+    source_ids: [pleiades]
+    property_path: properties.place_types
+    match_any: [theatre, theater, amphitheatre, amphitheater, monument, museum]
+    theme: culture
+    subtheme: public_culture
+    role: primary
+    classification_basis: explicit_source_type
+    confidence:
+      grade: B
+      rationale: A matching Pleiades place type is present in the structured source record.
+    review_status: provisional
+    rationale: The explicit place type identifies a place of performance, commemoration, or public cultural life.
+
+  - rule_id: theme-rule:pleiades-trade-types
+    source_ids: [pleiades]
+    property_path: properties.place_types
+    match_any: [port, harbour, harbor, market, road, route, bridge]
+    theme: trade
+    subtheme: exchange_infrastructure
+    role: primary
+    classification_basis: explicit_source_type
+    confidence:
+      grade: B
+      rationale: A matching Pleiades place type is present in the structured source record.
+    review_status: provisional
+    rationale: The explicit place type identifies transport or market infrastructure associated with exchange.

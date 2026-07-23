@@ -1,0 +1,234 @@
+{
+  "$defs": {
+    "Confidence": {
+      "additionalProperties": false,
+      "properties": {
+        "grade": {
+          "$ref": "#/$defs/ConfidenceGrade"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "grade",
+        "rationale"
+      ],
+      "title": "Confidence",
+      "type": "object"
+    },
+    "ConfidenceGrade": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "unknown"
+      ],
+      "title": "ConfidenceGrade",
+      "type": "string"
+    },
+    "FeatureKind": {
+      "enum": [
+        "polity",
+        "cultural_region",
+        "settlement",
+        "archaeological_site",
+        "route",
+        "event",
+        "archival_map",
+        "social_group",
+        "mobile_group",
+        "cultural_network"
+      ],
+      "title": "FeatureKind",
+      "type": "string"
+    },
+    "HistoricalTheme": {
+      "description": "Broad, non-exclusive discovery lenses attached by a reviewed source mapping.",
+      "enum": [
+        "power",
+        "belief",
+        "knowledge",
+        "culture",
+        "trade"
+      ],
+      "title": "HistoricalTheme",
+      "type": "string"
+    },
+    "ReviewStatus": {
+      "enum": [
+        "unreviewed",
+        "provisional",
+        "verified",
+        "contested",
+        "rejected"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    },
+    "SpatialMeaning": {
+      "enum": [
+        "legal_boundary",
+        "territorial_control",
+        "territorial_claim",
+        "occupation",
+        "tributary_relationship",
+        "cultural_region",
+        "influence_zone",
+        "location",
+        "route",
+        "mobility_range",
+        "seasonal_use",
+        "network",
+        "unknown"
+      ],
+      "title": "SpatialMeaning",
+      "type": "string"
+    },
+    "ThemeClassificationBasis": {
+      "description": "The bounded evidence that permits a thematic classification.",
+      "enum": [
+        "explicit_source_type",
+        "explicit_source_relation",
+        "reviewed_editorial"
+      ],
+      "title": "ThemeClassificationBasis",
+      "type": "string"
+    },
+    "ThemeRole": {
+      "description": "How strongly a thematic assertion should affect discovery and rendering.",
+      "enum": [
+        "primary",
+        "secondary",
+        "contextual"
+      ],
+      "title": "ThemeRole",
+      "type": "string"
+    },
+    "ThemeRule": {
+      "additionalProperties": false,
+      "description": "A reviewed, deterministic rule over normalized structured fields.\n\nEvery supplied selector is conjunctive. ``match_any`` is exact after value\nnormalization; it is never a free-text or substring search.",
+      "properties": {
+        "rule_id": {
+          "pattern": "^theme-rule:[a-z0-9][a-z0-9_-]+$",
+          "title": "Rule Id",
+          "type": "string"
+        },
+        "source_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Ids",
+          "type": "array"
+        },
+        "feature_kinds": {
+          "items": {
+            "$ref": "#/$defs/FeatureKind"
+          },
+          "title": "Feature Kinds",
+          "type": "array"
+        },
+        "spatial_meanings": {
+          "items": {
+            "$ref": "#/$defs/SpatialMeaning"
+          },
+          "title": "Spatial Meanings",
+          "type": "array"
+        },
+        "property_path": {
+          "anyOf": [
+            {
+              "pattern": "^properties\\.[a-z][a-z0-9_]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Property Path"
+        },
+        "match_any": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Match Any",
+          "type": "array"
+        },
+        "theme": {
+          "$ref": "#/$defs/HistoricalTheme"
+        },
+        "subtheme": {
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "title": "Subtheme",
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/$defs/ThemeRole",
+          "default": "primary"
+        },
+        "classification_basis": {
+          "$ref": "#/$defs/ThemeClassificationBasis"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus",
+          "default": "provisional"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rule_id",
+        "theme",
+        "subtheme",
+        "classification_basis",
+        "confidence",
+        "rationale"
+      ],
+      "title": "ThemeRule",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "authored_by": {
+      "minLength": 1,
+      "title": "Authored By",
+      "type": "string"
+    },
+    "reviewed_by": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reviewed By",
+      "type": "array"
+    },
+    "rules": {
+      "items": {
+        "$ref": "#/$defs/ThemeRule"
+      },
+      "title": "Rules",
+      "type": "array"
+    }
+  },
+  "required": [
+    "authored_by"
+  ],
+  "title": "ThemeRuleSet",
+  "type": "object"
+}

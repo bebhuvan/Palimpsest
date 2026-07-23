@@ -1,0 +1,222 @@
+{
+  "$defs": {
+    "ConfidenceGrade": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "unknown"
+      ],
+      "title": "ConfidenceGrade",
+      "type": "string"
+    },
+    "HistoricalTheme": {
+      "description": "Broad, non-exclusive discovery lenses attached by a reviewed source mapping.",
+      "enum": [
+        "power",
+        "belief",
+        "knowledge",
+        "culture",
+        "trade"
+      ],
+      "title": "HistoricalTheme",
+      "type": "string"
+    },
+    "RegionTimeEntry": {
+      "additionalProperties": false,
+      "description": "A discovery reference, not an assertion that a cell is a historical region.",
+      "properties": {
+        "entry_id": {
+          "title": "Entry Id",
+          "type": "string"
+        },
+        "entry_type": {
+          "enum": [
+            "map_feature",
+            "wikidata_entity"
+          ],
+          "title": "Entry Type",
+          "type": "string"
+        },
+        "entity_id": {
+          "title": "Entity Id",
+          "type": "string"
+        },
+        "feature_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Feature Id"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "themes": {
+          "items": {
+            "$ref": "#/$defs/HistoricalTheme"
+          },
+          "title": "Themes",
+          "type": "array"
+        },
+        "valid_from": {
+          "title": "Valid From",
+          "type": "integer"
+        },
+        "valid_to": {
+          "title": "Valid To",
+          "type": "integer"
+        },
+        "longitude": {
+          "maximum": 180,
+          "minimum": -180,
+          "title": "Longitude",
+          "type": "number"
+        },
+        "latitude": {
+          "maximum": 90,
+          "minimum": -90,
+          "title": "Latitude",
+          "type": "number"
+        },
+        "spatial_basis": {
+          "enum": [
+            "feature_geometry_intersection",
+            "wikidata_coordinate"
+          ],
+          "title": "Spatial Basis",
+          "type": "string"
+        },
+        "review_status": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReviewStatus"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "temporal_confidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ConfidenceGrade"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "dossier_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Dossier Ids",
+          "type": "array"
+        },
+        "source_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Source Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "entry_id",
+        "entry_type",
+        "entity_id",
+        "kind",
+        "valid_from",
+        "valid_to",
+        "longitude",
+        "latitude",
+        "spatial_basis",
+        "source_ids"
+      ],
+      "title": "RegionTimeEntry",
+      "type": "object"
+    },
+    "ReviewStatus": {
+      "enum": [
+        "unreviewed",
+        "provisional",
+        "verified",
+        "contested",
+        "rejected"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "bucket_id": {
+      "title": "Bucket Id",
+      "type": "string"
+    },
+    "cell_id": {
+      "title": "Cell Id",
+      "type": "string"
+    },
+    "band_id": {
+      "title": "Band Id",
+      "type": "string"
+    },
+    "bounds": {
+      "maxItems": 4,
+      "minItems": 4,
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "title": "Bounds",
+      "type": "array"
+    },
+    "valid_from": {
+      "title": "Valid From",
+      "type": "integer"
+    },
+    "valid_to": {
+      "title": "Valid To",
+      "type": "integer"
+    },
+    "entries": {
+      "items": {
+        "$ref": "#/$defs/RegionTimeEntry"
+      },
+      "title": "Entries",
+      "type": "array"
+    }
+  },
+  "required": [
+    "bucket_id",
+    "cell_id",
+    "band_id",
+    "bounds",
+    "valid_from",
+    "valid_to"
+  ],
+  "title": "RegionTimeBucket",
+  "type": "object"
+}

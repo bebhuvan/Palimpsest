@@ -43,7 +43,7 @@ rules:
   - rule_id: theme-rule:event-power-types
     feature_kinds: [event]
     property_path: properties.event_types
-    match_any: [battle, war, coup, election, treaty, coronation, revolt, revolution, conquest]
+    match_any: [battle, war, coup, election, treaty, coronation, revolt, revolution, conquest, royal_order, administrative_directive]
     theme: power
     subtheme: political_events
     role: primary
@@ -53,6 +53,66 @@ rules:
       rationale: The event has an explicit structured political or conflict type.
     review_status: provisional
     rationale: The event directly concerns authority, government, organized conflict, or political settlement.
+
+  - rule_id: theme-rule:event-ecclesiastical-oversight
+    source_ids: [loc_new_laws]
+    feature_kinds: [event]
+    property_path: properties.event_types
+    match_any: [ecclesiastical_oversight]
+    theme: belief
+    subtheme: religious_institutions
+    role: contextual
+    classification_basis: explicit_source_relation
+    confidence:
+      grade: B
+      rationale: The catalog summary explicitly describes instructions to a bishop and other religious officials.
+    review_status: provisional
+    rationale: This lens concerns the institutional role assigned to religious officials in monitoring the order, not the beliefs or experiences of Indigenous people.
+
+  - rule_id: theme-rule:tanegashima-maritime-exchange
+    source_ids: [mlit_tanegashima]
+    feature_kinds: [event]
+    property_path: properties.event_types
+    match_any: [maritime_trade_contact]
+    theme: trade
+    subtheme: maritime_exchange
+    role: primary
+    classification_basis: explicit_source_relation
+    confidence:
+      grade: C
+      rationale: The MLIT page describes Tanegashima as a trading transit point and the arriving people as traders, while retaining the late-source limitation.
+    review_status: provisional
+    rationale: The record foregrounds a maritime encounter and movement of objects and knowledge, not a one-way civilizational transfer.
+
+  - rule_id: theme-rule:tanegashima-technical-replication
+    source_ids: [mlit_tanegashima]
+    feature_kinds: [event]
+    property_path: properties.event_types
+    match_any: [technical_replication]
+    theme: knowledge
+    subtheme: craft_knowledge
+    role: secondary
+    classification_basis: explicit_source_relation
+    confidence:
+      grade: C
+      rationale: The MLIT page explicitly describes a commission to reproduce the matchlock, but the account depends on a later chronicle.
+    review_status: provisional
+    rationale: The knowledge lens concerns local observation, commissioning and craft replication rather than treating an imported object as the whole story.
+
+  - rule_id: theme-rule:tanegashima-weapons
+    source_ids: [mlit_tanegashima]
+    feature_kinds: [event]
+    property_path: properties.event_types
+    match_any: [weapons_transfer]
+    theme: power
+    subtheme: military_technology
+    role: contextual
+    classification_basis: explicit_source_relation
+    confidence:
+      grade: C
+      rationale: The page identifies matchlock weapons and later military importance, but this event alone does not establish their political effects.
+    review_status: provisional
+    rationale: The power lens marks the weapon context without claiming that one encounter caused later unification or military change.
 
   - rule_id: theme-rule:event-belief-types
     feature_kinds: [event]

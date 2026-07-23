@@ -79,10 +79,10 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Install current Wrangler for publication
-        if: github.event_name == 'schedule' || inputs.publish == true
+        if: github.event_name == 'workflow_dispatch' && inputs.publish == true
         run: npm install --global wrangler@latest
       - name: Publish artifacts and snapshots atomically
-        if: github.event_name == 'schedule' || inputs.publish == true
+        if: github.event_name == 'workflow_dispatch' && inputs.publish == true
         run: |
           test -n "$R2_BUCKET"
           test -n "$R2_SNAPSHOT_BUCKET"

@@ -4,6 +4,7 @@
       "enum": [
         "primary_source_metadata",
         "authority_metadata",
+        "tertiary_summary",
         "scholarly_assertion",
         "reviewed_editorial_link"
       ],

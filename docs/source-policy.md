@@ -47,6 +47,12 @@ entry records policy; `enabled: true` plus a matching manifest source proves act
 - Wikipedia and other encyclopedias are tertiary summaries. Wikisource/archival transcriptions are
   primary sources, while project-authored interpretations are separate records. A link between
   these roles does not make them interchangeable.
+- Library of Congress item records are archival catalog metadata. A catalog description can anchor
+  a document and its provenance, but it is not the document's full text and does not independently
+  establish every historical interpretation.
+- Japan MLIT multilingual site pages are tertiary discovery sources. Received traditions derived
+  from later chronicles must retain that source distance and remain provisional until reconciled
+  with appropriate scholarship and, where available, contemporary evidence.
 - Causal claims require at least one scholarly source with an explicit per-source licence review.
   Primary sources may support a claim but cannot replace scholarship that makes and contextualizes
   the causal argument. Wikipedia and Wikidata are discovery aids, not sufficient causal evidence.

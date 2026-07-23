@@ -934,6 +934,7 @@ class AssertionObject(BaseModel):
 class AssertionEvidenceBasis(StrEnum):
     PRIMARY_SOURCE_METADATA = "primary_source_metadata"
     AUTHORITY_METADATA = "authority_metadata"
+    TERTIARY_SUMMARY = "tertiary_summary"
     SCHOLARLY_ASSERTION = "scholarly_assertion"
     REVIEWED_EDITORIAL_LINK = "reviewed_editorial_link"
 

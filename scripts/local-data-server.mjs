@@ -143,6 +143,12 @@ export async function serveLocalData(
     response.end();
     return;
   }
+  if (details.size === 0) {
+    response.statusCode = 200;
+    response.setHeader('Content-Length', '0');
+    response.end();
+    return;
+  }
   const [start, end] = range ?? [0, details.size - 1];
   response.statusCode = range ? 206 : 200;
   response.setHeader('Content-Length', String(end - start + 1));

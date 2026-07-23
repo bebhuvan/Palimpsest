@@ -35,6 +35,7 @@ from history_pipeline.models import (
 )
 
 PILOT = Path("data/editorial/copernicus-1543")
+CEDULA_PILOT = Path("data/editorial/cedula-1543")
 CURATED = Path("data/curation/knowledge-1543.yml")
 PROMPT = Path("prompts/dossier-draft-v1.txt")
 
@@ -96,6 +97,32 @@ def test_copernicus_pilot_is_machine_only_and_source_pinned() -> None:
     )
     assert not (PILOT / "reviewed-draft.json").exists()
     assert not list((PILOT / "published").glob("*.json"))
+
+
+def test_cedula_pilot_is_machine_only_and_retains_the_date_correction() -> None:
+    curated, _checksum = load_curated_records(CURATED)
+    bundle = read_json_model(
+        CEDULA_PILOT / "evidence-bundle.json", ApprovedEvidenceBundle
+    )
+    draft = read_json_model(CEDULA_PILOT / "draft.json", DossierDraft)
+
+    validate_draft(draft, bundle, curated)
+    [document] = bundle.sources
+    assert document.source_revision_field_path == "/item/timestamp"
+    assert document.source_ref.source_id == "loc_new_laws"
+    validate_evidence_document_snapshot(
+        document, Path("data/raw/loc_new_laws/catalog-record.json").read_bytes()
+    )
+    assert draft.editorial_state == EditorialState.MACHINE_DRAFTED
+    assert draft.review is None
+    correction = next(
+        claim
+        for claim in draft.content.claims
+        if claim.claim_id == "draft-claim:cedula-date-correction"
+    )
+    assert "changed from 1544 to 1543" in correction.text
+    assert not (CEDULA_PILOT / "reviewed-draft.json").exists()
+    assert not list((CEDULA_PILOT / "published").glob("*.json"))
 
 
 def test_invalid_citation_span_fails_closed() -> None:
@@ -178,7 +205,12 @@ def test_explicit_no_evidence_result_requires_an_empty_bundle() -> None:
 
 def test_explicit_conflicting_evidence_is_verified_not_resolved() -> None:
     bundle, curated, _draft = _pilot()
-    original = curated.assertions[-1]
+    original = next(
+        assertion
+        for assertion in curated.assertions
+        if assertion.assertion_id
+        == "assertion:de-revolutionibus-subject-heliocentric-astronomy"
+    )
     conflict = original.model_copy(
         update={
             "assertion_id": "assertion:de-revolutionibus-subject-conflict",

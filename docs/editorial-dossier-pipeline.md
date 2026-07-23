@@ -66,7 +66,7 @@ Publishing derives the dossier ID from the reviewed content and publication meta
 opens the final JSON file in exclusive-create mode and refuses to overwrite it. Correcting prose,
 review metadata, evidence or licensing therefore creates a different immutable dossier.
 
-## Copernicus pilot
+## 1543 machine-draft pilots
 
 `data/editorial/copernicus-1543/` contains:
 
@@ -90,6 +90,19 @@ The command recomputes only the evidence bundle and machine draft. It never crea
 metadata, applies an editorial licence or publishes prose. Tests exercise review, rejection and
 publication transitions with an explicitly named simulated reviewer and temporary output paths;
 those records are not fixtures and cannot enter a production release.
+
+`data/editorial/cedula-1543/` applies the same boundary to Library of Congress item
+`mss31013-03800`, a notarized royal cedula addressed to Vasco de Quiroga. Its evidence bundle pins
+the catalog title, contributor, place/date field, complete catalog note, checksum and catalog
+timestamp. The draft retains the catalog's statement that the written year was changed from 1544
+to 1543 instead of presenting the date without qualification. It is also `machine_drafted`, has no
+human review and is not published.
+
+Build both pilots with:
+
+```bash
+make build-1543-dossier-pilots
+```
 
 ## Real generation and offline ingestion
 

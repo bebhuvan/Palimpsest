@@ -22,6 +22,10 @@ before(async () => {
     join(temporaryRoot, 'builds', 'test', 'tiles', 'ancient.pmtiles'),
     Buffer.from('PMTiles\u0003payload')
   );
+  await writeFile(
+    join(temporaryRoot, 'builds', 'test', 'tiles', 'empty.pmtiles'),
+    Buffer.alloc(0)
+  );
   server = createServer((request, response) => {
     void serveLocalData(request, response, temporaryRoot, () => {
       response.statusCode = 404;
@@ -57,6 +61,22 @@ test('keeps the local latest pointer revalidating', async () => {
   assert.equal(response.status, 200);
   assert.match(response.headers.get('cache-control'), /must-revalidate/);
   assert.doesNotMatch(response.headers.get('cache-control'), /immutable/);
+});
+
+test('serves zero-byte artifacts without constructing a negative byte range', async () => {
+  const response = await fetch(
+    `${origin}/data/builds/test/tiles/empty.pmtiles`
+  );
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get('content-length'), '0');
+  assert.equal((await response.arrayBuffer()).byteLength, 0);
+
+  const rangeResponse = await fetch(
+    `${origin}/data/builds/test/tiles/empty.pmtiles`,
+    { headers: { Range: 'bytes=0-0' } }
+  );
+  assert.equal(rangeResponse.status, 416);
+  assert.equal(rangeResponse.headers.get('content-range'), 'bytes */0');
 });
 
 test('rejects invalid ranges and paths outside the data root', async () => {

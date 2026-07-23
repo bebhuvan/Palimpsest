@@ -117,18 +117,20 @@ record, so browser tests cover map selection, search selection, successful joins
 missing-dossier states without live Wikimedia requests or generated prose. It also contains the
 synthetic rights-approved historical-map fixture used to test image rendering.
 
-Build the separate, deterministic Copernicus editorial-dossier pilot:
+Build the deterministic 1543 editorial-dossier pilots:
 
 ```bash
-make build-dossier-pilot
+make build-1543-dossier-pilots
 ```
 
-This ingests a saved schema-constrained model output without an API call, verifies every claim
-against the approved schema 1.10 assertions and exact, revision-pinned Library of Congress fields,
-and stops at `machine_drafted`. Human review and publication remain explicit editorial commands
-and are simulated only inside tests. Real generation is an explicit build-time CLI action requiring
-`OPENAI_API_KEY` and a `--model` identifier; the browser application contains no LLM client or
-credential. See the [editorial dossier pipeline](docs/editorial-dossier-pipeline.md).
+These ingest saved schema-constrained outputs without an API call, verify every claim against the
+approved schema 1.10 assertions and exact, revision-pinned Library of Congress fields, and stop at
+`machine_drafted`. The Copernicus publication and a royal cedula sent toward Michoacán are the
+first two anchors in the bounded [world in 1543 pilot](docs/pilot-1543.md). Human review and
+publication remain explicit editorial commands and are simulated only inside tests. Real
+generation is an explicit build-time CLI action requiring `OPENAI_API_KEY` and a `--model`
+identifier; the browser application contains no LLM client or credential. See the
+[editorial dossier pipeline](docs/editorial-dossier-pipeline.md).
 
 Reviewed labels come from first-class historical-name attestations rather than a timeless display
 string. Search and map labels choose the attestation active in the selected year and disclose when

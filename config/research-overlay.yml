@@ -15,6 +15,7 @@ license_policy:
     - ODC-By-1.0
     - ODbL-1.0
     - PDDL-1.0
+    - PDL-1.0
     - PDM-1.0
   denied:
     - LicenseRef-Proprietary

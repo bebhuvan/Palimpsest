@@ -450,7 +450,7 @@ export interface EvidenceAssertion {
     rationale: string;
   } | null;
   confidence: { grade: string; rationale: string };
-  evidence_basis: 'primary_source_metadata' | 'authority_metadata' | 'scholarly_assertion' | 'reviewed_editorial_link';
+  evidence_basis: 'primary_source_metadata' | 'authority_metadata' | 'tertiary_summary' | 'scholarly_assertion' | 'reviewed_editorial_link';
   review_status: string;
   source_refs: SourceReference[];
 }

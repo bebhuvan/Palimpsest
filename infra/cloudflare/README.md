@@ -63,6 +63,10 @@ uploads immutable artifacts with four-way concurrency, then advances `latest.jso
 deletes an object. Wrangler is intentionally fetched only for infrastructure and publication; it
 is not part of the browser application's dependency tree.
 
+The weekly scheduled workflow builds and retains a candidate for inspection but never publishes
+it. Advancing the public pointer requires a manually dispatched workflow with `publish=true`.
+This keeps source changes and editorial content behind an explicit release decision.
+
 `make build-smoke` never advances `latest.json`. Only a complete, inspected release build should
 become the candidate that the publisher advances; this prevents a limited-source smoke artifact
 from becoming the public pointer.

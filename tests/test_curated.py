@@ -20,7 +20,7 @@ from history_pipeline.verify import (
 )
 
 
-def test_copernicus_slice_is_structured_sourced_and_knowledge_classified() -> None:
+def test_1543_slice_is_structured_sourced_and_multi_lens() -> None:
     records, checksum = load_curated_records(
         Path("data/curation/knowledge-1543.yml")
     )
@@ -34,11 +34,39 @@ def test_copernicus_slice_is_structured_sourced_and_knowledge_classified() -> No
         EntityKind.WORK,
         EntityKind.PLACE,
     }
-    assert len(records.features) == 1
-    feature = records.features[0]
+    assert len(records.features) == 3
+    feature = next(
+        item
+        for item in records.features
+        if item.feature_id == "historyjoice:publication-de-revolutionibus:1543"
+    )
     assertions = classify_features(records.features, rules)
-    [classified] = apply_thematic_assertions(records.features, assertions)
-    assert "knowledge" in classified.model_dump(mode="json")["themes"]
+    classified = {
+        item.feature_id: item
+        for item in apply_thematic_assertions(records.features, assertions)
+    }
+    assert "knowledge" in classified[feature.feature_id].model_dump(mode="json")["themes"]
+    cedula = classified["historyjoice:royal-cedula-vasco-de-quiroga:1543"]
+    assert set(cedula.model_dump(mode="json")["themes"]) == {"power"}
+    cedula_lenses = {
+        assertion.theme.value
+        for assertion in assertions
+        if assertion.subject_id == cedula.feature_id
+    }
+    assert cedula_lenses == {"belief", "power"}
+    tanegashima = classified[
+        "historyjoice:tanegashima-firearms-tradition:1543"
+    ]
+    assert set(tanegashima.model_dump(mode="json")["themes"]) == {
+        "knowledge",
+        "trade",
+    }
+    tanegashima_lenses = {
+        assertion.theme.value
+        for assertion in assertions
+        if assertion.subject_id == tanegashima.feature_id
+    }
+    assert tanegashima_lenses == {"knowledge", "power", "trade"}
     assert feature.valid_from == feature.valid_to == 1543
     assert feature.temporal_uncertainty
     assert feature.spatial_uncertainty
@@ -80,7 +108,7 @@ def test_copernicus_slice_publishes_verified_assertion_and_layer_contracts(
     _verify_assertion_contract(build_dir, "assertions/index.json", paths, content)
 
     index = orjson.loads((build_dir / "assertions/index.json").read_bytes())
-    assert index["collections"]["records"]["count"] == 5
+    assert index["collections"]["records"]["count"] == len(records.assertions)
     catalog = LayerCatalog.model_validate_json(
         (build_dir / "layers/index.json").read_bytes()
     )

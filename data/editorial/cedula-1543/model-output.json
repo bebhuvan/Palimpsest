@@ -1,0 +1,155 @@
+{
+  "result": "draft",
+  "title": "A royal order sent toward Michoacán in 1543",
+  "language": "en",
+  "claims": [
+    {
+      "claim_id": "draft-claim:cedula-addressee-and-destination",
+      "text": "The Library of Congress catalog identifies this notarized royal cedula as addressed to Vasco de Quiroga, bishop of Michoacán.",
+      "entity_ids": [
+        "historyjoice:event:royal-cedula-vasco-de-quiroga",
+        "historyjoice:person:vasco-de-quiroga",
+        "historyjoice:place:michoacan"
+      ],
+      "valid_from": 1543,
+      "valid_to": 1543,
+      "date_precision": "exact",
+      "supporting_assertion_ids": [
+        "assertion:royal-cedula-addressed-to-vasco-de-quiroga",
+        "assertion:royal-cedula-directed-to-michoacan"
+      ],
+      "citations": [
+        {
+          "source_id": "loc_new_laws",
+          "passage_id": "passage:cedula-title",
+          "start_char": 0,
+          "end_char": 102,
+          "quote": "Hans Peter Kraus Collection: Notarized copy of a royal cedula to Vasco de Quiroga, bishop of Michoacán"
+        }
+      ]
+    },
+    {
+      "claim_id": "draft-claim:cedula-issuer",
+      "text": "The catalog names the contributor as the Prince who later became Philip II of Spain.",
+      "entity_ids": [
+        "historyjoice:event:royal-cedula-vasco-de-quiroga",
+        "historyjoice:person:philip-prince-later-philip-ii"
+      ],
+      "valid_from": 1543,
+      "valid_to": 1543,
+      "date_precision": "exact",
+      "supporting_assertion_ids": [
+        "assertion:royal-cedula-issued-by-prince-philip"
+      ],
+      "citations": [
+        {
+          "source_id": "loc_new_laws",
+          "passage_id": "passage:cedula-contributor",
+          "start_char": 103,
+          "end_char": 140,
+          "quote": "The Prince [later Philip II of Spain]"
+        }
+      ]
+    },
+    {
+      "claim_id": "draft-claim:cedula-place-of-issue",
+      "text": "The catalog places the document in Valladolid on 23 August 1543.",
+      "entity_ids": [
+        "historyjoice:event:royal-cedula-vasco-de-quiroga",
+        "historyjoice:place:valladolid"
+      ],
+      "valid_from": 1543,
+      "valid_to": 1543,
+      "date_precision": "exact",
+      "supporting_assertion_ids": [
+        "assertion:royal-cedula-issued-at-valladolid"
+      ],
+      "citations": [
+        {
+          "source_id": "loc_new_laws",
+          "passage_id": "passage:cedula-created-published",
+          "start_char": 141,
+          "end_char": 168,
+          "quote": "Valladolid, August 23, 1543"
+        }
+      ]
+    },
+    {
+      "claim_id": "draft-claim:cedula-treatment-ordinances",
+      "text": "According to the catalog summary, the ordinances concerned the treatment of Indigenous people and described them as free people and royal vassals.",
+      "entity_ids": [
+        "historyjoice:concept:ordinances-for-treatment-in-the-indies",
+        "historyjoice:event:royal-cedula-vasco-de-quiroga"
+      ],
+      "valid_from": 1543,
+      "valid_to": 1543,
+      "date_precision": "exact",
+      "supporting_assertion_ids": [
+        "assertion:royal-cedula-concerned-treatment-ordinances"
+      ],
+      "citations": [
+        {
+          "source_id": "loc_new_laws",
+          "passage_id": "passage:cedula-catalog-note",
+          "start_char": 365,
+          "end_char": 572,
+          "quote": "has issued certain ordinances and declarations, many of which are related to the welfare of the Indians \"so that in everything they may be treated well as free people and vassals of His Majesty, as they are."
+        }
+      ]
+    },
+    {
+      "claim_id": "draft-claim:cedula-monitoring-role",
+      "text": "The catalog summary says that religious officials were to publicize the ordinances and that the bishop was to monitor observance and report violations.",
+      "entity_ids": [
+        "historyjoice:event:royal-cedula-vasco-de-quiroga",
+        "historyjoice:person:vasco-de-quiroga"
+      ],
+      "valid_from": 1543,
+      "valid_to": 1543,
+      "date_precision": "exact",
+      "supporting_assertion_ids": [
+        "assertion:royal-cedula-assigned-ecclesiastical-oversight"
+      ],
+      "citations": [
+        {
+          "source_id": "loc_new_laws",
+          "passage_id": "passage:cedula-catalog-note",
+          "start_char": 692,
+          "end_char": 804,
+          "quote": "he has also ordered the religious to make them known to the Indians and to notify the audiencia about offenders."
+        },
+        {
+          "source_id": "loc_new_laws",
+          "passage_id": "passage:cedula-catalog-note",
+          "start_char": 874,
+          "end_char": 1002,
+          "quote": "he should be watchful concerning the fulfillment of the ordinances and notify the local royal authorities concerning violations."
+        }
+      ]
+    },
+    {
+      "claim_id": "draft-claim:cedula-date-correction",
+      "text": "The catalog records that the year written on this copy was changed from 1544 to 1543; History Joice therefore retains the correction rather than presenting the date without qualification.",
+      "entity_ids": [
+        "historyjoice:event:royal-cedula-vasco-de-quiroga"
+      ],
+      "valid_from": 1543,
+      "valid_to": 1543,
+      "date_precision": "exact",
+      "supporting_assertion_ids": [
+        "assertion:royal-cedula-catalog-date-correction"
+      ],
+      "citations": [
+        {
+          "source_id": "loc_new_laws",
+          "passage_id": "passage:cedula-catalog-note",
+          "start_char": 1253,
+          "end_char": 1367,
+          "quote": "The date of the cedula as originally written on this copy was August 23, 1544, but was changed to August 23, 1543."
+        }
+      ]
+    }
+  ],
+  "no_evidence_reason": null,
+  "conflicts": []
+}

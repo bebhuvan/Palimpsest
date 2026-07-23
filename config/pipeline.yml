@@ -26,6 +26,7 @@ license_policy:
     - ODC-By-1.0
     - ODbL-1.0
     - PDDL-1.0
+    - PDL-1.0
     - PDM-1.0
   denied:
     - LicenseRef-Proprietary
@@ -52,6 +53,52 @@ sources:
     version: catalog record accessed 2026-07-23
     options:
       snapshot_filename: catalog-record.json
+
+  - id: loc_new_laws
+    adapter: curated
+    title: Royal cedula to Vasco de Quiroga, 23 August 1543
+    publisher: Library of Congress
+    url: https://www.loc.gov/item/mss31013-03800/?fo=json
+    license_id: PDM-1.0
+    license_reviewed: true
+    license_notes: "The Library of Congress states that the Parallel Histories collection is in the public domain and free to use and reuse; retain its requested credit line."
+    roles: [primary_source, authority_metadata]
+    commercial_redistribution: allowed
+    expected_checksum_sha256: 6a97893bb98a13ba2a0f5943aa3e5e4604a06120b5f130208c5dda14db3de2f2
+    temporal_scope: "The royal cedula dated 23 August 1543 only; the catalog's note about its corrected date is retained."
+    geographic_scope: "Valladolid as the place of issue and Michoacán/New Spain as the named administrative destination; no territorial extent is inferred."
+    release_policy: "Use the checksummed Library of Congress JSON item record and re-review its catalog version, rights statement and note before any update."
+    limitations:
+      - "The map point represents Valladolid, the named place of issue, not the geographic reach or implementation of the ordinances."
+      - "The catalog says that 1544 on the notarized copy was changed to 1543; the correction must remain visible."
+      - "The catalog summary describes Crown instructions and cannot establish how the ordinances were implemented or experienced."
+    citation: "Library of Congress, Hans Peter Kraus Collection, item mss31013-03800"
+    version: "2022-04-27T09:38:13.500Z"
+    options:
+      snapshot_filename: catalog-record.json
+
+  - id: mlit_tanegashima
+    adapter: curated
+    title: Early modern firearms in Japan
+    publisher: Ministry of Land, Infrastructure, Transport and Tourism, Japan
+    url: https://www.mlit.go.jp/tagengo-db/R4-00195.html
+    license_id: PDL-1.0
+    license_reviewed: true
+    license_notes: "Unless otherwise stated, MLIT website content is reusable under Japan's Public Data License 1.0 with source attribution and modification disclosure."
+    roles: [tertiary_summary, authority_metadata]
+    commercial_redistribution: allowed
+    expected_checksum_sha256: ef40320221503715e22e6f2acf7ad0c536469533c8ae8ddb6d18cf1f391139e5
+    temporal_scope: "The page's account of the 1543 Tanegashima firearms tradition and its explicitly named early-seventeenth-century Teppoki source."
+    geographic_scope: "Tanegashima at island scale; no exact landing place, voyage route or later diffusion geometry is asserted."
+    release_policy: "Use the checksummed multilingual MLIT page R4-00195 and re-review both its historical wording and MLIT's Public Data License terms before any update."
+    limitations:
+      - "The government summary explicitly relies on the Teppoki, completed in the early seventeenth century, rather than a contemporaneous eyewitness account."
+      - "The page presents a received transmission narrative; it does not resolve scholarly debates about identification, date or other routes of firearms knowledge."
+      - "The representative island point must not be read as an exact landing site."
+    citation: "Ministry of Land, Infrastructure, Transport and Tourism, Japan, Early Modern Firearms in Japan, page R4-00195"
+    version: "R4-00195 accessed 2026-07-23"
+    options:
+      snapshot_filename: page.html
 
   - id: cliopatria
     adapter: cliopatria

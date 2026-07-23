@@ -17,9 +17,11 @@ import orjson
 from pydantic import HttpUrl
 
 from history_pipeline.adapters import (
+    AuthorityReconciliationAdapter,
     CliopatriaAdapter,
     CuratedSourceAdapter,
     GeoJsonAdapter,
+    IiifMapAdapter,
     LinkedPlacesAdapter,
     OpenContextAdapter,
     OwidAdapter,
@@ -31,18 +33,20 @@ from history_pipeline.adapters.wikidata import WikidataEnricher
 from history_pipeline.adapters.wikipedia import WikipediaEnricher
 from history_pipeline.artifacts import build_artifacts, compute_build_id
 from history_pipeline.causal import load_causal_dataset, validate_causal_entities
-from history_pipeline.config import PipelineConfig
+from history_pipeline.config import PipelineConfig, config_fingerprint_bytes
 from history_pipeline.curated import load_curated_records
 from history_pipeline.enrichment import EnrichmentCheckpoint
 from history_pipeline.licenses import enforce_source_license
 from history_pipeline.models import (
     ArtifactFile,
+    AuthorityMatch,
     BuildManifest,
     CausalDataset,
     EvidenceAssertion,
     HistoricalDossier,
     HistoricalEntity,
     HistoricalFeature,
+    HistoricalMapMetadata,
     HistoricalName,
     HistoricalPeriodDefinition,
     IndicatorObservation,
@@ -69,6 +73,8 @@ ADAPTERS: dict[str, type[SourceAdapter]] = {
     "pleiades": PleiadesAdapter,
     "periodo": PeriodoAdapter,
     "open_context": OpenContextAdapter,
+    "authority_reconciliation": AuthorityReconciliationAdapter,
+    "iiif_maps": IiifMapAdapter,
 }
 WIKIMEDIA_CLIENT = re.compile(
     r"^[A-Za-z][A-Za-z0-9._-]{2,}/[A-Za-z0-9][A-Za-z0-9._-]*"
@@ -132,6 +138,8 @@ class PipelineRun:
         features: list[HistoricalFeature] = list(curated.features)
         indicators: list[IndicatorObservation] = []
         periods: list[HistoricalPeriodDefinition] = []
+        authority_matches: list[AuthorityMatch] = []
+        historical_maps: list[HistoricalMapMetadata] = []
         entities: list[HistoricalEntity] = list(curated.entities)
         evidence_assertions: list[EvidenceAssertion] = list(curated.assertions)
         dossiers: list[HistoricalDossier] = []
@@ -173,6 +181,8 @@ class PipelineRun:
                 features.extend(result.features)
                 indicators.extend(result.indicators)
                 periods.extend(result.periods)
+                authority_matches.extend(result.authority_matches)
+                historical_maps.extend(result.historical_maps)
                 rejections.extend(result.rejections)
                 checksums.extend(asset.checksum_sha256 for asset in result.raw_assets)
                 raw_assets.extend((source.id, asset) for asset in result.raw_assets)
@@ -244,6 +254,8 @@ class PipelineRun:
             causal,
             thematic_assertions,
             evidence_assertions,
+            authority_matches,
+            historical_maps,
             rejections,
             validation.issues,
         )
@@ -251,7 +263,7 @@ class PipelineRun:
         builds_dir.mkdir(parents=True, exist_ok=True)
         temporary_build = Path(tempfile.mkdtemp(prefix=".build-", dir=builds_dir))
         input_id = compute_build_id(
-            self.config_path.read_bytes(),
+            config_fingerprint_bytes(self.config_path),
             [*checksums, *(feature.feature_id for feature in accepted_features)],
         )
         tile_work = self.config.staged_dir / "tiles" / f"inputs-{input_id}"
@@ -287,6 +299,8 @@ class PipelineRun:
                 maximum_year=self.config.maximum_year,
                 language_fallbacks=self._language_fallbacks(),
                 sources=self.config.sources,
+                authority_matches=authority_matches,
+                historical_maps=historical_maps,
             )
             if tiles:
                 artifacts.extend(
@@ -309,7 +323,7 @@ class PipelineRun:
             shutil.rmtree(tile_work, ignore_errors=True)
         artifact_checksums = [artifact.checksum_sha256 for artifact in artifacts]
         build_id = compute_build_id(
-            self.config_path.read_bytes(), [*checksums, *artifact_checksums]
+            config_fingerprint_bytes(self.config_path), [*checksums, *artifact_checksums]
         )
         build_dir = builds_dir / build_id
         if build_dir.exists():
@@ -325,6 +339,8 @@ class PipelineRun:
             dossiers,
             causal,
             evidence_assertions,
+            authority_matches,
+            historical_maps,
         )
         generated_at = max(
             (asset.retrieved_at for _, asset in raw_assets), default=datetime.now(UTC)
@@ -407,7 +423,7 @@ class PipelineRun:
         self, features: list[HistoricalFeature]
     ) -> EnrichmentCheckpoint:
         digest = hashlib.sha256()
-        digest.update(self.config_path.read_bytes())
+        digest.update(config_fingerprint_bytes(self.config_path))
         for feature_id in sorted(feature.feature_id for feature in features):
             digest.update(b"\0")
             digest.update(feature_id.encode("utf-8"))
@@ -798,6 +814,8 @@ class PipelineRun:
         causal: CausalDataset,
         thematic_assertions: list[ThematicAssertion],
         evidence_assertions: list[EvidenceAssertion],
+        authority_matches: list[AuthorityMatch],
+        historical_maps: list[HistoricalMapMetadata],
         rejections: list[RejectedRecord],
         validation_issues: list[Any],
     ) -> None:
@@ -812,6 +830,8 @@ class PipelineRun:
             ("causal-paths.ndjson", causal.paths),
             ("thematic-assertions.ndjson", thematic_assertions),
             ("evidence-assertions.ndjson", evidence_assertions),
+            ("authority-matches.ndjson", authority_matches),
+            ("historical-maps.ndjson", historical_maps),
             ("rejections.ndjson", [asdict(rejection) for rejection in rejections]),
             (
                 "validation.ndjson",
@@ -840,6 +860,8 @@ class PipelineRun:
         dossiers: list[HistoricalDossier],
         causal: CausalDataset,
         evidence_assertions: list[EvidenceAssertion],
+        authority_matches: list[AuthorityMatch],
+        historical_maps: list[HistoricalMapMetadata],
     ) -> list[SourceReference]:
         references = [reference for feature in features for reference in feature.source_refs]
         references.extend(observation.source_ref for observation in indicators)
@@ -853,6 +875,10 @@ class PipelineRun:
             source
             for assertion in evidence_assertions
             for source in assertion.source_refs
+        )
+        references.extend(match.source_ref for match in authority_matches)
+        references.extend(
+            source for historical_map in historical_maps for source in historical_map.source_refs
         )
         unique: dict[str, SourceReference] = {}
         for reference in references:

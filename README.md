@@ -153,5 +153,11 @@ The distinction between factual relationships and attributed causal arguments is
 ## Licensing
 
 Pipeline source code is MIT licensed. Historical data is not relicensed: every record and artifact
-retains its upstream source and licence. The default configuration permits non-commercial sources;
-removing that constraint requires a complete source-by-source licence audit.
+retains its upstream source and licence. The default `config/pipeline.yml` is the commercially
+redistributable `open_core` profile. `config/research-overlay.yml` is a separate, opt-in
+non-commercial research profile; artifacts built from it must not be presented as open-core
+releases.
+
+The build-time [source integration framework](docs/source-integration-framework.md) covers reviewed
+authority-reconciliation snapshots and IIIF georeference metadata. These artifacts never cause the
+visitor-facing application to query WHG, Getty, Allmaps, IIIF providers, or any other third party.

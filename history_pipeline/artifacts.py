@@ -21,6 +21,7 @@ from history_pipeline.models import (
     ArtifactFile,
     AssertionAdjacency,
     AssertionIndex,
+    AuthorityMatch,
     CausalDataset,
     CausalEntityIndex,
     CausalIndex,
@@ -29,14 +30,17 @@ from history_pipeline.models import (
     ChronologyIndex,
     CommercialRedistribution,
     ContentIndex,
+    DistributionTier,
     EvidenceAssertion,
     FeatureContentLink,
     HistoricalDossier,
     HistoricalEntity,
     HistoricalFeature,
+    HistoricalMapMetadata,
     HistoricalPeriodDefinition,
     HistoricalTheme,
     IndicatorObservation,
+    IntegrationIndex,
     LayerCatalog,
     LayerDefinition,
     LayerRole,
@@ -95,12 +99,16 @@ def build_artifacts(
     minimum_year: int = -3400,
     maximum_year: int = 2026,
     language_fallbacks: tuple[str, ...] = (),
+    authority_matches: list[AuthorityMatch] | None = None,
+    historical_maps: list[HistoricalMapMetadata] | None = None,
 ) -> list[ArtifactFile]:
     causal = causal or CausalDataset()
     thematic_assertions = thematic_assertions or []
     evidence_assertions = evidence_assertions or []
     periods = periods or []
     sources = sources or []
+    authority_matches = authority_matches or []
+    historical_maps = historical_maps or []
     if output_dir.exists():
         shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True)
@@ -143,6 +151,9 @@ def build_artifacts(
                 writer.write(dossier)
         artifacts.append(_artifact(path, output_dir, "application/x-ndjson"))
 
+    artifacts.extend(
+        _build_integration_artifacts(authority_matches, historical_maps, output_dir)
+    )
     artifacts.extend(
         _build_content_artifacts(
             features,
@@ -209,7 +220,16 @@ def build_artifacts(
     attribution_path = output_dir / "attribution.json"
     _write_json(
         attribution_path,
-        _attributions(features, indicators, periods, entities, dossiers, causal),
+        _attributions(
+            features,
+            indicators,
+            periods,
+            entities,
+            dossiers,
+            causal,
+            authority_matches,
+            historical_maps,
+        ),
     )
     artifacts.append(_artifact(attribution_path, output_dir, "application/json"))
 
@@ -1177,6 +1197,9 @@ def _source_registry_entry(source: SourceConfig) -> SourceRegistryEntry:
         license_id=source.license_id,
         license_reviewed=source.license_reviewed,
         commercial_redistribution=CommercialRedistribution(source.commercial_redistribution),
+        distribution_tier=DistributionTier(source.distribution_tier),
+        redistribution_conditions=source.redistribution_conditions,
+        separates_media_rights=bool(source.rights and source.rights.media),
         version=source.version,
         expected_checksum_sha256=source.expected_checksum_sha256,
         temporal_scope=source.temporal_scope,
@@ -1186,6 +1209,40 @@ def _source_registry_entry(source: SourceConfig) -> SourceRegistryEntry:
     )
 
 
+def _build_integration_artifacts(
+    authority_matches: list[AuthorityMatch],
+    historical_maps: list[HistoricalMapMetadata],
+    output_dir: Path,
+) -> list[ArtifactFile]:
+    root = output_dir / "integrations"
+    root.mkdir(parents=True, exist_ok=True)
+    artifacts: list[ArtifactFile] = []
+
+    matches_path = root / "authority-matches.ndjson"
+    with NdjsonWriter(matches_path) as writer:
+        for match in authority_matches:
+            writer.write(match)
+    artifacts.append(_artifact(matches_path, output_dir, "application/x-ndjson"))
+
+    maps_path = root / "historical-maps.ndjson"
+    with NdjsonWriter(maps_path) as writer:
+        for historical_map in historical_maps:
+            writer.write(historical_map)
+    artifacts.append(_artifact(maps_path, output_dir, "application/x-ndjson"))
+
+    index_path = root / "index.json"
+    index = IntegrationIndex(
+        authority_match_count=len(authority_matches),
+        historical_map_count=len(historical_maps),
+    )
+    index_path.write_bytes(
+        orjson.dumps(index.model_dump(mode="json"), option=orjson.OPT_INDENT_2)
+        + b"\n"
+    )
+    artifacts.append(_artifact(index_path, output_dir, "application/json"))
+    return artifacts
+
+
 def _attributions(
     features: Iterable[HistoricalFeature],
     indicators: Iterable[IndicatorObservation],
@@ -1193,6 +1250,8 @@ def _attributions(
     entities: Iterable[HistoricalEntity],
     dossiers: Iterable[HistoricalDossier],
     causal: CausalDataset,
+    authority_matches: Iterable[AuthorityMatch] = (),
+    historical_maps: Iterable[HistoricalMapMetadata] = (),
 ) -> list[dict[str, Any]]:
     unique: dict[tuple[str, str], dict[str, Any]] = {}
     sources = [reference for feature in features for reference in feature.source_refs]
@@ -1201,6 +1260,12 @@ def _attributions(
     sources.extend(reference for entity in entities for reference in entity.source_refs)
     sources.extend(dossier.source_ref for dossier in dossiers)
     sources.extend(source for claim in causal.claims for source in claim.source_refs)
+    sources.extend(match.source_ref for match in authority_matches)
+    sources.extend(
+        reference
+        for historical_map in historical_maps
+        for reference in historical_map.source_refs
+    )
     for source in sources:
         key = (source.source_id, source.license_id)
         unique[key] = {

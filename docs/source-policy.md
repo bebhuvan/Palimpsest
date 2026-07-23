@@ -10,6 +10,7 @@ A source adapter is not permission to publish a source. Enabled sources must hav
 4. confidence defaults with a rationale;
 5. an immutable raw snapshot and checksum in release builds.
 6. one or more explicit `roles` and a commercial-redistribution decision.
+7. an `open_core` or `research_only` distribution tier.
 
 Enabled source URLs must identify a numbered release or immutable object where the publisher
 provides one. A moving `main` branch, `latest` download, or live API response is acceptable only as
@@ -19,6 +20,11 @@ be advanced deliberately after review.
 Unknown and proprietary licences are rejected. Dataset-level licences do not override per-record
 licence tags. OpenHistoricalMap and Open Context therefore require licence-aware curated imports,
 not indiscriminate copying.
+
+The default open-core policy permits only reviewed, commercially redistributable sources. A
+research overlay may permit non-commercial sources, but its build is a separate distribution
+profile and cannot be promoted as an open-core release. Conditional redistribution requires its
+conditions to be recorded in configuration.
 
 `source-registry.json` publishes these decisions for enabled and gated sources: role, licence
 review, commercial status, release policy, scope, limitations, version and expected checksum. An
@@ -51,6 +57,11 @@ entry records policy; `enabled: true` plus a matching manifest source proves act
 - World Historical Gazetteer is a reconciliation and linked-place source, not a global boundary
   authority. Most API endpoints require a token and its platform licence is non-commercial;
   ingest only selected datasets after checking their individual rights.
+- Getty AAT/TGN/ULAN reconciliation produces reviewable authority candidates, not automatic
+  identity claims. Accepted matches still retain score, editorial status, record ID and lineage.
+- IIIF/Allmaps georeferences describe transformations of scanned maps. Catalog metadata,
+  georeference annotations and image pixels have separate rights gates. A permitted manifest does
+  not imply that its image may be copied.
 
 ## Geometry changes
 
@@ -76,3 +87,6 @@ Project-specific restrictions can demand coarser precision or complete exclusion
 Wikimedia Commons filenames are identifiers, not permission to republish a file. A future media
 adapter must validate the licence and attribution of every file revision before emitting an image
 artifact.
+
+World History Encyclopedia is not a bulk-ingest source. Individual links may be considered later
+as tertiary reading only after terms, attribution and article-level use are reviewed.

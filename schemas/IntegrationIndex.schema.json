@@ -1,0 +1,43 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "semantics": {
+      "const": "build-time-reviewed-source-integrations",
+      "default": "build-time-reviewed-source-integrations",
+      "title": "Semantics",
+      "type": "string"
+    },
+    "authority_matches_path": {
+      "default": "integrations/authority-matches.ndjson",
+      "title": "Authority Matches Path",
+      "type": "string"
+    },
+    "authority_match_count": {
+      "minimum": 0,
+      "title": "Authority Match Count",
+      "type": "integer"
+    },
+    "historical_maps_path": {
+      "default": "integrations/historical-maps.ndjson",
+      "title": "Historical Maps Path",
+      "type": "string"
+    },
+    "historical_map_count": {
+      "minimum": 0,
+      "title": "Historical Map Count",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "authority_match_count",
+    "historical_map_count"
+  ],
+  "title": "IntegrationIndex",
+  "type": "object"
+}

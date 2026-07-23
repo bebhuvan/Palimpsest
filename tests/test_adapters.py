@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import gzip
+import hashlib
 import io
 import json
 import tarfile
@@ -13,11 +14,13 @@ from pytest_httpx import HTTPXMock
 from history_pipeline.adapters.base import AdapterContext
 from history_pipeline.adapters.cliopatria import CliopatriaAdapter
 from history_pipeline.adapters.curated import CuratedSourceAdapter
+from history_pipeline.adapters.iiif_maps import IiifMapAdapter
 from history_pipeline.adapters.linked_places import LinkedPlacesAdapter
 from history_pipeline.adapters.open_context import OpenContextAdapter
 from history_pipeline.adapters.owid import OwidAdapter
 from history_pipeline.adapters.periodo import PeriodoAdapter
 from history_pipeline.adapters.pleiades import PleiadesAdapter
+from history_pipeline.adapters.reconciliation import AuthorityReconciliationAdapter
 from history_pipeline.adapters.wikidata import WikidataEnricher
 from history_pipeline.adapters.wikipedia import WikipediaEnricher
 from history_pipeline.config import PipelineConfig, SourceConfig
@@ -25,13 +28,19 @@ from history_pipeline.storage import DownloadCache
 
 
 def _config(source: SourceConfig, tmp_path: Path) -> PipelineConfig:
+    allowed = {source.license_id}
+    if source.rights:
+        if source.rights.georeference:
+            allowed.add(source.rights.georeference.license_id)
+        if source.rights.media:
+            allowed.update(source.rights.media.allowed)
     return PipelineConfig(
         raw_dir=tmp_path / "raw",
         staged_dir=tmp_path / "staged",
         cache_dir=tmp_path / "cache",
         dist_dir=tmp_path / "dist",
         sources=[source],
-        license_policy={"allowed": [source.license_id]},
+        license_policy={"allowed": sorted(allowed)},
     )
 
 
@@ -622,3 +631,329 @@ def test_linked_places_requires_chronology_and_preserves_names(
 
     assert result.features[0].valid_from == -1
     assert result.features[0].names == {"und": "Example place", "la": "Exemplum"}
+
+
+def test_authority_reconciliation_preserves_review_and_lineage(
+    tmp_path: Path, httpx_mock: HTTPXMock
+) -> None:
+    payload = {
+        "source_version": "snapshot-2026-07",
+        "provider_format": "whg-reconciliation-v0.2",
+        "score_scale": "0-100",
+        "rights": {
+            "license_id": "ODC-By-1.0",
+            "attribution": "Getty TGN, J. Paul Getty Trust",
+        },
+        "queries": [
+            {
+                "query_id": "query:nuremberg",
+                "subject_id": "historyjoice:place:nuremberg",
+                "result": [
+                    {
+                        "id": "http://vocab.getty.edu/tgn/7004333",
+                        "uri": "http://vocab.getty.edu/tgn/7004333",
+                        "name": "Nürnberg",
+                        "score": 98.5,
+                        "authority_namespace": "tgn",
+                        "review_status": "accepted",
+                        "relation": "exact_match",
+                    }
+                ],
+            }
+        ],
+    }
+    encoded = json.dumps(payload).encode()
+    source = SourceConfig.model_validate(
+        {
+            "id": "getty-tgn-reconciliation",
+            "adapter": "authority_reconciliation",
+            "title": "Getty TGN reconciliation",
+            "publisher": "J. Paul Getty Trust",
+            "url": "https://example.org/getty-reconciliation.json",
+            "license_id": "ODC-By-1.0",
+            "license_reviewed": True,
+            "license_notes": "Getty publishes the Vocabularies under ODC-By 1.0.",
+            "commercial_redistribution": "allowed",
+            "citation": "Getty Thesaurus of Geographic Names",
+            "version": "snapshot-2026-07",
+            "expected_checksum_sha256": hashlib.sha256(encoded).hexdigest(),
+            "rights": {
+                "metadata": {
+                    "license_id": "ODC-By-1.0",
+                    "attribution": "Getty TGN, J. Paul Getty Trust",
+                    "rights_uri": "https://opendatacommons.org/licenses/by/1.0/",
+                    "review_notes": "Official Getty licensing and attribution guidance.",
+                }
+            },
+            "options": {"allowed_authority_namespaces": ["tgn"]},
+        }
+    )
+    httpx_mock.add_response(url=str(source.url), content=encoded)
+    context = _context(source, tmp_path)
+    try:
+        result = AuthorityReconciliationAdapter().run(context)
+    finally:
+        context.downloads.close()
+
+    assert not result.rejections
+    [match] = result.authority_matches
+    assert match.review_status == "accepted"
+    assert match.confidence_score == 98.5
+    assert match.source_ref.record_id == "http://vocab.getty.edu/tgn/7004333"
+    assert match.source_ref.version == "snapshot-2026-07"
+    assert match.rights.license_id == "ODC-By-1.0"
+    assert match.lineage[0].input_record_ids == [
+        "query:nuremberg",
+        "http://vocab.getty.edu/tgn/7004333",
+    ]
+
+
+def test_authority_reconciliation_fails_closed_without_snapshot_rights(
+    tmp_path: Path, httpx_mock: HTTPXMock
+) -> None:
+    payload = {
+        "source_version": "snapshot-1",
+        "score_scale": "0-100",
+        "queries": [],
+    }
+    encoded = json.dumps(payload).encode()
+    source = SourceConfig.model_validate(
+        {
+            "id": "whg-reconciliation",
+            "adapter": "authority_reconciliation",
+            "title": "WHG reconciliation",
+            "publisher": "World Historical Gazetteer",
+            "url": "https://example.org/whg-reconciliation.json",
+            "license_id": "CC-BY-NC-4.0",
+            "license_reviewed": True,
+            "license_notes": "WHG platform terms reviewed for the research profile.",
+            "commercial_redistribution": "prohibited",
+            "distribution_tier": "research_only",
+            "citation": "World Historical Gazetteer",
+            "version": "snapshot-1",
+            "expected_checksum_sha256": hashlib.sha256(encoded).hexdigest(),
+            "rights": {
+                "metadata": {
+                    "license_id": "CC-BY-NC-4.0",
+                    "attribution": "World Historical Gazetteer",
+                    "review_notes": "Platform material is CC BY-NC 4.0.",
+                }
+            },
+            "options": {"allowed_authority_namespaces": ["whg", "tgn"]},
+        }
+    )
+    httpx_mock.add_response(url=str(source.url), content=encoded)
+    context = _context(source, tmp_path)
+    try:
+        with pytest.raises(ValueError, match="no rights object"):
+            AuthorityReconciliationAdapter().run(context)
+    finally:
+        context.downloads.close()
+
+
+def test_iiif_map_adapter_keeps_image_and_metadata_rights_separate(
+    tmp_path: Path, httpx_mock: HTTPXMock
+) -> None:
+    manifest_url = "https://example.org/iiif/map/manifest"
+    canvas_url = "https://example.org/iiif/map/canvas/1"
+    annotation_url = "https://example.org/annotations/map-1"
+    manifest = {
+        "@context": "http://iiif.io/api/presentation/3/context.json",
+        "id": manifest_url,
+        "type": "Manifest",
+        "label": {"en": ["Map of Example"]},
+        "provider": [
+            {
+                "id": "https://example.org/archive",
+                "type": "Agent",
+                "label": {"en": ["Example Archive"]},
+            }
+        ],
+        "requiredStatement": {
+            "label": {"en": ["Attribution"]},
+            "value": {"en": ["Courtesy Example Archive"]},
+        },
+        "rights": "https://creativecommons.org/publicdomain/mark/1.0/",
+        "items": [
+            {
+                "id": canvas_url,
+                "type": "Canvas",
+                "label": {"en": ["Map sheet"]},
+                "height": 1000,
+                "width": 1000,
+                "items": [],
+            }
+        ],
+    }
+    annotation = {
+        "id": annotation_url,
+        "type": "Annotation",
+        "motivation": "georeferencing",
+        "rights": "https://creativecommons.org/licenses/by/4.0/",
+        "target": canvas_url,
+        "body": {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "properties": {"resourceCoords": [0, 0]},
+                    "geometry": {"type": "Point", "coordinates": [10, 20]},
+                },
+                {
+                    "type": "Feature",
+                    "properties": {"resourceCoords": [1000, 0]},
+                    "geometry": {"type": "Point", "coordinates": [11, 20]},
+                },
+                {
+                    "type": "Feature",
+                    "properties": {"resourceCoords": [0, 1000]},
+                    "geometry": {"type": "Point", "coordinates": [10, 19]},
+                },
+            ],
+        },
+    }
+    manifest_bytes = json.dumps(manifest).encode()
+    annotation_bytes = json.dumps(annotation).encode()
+    source = SourceConfig.model_validate(
+        {
+            "id": "example-iiif-map",
+            "adapter": "iiif_maps",
+            "title": "Example historical map",
+            "publisher": "Example Archive",
+            "url": manifest_url,
+            "license_id": "CC0-1.0",
+            "license_reviewed": True,
+            "license_notes": "Manifest metadata is CC0.",
+            "commercial_redistribution": "allowed",
+            "citation": "Example Archive map catalog",
+            "version": "manifest-revision-1",
+            "expected_checksum_sha256": hashlib.sha256(manifest_bytes).hexdigest(),
+            "rights": {
+                "metadata": {
+                    "license_id": "CC0-1.0",
+                    "attribution": "Example Archive map catalog",
+                    "review_notes": "Catalog metadata rights reviewed.",
+                },
+                "media": {
+                    "require_explicit_license": True,
+                    "allowed": ["PDM-1.0"],
+                },
+                "georeference": {
+                    "license_id": "CC-BY-4.0",
+                    "attribution": "Example georeference contributor",
+                    "review_notes": "Annotation rights reviewed separately.",
+                },
+            },
+            "options": {
+                "annotation_url": annotation_url,
+                "annotation_checksum_sha256": hashlib.sha256(annotation_bytes).hexdigest(),
+                "depicted_date": "circa 1750",
+            },
+        }
+    )
+    httpx_mock.add_response(url=manifest_url, content=manifest_bytes)
+    httpx_mock.add_response(url=annotation_url, content=annotation_bytes)
+    context = _context(source, tmp_path)
+    try:
+        result = IiifMapAdapter().run(context)
+    finally:
+        context.downloads.close()
+
+    assert not result.rejections
+    [historical_map] = result.historical_maps
+    assert historical_map.metadata_rights.license_id == "CC0-1.0"
+    assert historical_map.image_rights.license_id == "PDM-1.0"
+    assert historical_map.georeference_rights.license_id == "CC-BY-4.0"
+    assert [reference.license_id for reference in historical_map.source_refs] == [
+        "CC0-1.0",
+        "CC-BY-4.0",
+    ]
+    assert historical_map.source_refs[0].checksum_sha256 != (
+        historical_map.source_refs[1].checksum_sha256
+    )
+    assert historical_map.lineage[0].parameters["image_bytes_downloaded"] is False
+
+
+def test_iiif_map_adapter_rejects_missing_image_rights(
+    tmp_path: Path, httpx_mock: HTTPXMock
+) -> None:
+    manifest = {
+        "id": "https://example.org/manifest",
+        "type": "Manifest",
+        "label": {"en": ["Map"]},
+        "provider": [{"type": "Agent", "label": {"en": ["Archive"]}}],
+        "requiredStatement": {
+            "label": {"en": ["Attribution"]},
+            "value": {"en": ["Archive"]},
+        },
+        "items": [
+            {
+                "id": "https://example.org/canvas",
+                "type": "Canvas",
+                "items": [],
+            }
+        ],
+    }
+    annotation = {
+        "id": "https://example.org/annotation",
+        "type": "Annotation",
+        "motivation": "georeferencing",
+        "target": "https://example.org/canvas",
+        "body": {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "properties": {"resourceCoords": [index, index]},
+                    "geometry": {"type": "Point", "coordinates": [index, index]},
+                }
+                for index in range(3)
+            ],
+        },
+    }
+    manifest_bytes = json.dumps(manifest).encode()
+    annotation_bytes = json.dumps(annotation).encode()
+    source = SourceConfig.model_validate(
+        {
+            "id": "unlicensed-iiif-map",
+            "adapter": "iiif_maps",
+            "title": "Map",
+            "publisher": "Archive",
+            "url": "https://example.org/manifest",
+            "license_id": "CC0-1.0",
+            "license_reviewed": True,
+            "license_notes": "Metadata rights reviewed.",
+            "commercial_redistribution": "allowed",
+            "citation": "Archive",
+            "version": "1",
+            "expected_checksum_sha256": hashlib.sha256(manifest_bytes).hexdigest(),
+            "rights": {
+                "metadata": {
+                    "license_id": "CC0-1.0",
+                    "attribution": "Archive",
+                    "review_notes": "Metadata review.",
+                },
+                "media": {"allowed": ["PDM-1.0"]},
+                "georeference": {
+                    "license_id": "CC0-1.0",
+                    "attribution": "Georeferencer",
+                    "review_notes": "Annotation review.",
+                },
+            },
+            "options": {
+                "annotation_url": "https://example.org/annotation",
+                "annotation_checksum_sha256": hashlib.sha256(annotation_bytes).hexdigest(),
+                "depicted_date": "1800",
+            },
+        }
+    )
+    httpx_mock.add_response(content=manifest_bytes)
+    httpx_mock.add_response(content=annotation_bytes)
+    context = _context(source, tmp_path)
+    try:
+        result = IiifMapAdapter().run(context)
+    finally:
+        context.downloads.close()
+
+    assert result.historical_maps == []
+    assert len(result.rejections) == 1
+    assert "no explicit rights URI" in result.rejections[0].reason

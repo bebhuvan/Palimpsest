@@ -3,7 +3,7 @@
 No open dataset supplies accurate, globally complete boundaries from the first cities to the
 present. V1 therefore treats coverage and uncertainty as data rather than hiding them.
 
-## In the release profile
+## In the open-core release profile
 
 - [**Cliopatria v0.2.0**](https://github.com/Seshat-Global-History-Databank/cliopatria/releases/tag/v0.2.0) provides provisional worldwide polity reconstructions from 3400 BCE to
   2024 CE. It gives the map breadth, but its own maintainers describe the polygons as one version of
@@ -34,6 +34,14 @@ present. V1 therefore treats coverage and uncertainty as data rather than hiding
 - **Linked Places Format** has a strict adapter for selected WHG/Pelagios-compatible exports. It
   requires an explicit chronology, a bounded timespan, and a single geometry attestation per row;
   ambiguous multi-geometry records must be split during review.
+- **WHG/Getty authority reconciliation** has a checksummed snapshot adapter. It emits reviewable
+  candidates with explicit rights, scores, decisions and transformation lineage. No live
+  reconciliation endpoint or unreviewed match is published, and no WHG or Getty snapshot is
+  currently selected in configuration.
+- **IIIF/Allmaps historical-map metadata** has a Presentation 3/Georeference Extension adapter.
+  It downloads only manifests and annotations during the build, requires separate metadata,
+  georeference and per-image rights, and emits no image bytes. No institution/map pilot is
+  currently selected.
 
 ## Candidate-source decision register
 
@@ -45,11 +53,11 @@ be revisited immediately before a source is enabled.
 | [Pleiades](https://pleiades.stoa.org/downloads) | Scholarly ancient places, names, locations and connections, strongest around the Mediterranean and Near East; not polity borders. | CC BY 3.0; commercial redistribution is allowed with attribution. | Numbered v4.1 source archive, expected SHA-256 and safe internal-path allowlist. | Representative points may be derived centroids; some places deliberately have no location; dates describe attestations rather than continuous occupation. | Enabled. Advance only through a reviewed numbered release and checksum change. |
 | [OpenHistoricalMap](https://wiki.openstreetmap.org/wiki/OpenHistoricalMap/License) | Global, contributor-built historical features and local detail across periods. | Database is CC0 unless an element says otherwise; commercial reuse is allowed only for the CC0 subset. Preserve and enforce every `license=*` override. | OSM API, bounded Overpass extracts and database dumps; pin an extract checksum plus source changeset IDs. | Coverage, dating, geometry and sourcing are uneven; imports can repeat modern state assumptions. It cannot silently supersede a reviewed scholarly reconstruction. | Build a bounded regional adapter only after per-element licence and provenance tests exist. |
 | [Open Context](https://opencontext.org/about/terms) | Archaeological observations and project collections worldwide; evidence and sites, not continuous political extents. | Public-domain and Creative Commons records, often CC BY; commercial reuse depends on each project/record licence. | JSON/GeoJSON API; snapshot each curated query and obey the published limit of at most three requests per second. No stable global release. | Sensitive locations, Indigenous/community interests, human remains, heterogeneous dating and project-specific rights require review and often generalisation or exclusion. | Adapter exists; keep disabled until a named project query passes rights, sensitivity and release review. |
-| [World Historical Gazetteer](https://docs.whgazetteer.org/content/technical/apis.html) | Global reconciliation, alternate names, temporal attestations and selected Linked Places datasets; not a boundary authority. | WHG platform material is CC BY-NC 4.0, while its [public datasets](https://whgazetteer.org/public_data/) state CC BY 4.0 and contributed datasets may differ. Commercial redistribution is allowed only for a specifically reviewed dataset whose own rights permit it. | Token required for most Entity/LPF API endpoints; pin a selected dataset export and checksum rather than the changing union index. | Reconciliation links are hypotheses; geometry and rights are dataset-specific. | Linked Places adapter exists. Admit only a named, immutable dataset export. |
+| [World Historical Gazetteer](https://docs.whgazetteer.org/content/technical/apis.html) | Global reconciliation, alternate names, temporal attestations and selected Linked Places datasets; not a boundary authority. | WHG platform material is CC BY-NC 4.0 and contributed datasets retain dataset-specific terms. Commercial redistribution is allowed only for a specifically reviewed dataset whose own rights permit it. | Token required for most Entity/LPF API endpoints; pin a selected dataset export or response snapshot and checksum rather than the changing union index. | Reconciliation links are hypotheses; geometry and rights are dataset-specific. | Snapshot reconciliation and Linked Places adapters are implemented. No WHG dataset is selected; platform-derived output belongs only in the research profile unless a dataset-specific open licence is proved. |
 | [China Historical GIS](https://chgis.fairbank.fas.harvard.edu/data/chgis/v4/) | Chinese administrative units and places, principally 222 BCE–1911 CE; valuable for correcting geographic imbalance. | Academic research only; no commercial use, resale or redistribution. | Versioned downloads (latest advertised version 6, 2016); GIS/database files. | Licence is incompatible with the public artifact contract; administrative geography does not represent all communities or territorial realities. | Research and QA reference only. Do not ingest or redistribute without new permission. |
 | [al-Ṯurayyā](https://althurayya.github.io/) | More than 2,000 Arabic toponyms and route sections for the ninth–tenth-century Islamicate world; explicitly models regions through place/route networks rather than borderlines. | Repository says data are open but also says licence information still needs to be added. Commercial redistribution is therefore not established. | GitHub-hosted GeoJSON/JSON with no numbered releases. | Work in progress, fuzzy text matches, source ambiguity and no durable release or explicit data licence. | High-value model and future source; blocked on licence, release pinning and match review. |
 | [PeriodO](https://perio.do/license/) | Global scholarly definitions of historical periods; vocabulary and chronology only, never geometry. | PeriodO declares the data public domain; commercial redistribution is allowed. | Canonical JSON-LD export; dataset-version-299 plus exact SHA-256 is reviewed and snapshotted. | Definitions overlap, may be unbounded, and encode scholarly/regional perspectives. | Enabled as a separate chronology artifact; 789 unbounded/invalid definitions in the reviewed snapshot are rejected rather than guessed. |
-| [Getty AAT/TGN/ULAN](https://www.getty.edu/research/tools/vocabularies/obtain/) | Multilingual terminology, places, people and organizations; authority metadata and reconciliation, not historical boundary evidence. | Open Data Commons Attribution 1.0; commercial reuse is allowed with attribution. | Monthly linked-data releases and SPARQL/OpenRefine access; pin a dated bulk release. Getty retired legacy XML web services in January 2026. | TGN is not a complete historical gazetteer and matches require editorial review. | Next authority adapter after a dated N-Triples release and reconciliation review are pinned. |
+| [Getty AAT/TGN/ULAN](https://www.getty.edu/research/tools/vocabularies/obtain/) | Multilingual terminology, places, people and organizations; authority metadata and reconciliation, not historical boundary evidence. | Open Data Commons Attribution 1.0; commercial reuse is allowed with Getty and contributor/source attribution. | Monthly linked-data releases and SPARQL/OpenRefine access; pin a dated release or checksummed response snapshot. Getty retired legacy XML web services in January 2026. | TGN is not a complete historical gazetteer and matches require editorial review. | Reconciliation snapshot adapter is implemented and open-core-compatible. Selecting and pinning the first bounded TGN/AAT/ULAN input remains pending. |
 | [Syriaca.org](https://syriaca.org/api-documentation/index.html) | Places, persons, saints, works and events for Syriac studies, with strong Near Eastern coverage. | Project data are CC BY 4.0; commercial reuse is allowed with attribution, subject to cited-source rights. | TEI/XML, JSON/GeoJSON APIs and OAI; snapshot a named collection/export. | Specialist scope, multiple attestations and inherited source restrictions require record-level provenance. | High-priority non-Western specialist pilot; disabled until a stable collection snapshot is selected. |
 | [ORACC](https://oracc.museum.upenn.edu/doc/opendata/) | Cuneiform corpora, texts, glossaries and prosopography for ancient Mesopotamia. | Default CC BY-SA 3.0, but projects can override; commercial reuse is conditional on each project's licence and share-alike. | Project JSON downloads and APIs; pin exact project versions/checksums. | Transliteration and text assertions are primary/scholarly records, not geographic facts; licences vary by project. | Build a project-scoped primary-source adapter only after a named corpus review. |
 | [DHARMA](https://erc-dharma.github.io/) | Inscriptions, documents and institutions across South and Southeast Asia, especially the first millennium CE. | CC BY 4.0 for reviewed DHARMA corpora; commercial reuse is allowed with attribution. | Versioned Git repositories/TEI editions; pin commit and corpus. | Corpus modules and image rights differ; epigraphic interpretation and uncertain findspots must remain explicit. | High-priority South/Southeast Asian pilot; select one corpus before adapter work. |
@@ -78,12 +86,12 @@ not an artifact to republish or send to browsers.
 
 ## Georeferenced scanned maps
 
-Allmaps is a strong candidate for a later, optional document layer: it supports IIIF maps,
-georeference annotations and MapLibre rendering. It should expose specific historical map images
-as primary-source objects with their institution, IIIF manifest, georeference annotation, date,
-licence, attribution and transformation provenance. Scanned sheets must never become the silent
-default basemap or be treated as agreeing with OHM or a reviewed reconstruction merely because
-their images overlap.
+The metadata adapter for an Allmaps-compatible IIIF Presentation 3 Manifest and IIIF Georeference
+Annotation is implemented. It exposes map identifiers and rights/provenance metadata as an optional
+build artifact, not a map layer. Selecting an institution/map pilot, reviewing its catalog and
+image rights, and deciding whether to build a later MapLibre renderer remain proposed. Scanned
+sheets must never become the silent default basemap or be treated as agreeing with OHM or a
+reviewed reconstruction merely because their images overlap.
 
 ## Deep-time map strategy
 
@@ -109,6 +117,9 @@ Prioritise additions in this order:
 5. use explicitly licensed WHG/Linked Places datasets for reconciliation;
 6. seek redistribution permission or open alternatives for Chinese, African,
    Indigenous, steppe and Islamicate specialist datasets.
+
+World History Encyclopedia remains deferred as links-only tertiary reading; there is no bulk
+ingestion plan.
 
 ## Accuracy from day one
 

@@ -14,6 +14,7 @@ from history_pipeline.curated import load_curated_records
 from history_pipeline.licenses import enforce_source_license
 from history_pipeline.models import (
     AssertionIndex,
+    AuthorityMatch,
     BuildManifest,
     CausalClaim,
     CausalDataset,
@@ -27,9 +28,11 @@ from history_pipeline.models import (
     HistoricalDossier,
     HistoricalEntity,
     HistoricalFeature,
+    HistoricalMapMetadata,
     HistoricalName,
     HistoricalPeriodDefinition,
     IndicatorObservation,
+    IntegrationIndex,
     LatestPointer,
     LayerCatalog,
     RegionTimeBucket,
@@ -78,7 +81,8 @@ def config_check(
                 causal_source.source_id,
             )
     console.print(
-        f"[green]Configuration valid[/green]: {len(config.sources)} sources, "
+        f"[green]Configuration valid[/green]: {config.distribution_profile}, "
+        f"{len(config.sources)} sources, "
         f"{config.minimum_year} to {config.maximum_year}, "
         f"{len(causal.claims)} causal claims, {len(theme_rules.rules)} theme rules, "
         f"{len(curated.assertions)} evidence assertions"
@@ -109,6 +113,9 @@ def schemas(
     output.mkdir(parents=True, exist_ok=True)
     models = (
         HistoricalFeature,
+        AuthorityMatch,
+        HistoricalMapMetadata,
+        IntegrationIndex,
         HistoricalName,
         HistoricalEntity,
         EvidenceAssertion,

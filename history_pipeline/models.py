@@ -111,6 +111,17 @@ class CommercialRedistribution(StrEnum):
     UNREVIEWED = "unreviewed"
 
 
+class DistributionTier(StrEnum):
+    OPEN_CORE = "open_core"
+    RESEARCH_ONLY = "research_only"
+
+
+class RightsScope(StrEnum):
+    METADATA = "metadata"
+    MEDIA = "media"
+    GEOREFERENCE = "georeference"
+
+
 class NameKind(StrEnum):
     """How a historical name relates to the people and source using it."""
 
@@ -200,6 +211,97 @@ class SourceReference(BaseModel):
     checksum_sha256: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
     citation: str
     modified: bool = False
+
+
+class RightsReference(BaseModel):
+    """A rights decision for one kind of material, never an implicit relicense."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    scope: RightsScope
+    license_id: str = Field(min_length=1)
+    attribution: str = Field(min_length=1)
+    rights_uri: HttpUrl | None = None
+
+
+class TransformationStep(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    operation: str = Field(min_length=1)
+    tool: str = Field(min_length=1)
+    tool_version: str = Field(min_length=1)
+    input_record_ids: list[str] = Field(min_length=1)
+    parameters: dict[str, Any] = Field(default_factory=dict)
+
+
+class AuthorityMatch(BaseModel):
+    """A reviewable authority candidate; a score never silently establishes identity."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    match_id: str = Field(pattern=r"^match:[a-f0-9]{16}$")
+    subject_id: str = Field(min_length=1)
+    authority_id: str = Field(min_length=1)
+    authority_namespace: str = Field(min_length=1)
+    label: str = Field(min_length=1)
+    relation: Literal["exact_match", "close_match", "candidate"]
+    review_status: Literal["proposed", "accepted", "rejected"]
+    confidence_score: float = Field(ge=0, le=100)
+    confidence: Confidence
+    source_ref: SourceReference
+    rights: RightsReference
+    lineage: list[TransformationStep] = Field(min_length=1)
+
+
+class HistoricalMapMetadata(BaseModel):
+    """Build-time metadata for a georeferenced IIIF map; no image bytes are embedded."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    map_id: str = Field(pattern=r"^map:[a-f0-9]{16}$")
+    manifest_id: HttpUrl
+    canvas_id: HttpUrl
+    annotation_id: HttpUrl
+    label: str = Field(min_length=1)
+    depicted_date: str = Field(min_length=1)
+    providers: list[str] = Field(min_length=1)
+    required_statement: str = Field(min_length=1)
+    metadata_rights: RightsReference
+    image_rights: RightsReference
+    georeference_rights: RightsReference
+    georeference_confidence: Confidence
+    source_refs: list[SourceReference] = Field(min_length=2)
+    lineage: list[TransformationStep] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def require_separate_rights_scopes(self) -> HistoricalMapMetadata:
+        scopes = (
+            self.metadata_rights.scope,
+            self.image_rights.scope,
+            self.georeference_rights.scope,
+        )
+        if scopes != (
+            RightsScope.METADATA,
+            RightsScope.MEDIA,
+            RightsScope.GEOREFERENCE,
+        ):
+            raise ValueError("map rights must remain separated by material scope")
+        return self
+
+
+class IntegrationIndex(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    semantics: Literal["build-time-reviewed-source-integrations"] = (
+        "build-time-reviewed-source-integrations"
+    )
+    authority_matches_path: str = "integrations/authority-matches.ndjson"
+    authority_match_count: int = Field(ge=0)
+    historical_maps_path: str = "integrations/historical-maps.ndjson"
+    historical_map_count: int = Field(ge=0)
 
 
 class HistoricalName(BaseModel):
@@ -1438,6 +1540,9 @@ class SourceRegistryEntry(BaseModel):
     license_id: str
     license_reviewed: bool
     commercial_redistribution: CommercialRedistribution
+    distribution_tier: DistributionTier = DistributionTier.OPEN_CORE
+    redistribution_conditions: list[str] = Field(default_factory=list)
+    separates_media_rights: bool = False
     version: str | None = None
     expected_checksum_sha256: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
     temporal_scope: str | None = None

@@ -8,6 +8,7 @@ causal_claims_path: data/curation/causal-claims.yml
 theme_rules_path: data/curation/theme-rules.yml
 curated_records_path: data/curation/knowledge-1543.yml
 user_agent_env: WIKIMEDIA_USER_AGENT
+distribution_profile: open_core
 
 tiles:
   minimum_zoom: 0
@@ -15,15 +16,14 @@ tiles:
   simplification: 2.0
 
 license_policy:
-  mode: noncommercial
+  mode: commercial
   require_explicit_license: true
   allowed:
     - CC0-1.0
     - CC-BY-3.0
     - CC-BY-4.0
     - CC-BY-SA-4.0
-    - CC-BY-NC-4.0
-    - CC-BY-NC-SA-4.0
+    - ODC-By-1.0
     - ODbL-1.0
     - PDDL-1.0
     - PDM-1.0
@@ -205,6 +205,8 @@ sources:
     license_notes: "Extracts retain revision provenance, attribution, and CC BY-SA terms."
     roles: [tertiary_summary]
     commercial_redistribution: conditional
+    redistribution_conditions:
+      - "Preserve article-level attribution, revision provenance, and CC BY-SA 4.0 terms for redistributed extracts."
     temporal_scope: "Only pages selected through accepted entity links."
     geographic_scope: "Follows accepted entity coverage and configured languages."
     release_policy: "Preserve canonical page IDs, redirects, revision IDs, timestamps, checksums, attribution, and licence."
@@ -229,6 +231,8 @@ sources:
     license_notes: "Reviewed for this population chart only; re-audit before changing indicator_slug."
     roles: [indicator]
     commercial_redistribution: conditional
+    redistribution_conditions:
+      - "Preserve chart-specific upstream citations and Our World in Data attribution; do not imply compatible historical geometry."
     temporal_scope: "Years published by the reviewed population chart within the configured build window."
     geographic_scope: "Country and aggregate series; mostly present-day geographic units."
     release_policy: "Snapshot chart data and metadata together; re-review if the indicator slug or upstream attribution changes."
@@ -241,3 +245,32 @@ sources:
     options:
       spatial_mapping_valid: false
       spatial_mapping_note: "Country observations use present-day boundaries and must not be projected onto historical polities."
+
+  - id: getty_reconciliation
+    adapter: authority_reconciliation
+    title: Bounded Getty Vocabularies reconciliation snapshot
+    publisher: J. Paul Getty Trust, Getty Research Institute
+    url: https://services.getty.edu/vocab/reconcile/
+    license_id: ODC-By-1.0
+    license_reviewed: true
+    license_notes: "Getty makes AAT, TGN and ULAN available under ODC-By 1.0 and requires Getty plus contributor/source attribution."
+    roles: [authority_metadata]
+    commercial_redistribution: allowed
+    distribution_tier: open_core
+    temporal_scope: "Only configured History Joice subjects in a future bounded response snapshot."
+    geographic_scope: "Depends on the selected AAT, TGN or ULAN queries; reconciliation is not boundary evidence."
+    release_policy: "Disabled until a bounded reconciliation response is wrapped with rights metadata, assigned a source version and checksum-pinned."
+    limitations:
+      - "Reconciliation candidates require editorial review; provider scores do not establish identity."
+      - "Getty contributor and published-source attribution must be retained with Getty attribution."
+    citation: "J. Paul Getty Trust, Getty Research Institute, Getty Vocabularies"
+    version: unselected-snapshot
+    enabled: false
+    rights:
+      metadata:
+        license_id: ODC-By-1.0
+        attribution: "Contains information from the J. Paul Getty Trust, Getty Research Institute, Getty Vocabularies, made available under the ODC Attribution License."
+        rights_uri: https://opendatacommons.org/licenses/by/1.0/
+        review_notes: "Official Getty obtain/download guidance, reviewed 2026-07-23."
+    options:
+      allowed_authority_namespaces: [aat, tgn, ulan]

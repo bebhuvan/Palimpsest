@@ -134,6 +134,20 @@ content index. The layer catalog declares map sources, thematic lenses, confiden
 provenance overlays as orthogonal roles; selecting one role must not silently change another.
 See [the entity, event, assertion and layer architecture](entity-event-layer-architecture.md).
 
+Schema 1.10 builds may also contain the additive, build-time-only `integrations/index.json`,
+`integrations/authority-matches.ndjson`, and `integrations/historical-maps.ndjson` artifacts.
+Older 1.10 consumers may ignore them. They are listed in the existing manifest `artifacts` array;
+no manifest field or browser requirement was added.
+
+Authority matches retain the internal subject, authority record ID and namespace, provider score,
+confidence rationale, explicit editorial status, source version, retrieval date, checksum,
+licence, attribution and normalization lineage. A proposed match is not an identity assertion.
+
+Historical-map metadata retains the IIIF Manifest, Canvas and georeference Annotation identifiers,
+depicted date, provider and required attribution. Metadata, image and georeference rights are
+separate fields. The artifact contains no image pixels and is not a browser-side proxy for a IIIF
+service.
+
 ## Stable identity and content roles
 
 Every admitted feature has one or more namespaced `entity_ids`. A reconciled Wikidata entity uses

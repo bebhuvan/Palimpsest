@@ -72,6 +72,9 @@ def test_artifact_build_writes_contract_files(
     assert "chronology/index.json" in paths
     assert "source-registry.json" in paths
     assert "coverage-priorities.json" in paths
+    assert "integrations/index.json" in paths
+    assert "integrations/authority-matches.ndjson" in paths
+    assert "integrations/historical-maps.ndjson" in paths
 
     chronology = orjson.loads((tmp_path / "build/chronology/index.json").read_bytes())
     assert chronology["semantics"] == "attributed-competing-period-definitions"

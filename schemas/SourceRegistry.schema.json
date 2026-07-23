@@ -10,6 +10,14 @@
       "title": "CommercialRedistribution",
       "type": "string"
     },
+    "DistributionTier": {
+      "enum": [
+        "open_core",
+        "research_only"
+      ],
+      "title": "DistributionTier",
+      "type": "string"
+    },
     "SourceRegistryEntry": {
       "additionalProperties": false,
       "description": "Public policy record; inclusion here is not proof that a source was ingested.",
@@ -59,6 +67,22 @@
         },
         "commercial_redistribution": {
           "$ref": "#/$defs/CommercialRedistribution"
+        },
+        "distribution_tier": {
+          "$ref": "#/$defs/DistributionTier",
+          "default": "open_core"
+        },
+        "redistribution_conditions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Redistribution Conditions",
+          "type": "array"
+        },
+        "separates_media_rights": {
+          "default": false,
+          "title": "Separates Media Rights",
+          "type": "boolean"
         },
         "version": {
           "anyOf": [

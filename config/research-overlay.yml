@@ -1,0 +1,50 @@
+extends: pipeline.yml
+
+distribution_profile: research
+
+license_policy:
+  mode: noncommercial
+  require_explicit_license: true
+  allowed:
+    - CC0-1.0
+    - CC-BY-3.0
+    - CC-BY-4.0
+    - CC-BY-SA-4.0
+    - CC-BY-NC-4.0
+    - CC-BY-NC-SA-4.0
+    - ODC-By-1.0
+    - ODbL-1.0
+    - PDDL-1.0
+    - PDM-1.0
+  denied:
+    - LicenseRef-Proprietary
+
+sources:
+  - id: whg_reconciliation
+    adapter: authority_reconciliation
+    title: Bounded World Historical Gazetteer reconciliation snapshot
+    publisher: World Historical Gazetteer
+    url: https://whgazetteer.org/api/reconcile/
+    license_id: CC-BY-NC-4.0
+    license_reviewed: true
+    license_notes: "WHG platform documentation is CC BY-NC 4.0; contributed dataset rights remain dataset-specific."
+    roles: [authority_metadata]
+    commercial_redistribution: prohibited
+    distribution_tier: research_only
+    temporal_scope: "Only configured History Joice subjects in a future bounded response snapshot."
+    geographic_scope: "Depends on the selected query and namespaces; reconciliation is not boundary evidence."
+    release_policy: "Disabled until a bounded response is wrapped with explicit platform/dataset rights, assigned a source version and checksum-pinned."
+    limitations:
+      - "Platform-derived output is non-commercial unless a selected underlying dataset has separately reviewed open terms."
+      - "Reconciliation links are hypotheses requiring editorial review."
+    citation: "World Historical Gazetteer"
+    version: unselected-snapshot
+    enabled: false
+    rights:
+      metadata:
+        license_id: CC-BY-NC-4.0
+        attribution: "World Historical Gazetteer"
+        rights_uri: https://creativecommons.org/licenses/by-nc/4.0/
+        review_notes: "WHG platform licence and dataset-specific licensing guidance, reviewed 2026-07-23."
+    options:
+      allowed_authority_namespaces: [whg, gn, tgn, wd, osm, ohm, pl]

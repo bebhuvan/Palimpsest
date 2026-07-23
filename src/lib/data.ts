@@ -175,6 +175,7 @@ export interface HistoricalEntity {
 
 export interface HistoricalDossier {
   dossier_id: string;
+  dossier_kind?: 'source_extract';
   title: string;
   language: string;
   entity_ids?: string[];
@@ -186,6 +187,24 @@ export interface HistoricalDossier {
   revision_timestamp?: string;
   content_checksum_sha256?: string;
   source_ref: SourceReference;
+}
+
+export interface PublishedEditorialDossier {
+  dossier_id: string;
+  source_draft_id: string;
+  dossier_kind: 'generated_editorial';
+  editorial_state: 'published';
+  title: string;
+  language: string;
+  entity_ids: string[];
+  feature_ids: string[];
+  content_role: 'project_interpretation';
+  extract: string;
+  content_checksum_sha256: string;
+  evidence_sources: SourceReference[];
+  evidence_attributions: string[];
+  editorial_license_id: string;
+  editorial_attribution: string;
 }
 
 export interface ContentRelationship {

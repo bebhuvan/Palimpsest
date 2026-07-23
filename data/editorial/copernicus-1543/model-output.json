@@ -1,0 +1,95 @@
+{
+  "result": "draft",
+  "title": "The 1543 publication of De revolutionibus",
+  "language": "en",
+  "claims": [
+    {
+      "claim_id": "draft-claim:copernicus-authorship",
+      "text": "The catalog record identifies Nicolaus Copernicus as the creator of the 1543 work De revolutionibus.",
+      "entity_ids": [
+        "historyjoice:person:nicolaus-copernicus",
+        "historyjoice:work:de-revolutionibus"
+      ],
+      "valid_from": 1543,
+      "valid_to": 1543,
+      "date_precision": "year",
+      "supporting_assertion_ids": [
+        "assertion:copernicus-authored-de-revolutionibus"
+      ],
+      "citations": [
+        {
+          "source_id": "loc_copernicus",
+          "passage_id": "passage:copernicus-authorship",
+          "start_char": 0,
+          "end_char": 69,
+          "quote": "The catalog record identifies Copernicus as creator of the 1543 work."
+        }
+      ]
+    },
+    {
+      "claim_id": "draft-claim:publication",
+      "text": "The evidence records the work's publication in Nuremberg in 1543 and names Johannes Petreius's workshop as its printer.",
+      "entity_ids": [
+        "historyjoice:event:de-revolutionibus-publication",
+        "historyjoice:institution:petreius-workshop",
+        "historyjoice:place:nuremberg",
+        "historyjoice:work:de-revolutionibus"
+      ],
+      "valid_from": 1543,
+      "valid_to": 1543,
+      "date_precision": "year",
+      "supporting_assertion_ids": [
+        "assertion:publication-event-published-work",
+        "assertion:publication-event-printed-by-petreius",
+        "assertion:publication-event-occurred-in-nuremberg"
+      ],
+      "citations": [
+        {
+          "source_id": "loc_copernicus",
+          "passage_id": "passage:publication-work",
+          "start_char": 70,
+          "end_char": 137,
+          "quote": "The title page belongs to the work and records publication in 1543."
+        },
+        {
+          "source_id": "loc_copernicus",
+          "passage_id": "passage:publication-printer",
+          "start_char": 138,
+          "end_char": 205,
+          "quote": "The catalog note transcribes the imprint as Apud I. Petreium, 1543."
+        },
+        {
+          "source_id": "loc_copernicus",
+          "passage_id": "passage:publication-place",
+          "start_char": 206,
+          "end_char": 279,
+          "quote": "The catalog note identifies Norimbergae (Nuremberg) as the imprint place."
+        }
+      ]
+    },
+    {
+      "claim_id": "draft-claim:subject",
+      "text": "The Library of Congress description presents the title page as stating a sun-centred model.",
+      "entity_ids": [
+        "historyjoice:work:de-revolutionibus"
+      ],
+      "valid_from": 1543,
+      "valid_to": 1543,
+      "date_precision": "year",
+      "supporting_assertion_ids": [
+        "assertion:de-revolutionibus-subject-heliocentric-astronomy"
+      ],
+      "citations": [
+        {
+          "source_id": "loc_copernicus",
+          "passage_id": "passage:heliocentric-subject",
+          "start_char": 280,
+          "end_char": 360,
+          "quote": "The Library of Congress describes the title page as stating a sun-centred model."
+        }
+      ]
+    }
+  ],
+  "no_evidence_reason": null,
+  "conflicts": []
+}

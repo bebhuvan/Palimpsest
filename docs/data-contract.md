@@ -166,6 +166,13 @@ History Joice analysis is `project_interpretation`. The pipeline and interface m
 role as another. Commons file names are media references on an entity and are not publishable images
 until the individual file licence, attribution and revision metadata have been ingested.
 
+`HistoricalDossier.dossier_kind: source_extract` makes existing revision-pinned Wikipedia and
+other source dossiers structurally distinct from a
+`PublishedEditorialDossier.dossier_kind: generated_editorial`. Generated editorial dossiers are
+created only by the separate build-time, human-reviewed workflow; their evidence sources support
+the cited claims but do not license the generated prose. See
+[the editorial dossier pipeline](editorial-dossier-pipeline.md).
+
 ## Causal and historiographical claims
 
 Factual entity relationships and historical causal arguments are different datasets. Wikidata may

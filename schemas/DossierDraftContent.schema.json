@@ -1,0 +1,224 @@
+{
+  "$defs": {
+    "DatePrecision": {
+      "enum": [
+        "exact",
+        "year",
+        "decade",
+        "century",
+        "range",
+        "unknown"
+      ],
+      "title": "DatePrecision",
+      "type": "string"
+    },
+    "DossierDraftClaim": {
+      "additionalProperties": false,
+      "properties": {
+        "claim_id": {
+          "pattern": "^draft-claim:[a-z0-9][a-z0-9:_-]+$",
+          "title": "Claim Id",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "entity_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Entity Ids",
+          "type": "array"
+        },
+        "valid_from": {
+          "title": "Valid From",
+          "type": "integer"
+        },
+        "valid_to": {
+          "title": "Valid To",
+          "type": "integer"
+        },
+        "date_precision": {
+          "$ref": "#/$defs/DatePrecision"
+        },
+        "supporting_assertion_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Supporting Assertion Ids",
+          "type": "array"
+        },
+        "citations": {
+          "items": {
+            "$ref": "#/$defs/EvidenceCitation"
+          },
+          "minItems": 1,
+          "title": "Citations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "claim_id",
+        "text",
+        "entity_ids",
+        "valid_from",
+        "valid_to",
+        "date_precision",
+        "supporting_assertion_ids",
+        "citations"
+      ],
+      "title": "DossierDraftClaim",
+      "type": "object"
+    },
+    "DossierDraftResult": {
+      "enum": [
+        "draft",
+        "no_evidence",
+        "conflicting_evidence"
+      ],
+      "title": "DossierDraftResult",
+      "type": "string"
+    },
+    "DossierEvidenceConflict": {
+      "additionalProperties": false,
+      "properties": {
+        "conflict_id": {
+          "pattern": "^conflict:[a-z0-9][a-z0-9:_-]+$",
+          "title": "Conflict Id",
+          "type": "string"
+        },
+        "assertion_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 2,
+          "title": "Assertion Ids",
+          "type": "array"
+        },
+        "explanation": {
+          "minLength": 1,
+          "title": "Explanation",
+          "type": "string"
+        },
+        "citations": {
+          "items": {
+            "$ref": "#/$defs/EvidenceCitation"
+          },
+          "minItems": 2,
+          "title": "Citations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "conflict_id",
+        "assertion_ids",
+        "explanation",
+        "citations"
+      ],
+      "title": "DossierEvidenceConflict",
+      "type": "object"
+    },
+    "EvidenceCitation": {
+      "additionalProperties": false,
+      "description": "An exact character span used to support one generated claim.",
+      "properties": {
+        "source_id": {
+          "pattern": "^[a-z0-9][a-z0-9_-]+$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "passage_id": {
+          "pattern": "^passage:[a-z0-9][a-z0-9:_-]+$",
+          "title": "Passage Id",
+          "type": "string"
+        },
+        "start_char": {
+          "minimum": 0,
+          "title": "Start Char",
+          "type": "integer"
+        },
+        "end_char": {
+          "exclusiveMinimum": 0,
+          "title": "End Char",
+          "type": "integer"
+        },
+        "quote": {
+          "minLength": 1,
+          "title": "Quote",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "passage_id",
+        "start_char",
+        "end_char",
+        "quote"
+      ],
+      "title": "EvidenceCitation",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Strict model output; provenance is added outside the model response.",
+  "properties": {
+    "result": {
+      "$ref": "#/$defs/DossierDraftResult"
+    },
+    "title": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Title"
+    },
+    "language": {
+      "minLength": 1,
+      "title": "Language",
+      "type": "string"
+    },
+    "claims": {
+      "items": {
+        "$ref": "#/$defs/DossierDraftClaim"
+      },
+      "title": "Claims",
+      "type": "array"
+    },
+    "no_evidence_reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "No Evidence Reason"
+    },
+    "conflicts": {
+      "items": {
+        "$ref": "#/$defs/DossierEvidenceConflict"
+      },
+      "title": "Conflicts",
+      "type": "array"
+    }
+  },
+  "required": [
+    "result",
+    "title",
+    "language",
+    "claims",
+    "no_evidence_reason",
+    "conflicts"
+  ],
+  "title": "DossierDraftContent",
+  "type": "object"
+}

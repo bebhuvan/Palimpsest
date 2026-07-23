@@ -37,3 +37,35 @@ def test_schemas_command_writes_public_contracts(tmp_path: Path) -> None:
     assert (output / "AuthorityMatch.schema.json").is_file()
     assert (output / "HistoricalMapMetadata.schema.json").is_file()
     assert (output / "IntegrationIndex.schema.json").is_file()
+    assert (output / "ApprovedEvidenceBundle.schema.json").is_file()
+    assert (output / "DossierDraftContent.schema.json").is_file()
+    assert (output / "DossierDraft.schema.json").is_file()
+    assert (output / "PublishedEditorialDossier.schema.json").is_file()
+
+
+def test_dossier_ingest_accepts_timezone_aware_iso_timestamp(tmp_path: Path) -> None:
+    output = tmp_path / "draft.json"
+    result = runner.invoke(
+        app,
+        [
+            "dossier-ingest",
+            "--bundle",
+            "data/editorial/copernicus-1543/evidence-bundle.json",
+            "--model-output",
+            "data/editorial/copernicus-1543/model-output.json",
+            "--prompt",
+            "prompts/dossier-draft-v1.txt",
+            "--prompt-version",
+            "dossier-draft-v1",
+            "--model",
+            "fixture:deterministic-dossier-v1",
+            "--generated-at",
+            "2026-07-23T07:05:00Z",
+            "--output",
+            str(output),
+        ],
+    )
+    assert result.exit_code == 0, result.output
+    assert output.read_bytes() == (
+        Path("data/editorial/copernicus-1543/draft.json").read_bytes()
+    )

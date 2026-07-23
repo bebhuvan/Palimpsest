@@ -1,4 +1,4 @@
-.PHONY: bootstrap config-check schemas lint typecheck test test-browser audit check build-smoke build-browser-pilot build-release verify-release install-tippecanoe publish-r2
+.PHONY: bootstrap config-check schemas lint typecheck test test-browser audit check build-smoke build-browser-pilot build-dossier-pilot build-release verify-release install-tippecanoe publish-r2
 
 bootstrap:
 	uv sync --extra dev
@@ -32,6 +32,9 @@ build-smoke:
 
 build-browser-pilot: install-tippecanoe
 	uv run python scripts/build-browser-pilot.py
+
+build-dossier-pilot:
+	uv run python scripts/build-dossier-pilot.py
 
 install-tippecanoe:
 	bash scripts/install-tippecanoe.sh

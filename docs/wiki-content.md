@@ -103,6 +103,11 @@ Each request contains at most 20 titles and uses deterministic hash buckets. A d
 - publisher, citation, attribution and CC BY-SA licence;
 - linked entity IDs and the `tertiary_summary` role.
 
+Wikipedia records also carry `dossier_kind: source_extract`. This must not be changed to
+`generated_editorial`, even when an editorial dossier discusses the same entity. Generated
+editorial prose follows a separate evidence, review and licensing workflow and never overwrites a
+Wikipedia revision.
+
 The interface must label Wikipedia as a tertiary summary and link to the revision-attributed page.
 It must not imply that its extract is project-authored interpretation or primary evidence.
 

@@ -100,6 +100,12 @@
       "title": "Dossier Id",
       "type": "string"
     },
+    "dossier_kind": {
+      "const": "source_extract",
+      "default": "source_extract",
+      "title": "Dossier Kind",
+      "type": "string"
+    },
     "title": {
       "title": "Title",
       "type": "string"

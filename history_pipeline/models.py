@@ -7,7 +7,7 @@ from enum import StrEnum
 from itertools import pairwise
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, HttpUrl, model_validator
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, HttpUrl, model_validator
 
 
 class FeatureKind(StrEnum):
@@ -769,10 +769,16 @@ class ContentRole(StrEnum):
     PROJECT_INTERPRETATION = "project_interpretation"
 
 
+class DossierKind(StrEnum):
+    SOURCE_EXTRACT = "source_extract"
+    GENERATED_EDITORIAL = "generated_editorial"
+
+
 class HistoricalDossier(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     dossier_id: str
+    dossier_kind: Literal[DossierKind.SOURCE_EXTRACT] = DossierKind.SOURCE_EXTRACT
     title: str
     language: str
     entity_ids: list[str] = Field(default_factory=list)
@@ -786,6 +792,318 @@ class HistoricalDossier(BaseModel):
     redirects_from: list[str] = Field(default_factory=list)
     content_checksum_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
     source_ref: SourceReference
+
+
+class EvidencePassage(BaseModel):
+    """An approved, byte-stable passage within one evidence document."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    passage_id: str = Field(pattern=r"^passage:[a-z0-9][a-z0-9:_-]+$")
+    assertion_ids: list[str] = Field(min_length=1)
+    start_char: int = Field(ge=0)
+    end_char: int = Field(gt=0)
+    text: str = Field(min_length=1)
+    text_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+
+    @model_validator(mode="after")
+    def validate_passage(self) -> EvidencePassage:
+        if self.start_char >= self.end_char:
+            raise ValueError("Evidence passage start_char must be before end_char")
+        if len(self.assertion_ids) != len(set(self.assertion_ids)):
+            raise ValueError("Evidence passage assertion IDs must be unique")
+        if hashlib.sha256(self.text.encode("utf-8")).hexdigest() != self.text_sha256:
+            raise ValueError("Evidence passage text checksum does not match")
+        return self
+
+
+class EvidenceDocument(BaseModel):
+    """One revision-pinned source document admitted to an evidence bundle."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    source_ref: SourceReference
+    source_revision_id: str = Field(min_length=1)
+    attribution: str = Field(min_length=1)
+    text: str = Field(min_length=1)
+    text_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    passages: list[EvidencePassage] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def validate_document(self) -> EvidenceDocument:
+        if self.source_ref.version != self.source_revision_id:
+            raise ValueError("Evidence source revision must match source_ref.version")
+        if self.source_ref.citation != self.attribution:
+            raise ValueError("Evidence attribution must match the preserved source citation")
+        if hashlib.sha256(self.text.encode("utf-8")).hexdigest() != self.text_sha256:
+            raise ValueError("Evidence document text checksum does not match")
+        passage_ids = [passage.passage_id for passage in self.passages]
+        if len(passage_ids) != len(set(passage_ids)):
+            raise ValueError("Evidence passage IDs must be unique within a source")
+        for passage in self.passages:
+            if passage.end_char > len(self.text):
+                raise ValueError(f"Evidence passage is outside its source: {passage.passage_id}")
+            if self.text[passage.start_char : passage.end_char] != passage.text:
+                raise ValueError(f"Evidence passage span does not match: {passage.passage_id}")
+        return self
+
+
+class ApprovedEvidenceBundle(BaseModel):
+    """The complete and only historical context allowed into dossier generation."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    bundle_id: str = Field(pattern=r"^evidence-bundle:[a-z0-9][a-z0-9:_-]+$")
+    subject_entity_ids: list[str] = Field(min_length=1)
+    feature_ids: list[str] = Field(default_factory=list)
+    assertions: list[EvidenceAssertion] = Field(default_factory=list)
+    sources: list[EvidenceDocument] = Field(default_factory=list)
+    approved_by: str = Field(min_length=1)
+    approved_at: AwareDatetime
+
+    @model_validator(mode="after")
+    def validate_bundle_graph(self) -> ApprovedEvidenceBundle:
+        for values, label in (
+            (self.subject_entity_ids, "subject entity"),
+            (self.feature_ids, "feature"),
+        ):
+            if len(values) != len(set(values)):
+                raise ValueError(f"Evidence bundle {label} IDs must be unique")
+        assertion_ids = [assertion.assertion_id for assertion in self.assertions]
+        if len(assertion_ids) != len(set(assertion_ids)):
+            raise ValueError("Evidence bundle assertion IDs must be unique")
+        known_assertions = set(assertion_ids)
+        passage_assertions: set[str] = set()
+        passage_keys: list[tuple[str, str]] = []
+        for source in self.sources:
+            for passage in source.passages:
+                passage_keys.append((source.source_ref.source_id, passage.passage_id))
+                unknown = set(passage.assertion_ids) - known_assertions
+                if unknown:
+                    raise ValueError(
+                        f"Evidence passage references unknown assertions: {sorted(unknown)}"
+                    )
+                passage_assertions.update(passage.assertion_ids)
+        if len(passage_keys) != len(set(passage_keys)):
+            raise ValueError("Evidence passage IDs must be unique within each source")
+        if passage_assertions != known_assertions:
+            missing = sorted(known_assertions - passage_assertions)
+            raise ValueError(f"Evidence assertions have no approved passage: {missing}")
+        if bool(self.assertions) != bool(self.sources):
+            raise ValueError(
+                "Evidence bundles must contain both assertions and sources, or neither"
+            )
+        return self
+
+
+class EvidenceCitation(BaseModel):
+    """An exact character span used to support one generated claim."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    source_id: str = Field(pattern=r"^[a-z0-9][a-z0-9_-]+$")
+    passage_id: str = Field(pattern=r"^passage:[a-z0-9][a-z0-9:_-]+$")
+    start_char: int = Field(ge=0)
+    end_char: int = Field(gt=0)
+    quote: str = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def validate_span_order(self) -> EvidenceCitation:
+        if self.start_char >= self.end_char:
+            raise ValueError("Citation start_char must be before end_char")
+        return self
+
+
+class DossierDraftClaim(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    claim_id: str = Field(pattern=r"^draft-claim:[a-z0-9][a-z0-9:_-]+$")
+    text: str = Field(min_length=1)
+    entity_ids: list[str] = Field(min_length=1)
+    valid_from: int
+    valid_to: int
+    date_precision: DatePrecision
+    supporting_assertion_ids: list[str] = Field(min_length=1)
+    citations: list[EvidenceCitation] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def validate_claim_shape(self) -> DossierDraftClaim:
+        if self.valid_from == 0 or self.valid_to == 0:
+            raise ValueError("Dossier claims use BCE/CE notation and cannot contain year zero")
+        if self.valid_from > self.valid_to:
+            raise ValueError("Dossier claim valid_from must not exceed valid_to")
+        for values, label in (
+            (self.entity_ids, "entity"),
+            (self.supporting_assertion_ids, "supporting assertion"),
+        ):
+            if len(values) != len(set(values)):
+                raise ValueError(f"Dossier claim {label} IDs must be unique")
+        return self
+
+
+class DossierEvidenceConflict(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    conflict_id: str = Field(pattern=r"^conflict:[a-z0-9][a-z0-9:_-]+$")
+    assertion_ids: list[str] = Field(min_length=2)
+    explanation: str = Field(min_length=1)
+    citations: list[EvidenceCitation] = Field(min_length=2)
+
+    @model_validator(mode="after")
+    def validate_unique_assertions(self) -> DossierEvidenceConflict:
+        if len(self.assertion_ids) != len(set(self.assertion_ids)):
+            raise ValueError("Conflict assertion IDs must be unique")
+        return self
+
+
+class DossierDraftResult(StrEnum):
+    DRAFT = "draft"
+    NO_EVIDENCE = "no_evidence"
+    CONFLICTING_EVIDENCE = "conflicting_evidence"
+
+
+class DossierDraftContent(BaseModel):
+    """Strict model output; provenance is added outside the model response."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    result: DossierDraftResult
+    title: str | None
+    language: str = Field(min_length=1)
+    claims: list[DossierDraftClaim]
+    no_evidence_reason: str | None
+    conflicts: list[DossierEvidenceConflict]
+
+    @model_validator(mode="after")
+    def validate_result(self) -> DossierDraftContent:
+        if self.result == DossierDraftResult.DRAFT:
+            if not self.title or not self.claims:
+                raise ValueError("A dossier draft requires a title and at least one claim")
+            if self.no_evidence_reason or self.conflicts:
+                raise ValueError("A dossier draft cannot also be a terminal evidence result")
+        elif self.result == DossierDraftResult.NO_EVIDENCE:
+            if not self.no_evidence_reason:
+                raise ValueError("A no-evidence result requires a reason")
+            if self.title or self.claims or self.conflicts:
+                raise ValueError("A no-evidence result cannot contain draft content or conflicts")
+        else:
+            if not self.conflicts:
+                raise ValueError("A conflicting-evidence result requires at least one conflict")
+            if self.title or self.claims or self.no_evidence_reason:
+                raise ValueError("A conflicting-evidence result cannot contain draft content")
+        claim_ids = [claim.claim_id for claim in self.claims]
+        if len(claim_ids) != len(set(claim_ids)):
+            raise ValueError("Dossier draft claim IDs must be unique")
+        conflict_ids = [conflict.conflict_id for conflict in self.conflicts]
+        if len(conflict_ids) != len(set(conflict_ids)):
+            raise ValueError("Dossier conflict IDs must be unique")
+        return self
+
+
+class EditorialState(StrEnum):
+    MACHINE_DRAFTED = "machine_drafted"
+    HUMAN_REVIEWED = "human_reviewed"
+    REJECTED = "rejected"
+    PUBLISHED = "published"
+
+
+class HumanDossierReview(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    reviewed_by: str = Field(min_length=1)
+    reviewed_at: AwareDatetime
+    notes: str = Field(min_length=1)
+    reviewed_claim_ids: list[str] = Field(min_length=1)
+
+
+class DossierGenerationProvenance(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    prompt_version: str = Field(min_length=1)
+    prompt_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    model_identifier: str = Field(min_length=1)
+    evidence_bundle_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    output_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    generated_at: AwareDatetime
+    provider_response_id: str | None = None
+
+
+class DossierDraft(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    draft_id: str = Field(pattern=r"^dossier-draft:[a-f0-9]{16}$")
+    editorial_state: Literal[
+        EditorialState.MACHINE_DRAFTED,
+        EditorialState.HUMAN_REVIEWED,
+        EditorialState.REJECTED,
+    ] = EditorialState.MACHINE_DRAFTED
+    bundle_id: str = Field(pattern=r"^evidence-bundle:[a-z0-9][a-z0-9:_-]+$")
+    content: DossierDraftContent
+    generation: DossierGenerationProvenance
+    review: HumanDossierReview | None = None
+    rejection_reason: str | None = None
+    rejected_by: str | None = None
+    rejected_at: AwareDatetime | None = None
+
+    @model_validator(mode="after")
+    def validate_editorial_state(self) -> DossierDraft:
+        if self.editorial_state == EditorialState.MACHINE_DRAFTED:
+            if self.review or self.rejection_reason or self.rejected_by or self.rejected_at:
+                raise ValueError("Machine drafts cannot contain review or rejection metadata")
+        elif self.editorial_state == EditorialState.HUMAN_REVIEWED:
+            if (
+                not self.review
+                or self.rejection_reason
+                or self.rejected_by
+                or self.rejected_at
+            ):
+                raise ValueError("Human-reviewed drafts require review metadata only")
+            expected = [claim.claim_id for claim in self.content.claims]
+            if sorted(self.review.reviewed_claim_ids) != sorted(expected):
+                raise ValueError("Human review must cover every generated claim exactly once")
+        elif (
+            not self.rejection_reason
+            or not self.rejected_by
+            or not self.rejected_at
+            or self.review
+        ):
+            raise ValueError(
+                "Rejected drafts require actor, timestamp and reason, without a review"
+            )
+        return self
+
+
+class PublishedEditorialDossier(BaseModel):
+    """Immutable, human-approved editorial data, distinct from source extracts."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    dossier_id: str = Field(pattern=r"^historyjoice:editorial:[a-f0-9]{16}$")
+    source_draft_id: str = Field(pattern=r"^dossier-draft:[a-f0-9]{16}$")
+    dossier_kind: Literal[DossierKind.GENERATED_EDITORIAL] = (
+        DossierKind.GENERATED_EDITORIAL
+    )
+    editorial_state: Literal[EditorialState.PUBLISHED] = EditorialState.PUBLISHED
+    title: str = Field(min_length=1)
+    language: str = Field(min_length=1)
+    entity_ids: list[str] = Field(min_length=1)
+    feature_ids: list[str] = Field(default_factory=list)
+    content_role: Literal[ContentRole.PROJECT_INTERPRETATION] = (
+        ContentRole.PROJECT_INTERPRETATION
+    )
+    extract: str = Field(min_length=1)
+    claims: list[DossierDraftClaim] = Field(min_length=1)
+    content_checksum_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    evidence_sources: list[SourceReference] = Field(min_length=1)
+    evidence_attributions: list[str] = Field(min_length=1)
+    editorial_license_id: str = Field(min_length=1)
+    editorial_attribution: str = Field(min_length=1)
+    generation: DossierGenerationProvenance
+    review: HumanDossierReview
+    published_at: AwareDatetime
 
 
 class PeriodSpatialCoverage(BaseModel):

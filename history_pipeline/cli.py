@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import hashlib
 import json
+from datetime import datetime
 from pathlib import Path
 from typing import Annotated
 
@@ -10,9 +12,20 @@ from rich.table import Table
 
 from history_pipeline.causal import load_causal_dataset
 from history_pipeline.config import load_config
-from history_pipeline.curated import load_curated_records
+from history_pipeline.curated import CuratedRecords, load_curated_records
+from history_pipeline.dossiers import (
+    api_key_from_environment,
+    generate_with_openai,
+    ingest_model_output,
+    publish_reviewed_draft,
+    read_json_model,
+    reject_draft,
+    review_draft,
+    write_json,
+)
 from history_pipeline.licenses import enforce_source_license
 from history_pipeline.models import (
+    ApprovedEvidenceBundle,
     AssertionIndex,
     AuthorityMatch,
     BuildManifest,
@@ -23,6 +36,8 @@ from history_pipeline.models import (
     ChronologyIndex,
     ContentIndex,
     CoverageCell,
+    DossierDraft,
+    DossierDraftContent,
     EvidenceAssertion,
     FeatureContentLink,
     HistoricalDossier,
@@ -35,6 +50,7 @@ from history_pipeline.models import (
     IntegrationIndex,
     LatestPointer,
     LayerCatalog,
+    PublishedEditorialDossier,
     RegionTimeBucket,
     RegionTimeIndex,
     SourceRegistry,
@@ -120,6 +136,10 @@ def schemas(
         HistoricalEntity,
         EvidenceAssertion,
         HistoricalDossier,
+        ApprovedEvidenceBundle,
+        DossierDraftContent,
+        DossierDraft,
+        PublishedEditorialDossier,
         IndicatorObservation,
         CoverageCell,
         BuildManifest,
@@ -147,6 +167,158 @@ def schemas(
         path = output / f"{model.__name__}.schema.json"
         path.write_text(json.dumps(model.model_json_schema(), indent=2) + "\n")
     console.print(f"[green]Wrote {len(models)} schemas[/green] to {output}")
+
+
+def _load_dossier_inputs(
+    bundle_path: Path,
+    curated_path: Path,
+) -> tuple[ApprovedEvidenceBundle, CuratedRecords]:
+    bundle = read_json_model(bundle_path, ApprovedEvidenceBundle)
+    curated, _checksum = load_curated_records(curated_path)
+    return bundle, curated
+
+
+def _parse_timestamp(value: str, option: str) -> datetime:
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as error:
+        raise typer.BadParameter(f"{option} must be an ISO-8601 timestamp") from error
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        raise typer.BadParameter(f"{option} must include a UTC offset")
+    return parsed
+
+
+@app.command("dossier-ingest")
+def dossier_ingest(
+    bundle_path: Annotated[Path, typer.Option("--bundle")],
+    model_output_path: Annotated[Path, typer.Option("--model-output")],
+    output_path: Annotated[Path, typer.Option("--output")],
+    prompt_path: Annotated[Path, typer.Option("--prompt")],
+    prompt_version: Annotated[str, typer.Option("--prompt-version")],
+    model_identifier: Annotated[str, typer.Option("--model")],
+    generated_at: Annotated[str, typer.Option("--generated-at")],
+    curated_path: Annotated[Path, typer.Option("--curated")] = Path(
+        "data/curation/knowledge-1543.yml"
+    ),
+) -> None:
+    bundle, curated = _load_dossier_inputs(bundle_path, curated_path)
+    prompt = prompt_path.read_text(encoding="utf-8")
+    content = read_json_model(model_output_path, DossierDraftContent)
+    draft = ingest_model_output(
+        content,
+        bundle,
+        curated,
+        prompt_version=prompt_version,
+        prompt_sha256=hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
+        model_identifier=model_identifier,
+        generated_at=_parse_timestamp(generated_at, "--generated-at"),
+    )
+    write_json(output_path, draft)
+    console.print(f"[green]Validated dossier draft[/green] {draft.draft_id}")
+
+
+@app.command("dossier-generate")
+def dossier_generate(
+    bundle_path: Annotated[Path, typer.Option("--bundle")],
+    output_path: Annotated[Path, typer.Option("--output")],
+    prompt_path: Annotated[Path, typer.Option("--prompt")],
+    prompt_version: Annotated[str, typer.Option("--prompt-version")],
+    model_identifier: Annotated[str, typer.Option("--model")],
+    api_key_env: Annotated[str, typer.Option("--api-key-env")] = "OPENAI_API_KEY",
+    curated_path: Annotated[Path, typer.Option("--curated")] = Path(
+        "data/curation/knowledge-1543.yml"
+    ),
+) -> None:
+    bundle, curated = _load_dossier_inputs(bundle_path, curated_path)
+    draft = generate_with_openai(
+        bundle,
+        curated,
+        prompt=prompt_path.read_text(encoding="utf-8"),
+        prompt_version=prompt_version,
+        model_identifier=model_identifier,
+        api_key=api_key_from_environment(api_key_env),
+    )
+    write_json(output_path, draft)
+    console.print(f"[green]Generated and validated dossier draft[/green] {draft.draft_id}")
+
+
+@app.command("dossier-review")
+def dossier_review(
+    bundle_path: Annotated[Path, typer.Option("--bundle")],
+    draft_path: Annotated[Path, typer.Option("--draft")],
+    output_path: Annotated[Path, typer.Option("--output")],
+    reviewed_by: Annotated[str, typer.Option("--reviewed-by")],
+    reviewed_at: Annotated[str, typer.Option("--reviewed-at")],
+    notes: Annotated[str, typer.Option("--notes")],
+    curated_path: Annotated[Path, typer.Option("--curated")] = Path(
+        "data/curation/knowledge-1543.yml"
+    ),
+) -> None:
+    bundle, curated = _load_dossier_inputs(bundle_path, curated_path)
+    draft = read_json_model(draft_path, DossierDraft)
+    reviewed = review_draft(
+        draft,
+        bundle,
+        curated,
+        reviewed_by=reviewed_by,
+        reviewed_at=_parse_timestamp(reviewed_at, "--reviewed-at"),
+        notes=notes,
+    )
+    write_json(output_path, reviewed)
+    console.print(f"[green]Recorded human dossier review[/green] {reviewed.draft_id}")
+
+
+@app.command("dossier-publish")
+def dossier_publish(
+    bundle_path: Annotated[Path, typer.Option("--bundle")],
+    draft_path: Annotated[Path, typer.Option("--reviewed-draft")],
+    output_dir: Annotated[Path, typer.Option("--output-dir")],
+    editorial_license_id: Annotated[str, typer.Option("--editorial-license-id")],
+    editorial_attribution: Annotated[str, typer.Option("--editorial-attribution")],
+    published_at: Annotated[str, typer.Option("--published-at")],
+    curated_path: Annotated[Path, typer.Option("--curated")] = Path(
+        "data/curation/knowledge-1543.yml"
+    ),
+) -> None:
+    bundle, curated = _load_dossier_inputs(bundle_path, curated_path)
+    draft = read_json_model(draft_path, DossierDraft)
+    dossier = publish_reviewed_draft(
+        draft,
+        bundle,
+        curated,
+        editorial_license_id=editorial_license_id,
+        editorial_attribution=editorial_attribution,
+        published_at=_parse_timestamp(published_at, "--published-at"),
+    )
+    output_path = output_dir / f"{dossier.dossier_id.rsplit(':', 1)[-1]}.json"
+    write_json(output_path, dossier, immutable=True)
+    console.print(f"[green]Published immutable editorial dossier[/green] {output_path}")
+
+
+@app.command("dossier-reject")
+def dossier_reject(
+    bundle_path: Annotated[Path, typer.Option("--bundle")],
+    draft_path: Annotated[Path, typer.Option("--draft")],
+    output_path: Annotated[Path, typer.Option("--output")],
+    rejected_by: Annotated[str, typer.Option("--rejected-by")],
+    rejected_at: Annotated[str, typer.Option("--rejected-at")],
+    reason: Annotated[str, typer.Option("--reason")],
+    curated_path: Annotated[Path, typer.Option("--curated")] = Path(
+        "data/curation/knowledge-1543.yml"
+    ),
+) -> None:
+    bundle, curated = _load_dossier_inputs(bundle_path, curated_path)
+    draft = read_json_model(draft_path, DossierDraft)
+    rejected = reject_draft(
+        draft,
+        bundle,
+        curated,
+        rejected_by=rejected_by,
+        rejected_at=_parse_timestamp(rejected_at, "--rejected-at"),
+        reason=reason,
+    )
+    write_json(output_path, rejected)
+    console.print(f"[yellow]Rejected dossier draft[/yellow] {rejected.draft_id}")
 
 
 @app.command("build")

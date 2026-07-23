@@ -1,0 +1,410 @@
+{
+  "$defs": {
+    "DatePrecision": {
+      "enum": [
+        "exact",
+        "year",
+        "decade",
+        "century",
+        "range",
+        "unknown"
+      ],
+      "title": "DatePrecision",
+      "type": "string"
+    },
+    "DossierDraftClaim": {
+      "additionalProperties": false,
+      "properties": {
+        "claim_id": {
+          "pattern": "^draft-claim:[a-z0-9][a-z0-9:_-]+$",
+          "title": "Claim Id",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "entity_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Entity Ids",
+          "type": "array"
+        },
+        "valid_from": {
+          "title": "Valid From",
+          "type": "integer"
+        },
+        "valid_to": {
+          "title": "Valid To",
+          "type": "integer"
+        },
+        "date_precision": {
+          "$ref": "#/$defs/DatePrecision"
+        },
+        "supporting_assertion_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Supporting Assertion Ids",
+          "type": "array"
+        },
+        "citations": {
+          "items": {
+            "$ref": "#/$defs/EvidenceCitation"
+          },
+          "minItems": 1,
+          "title": "Citations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "claim_id",
+        "text",
+        "entity_ids",
+        "valid_from",
+        "valid_to",
+        "date_precision",
+        "supporting_assertion_ids",
+        "citations"
+      ],
+      "title": "DossierDraftClaim",
+      "type": "object"
+    },
+    "DossierDraftContent": {
+      "additionalProperties": false,
+      "description": "Strict model output; provenance is added outside the model response.",
+      "properties": {
+        "result": {
+          "$ref": "#/$defs/DossierDraftResult"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Title"
+        },
+        "language": {
+          "minLength": 1,
+          "title": "Language",
+          "type": "string"
+        },
+        "claims": {
+          "items": {
+            "$ref": "#/$defs/DossierDraftClaim"
+          },
+          "title": "Claims",
+          "type": "array"
+        },
+        "no_evidence_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "No Evidence Reason"
+        },
+        "conflicts": {
+          "items": {
+            "$ref": "#/$defs/DossierEvidenceConflict"
+          },
+          "title": "Conflicts",
+          "type": "array"
+        }
+      },
+      "required": [
+        "result",
+        "title",
+        "language",
+        "claims",
+        "no_evidence_reason",
+        "conflicts"
+      ],
+      "title": "DossierDraftContent",
+      "type": "object"
+    },
+    "DossierDraftResult": {
+      "enum": [
+        "draft",
+        "no_evidence",
+        "conflicting_evidence"
+      ],
+      "title": "DossierDraftResult",
+      "type": "string"
+    },
+    "DossierEvidenceConflict": {
+      "additionalProperties": false,
+      "properties": {
+        "conflict_id": {
+          "pattern": "^conflict:[a-z0-9][a-z0-9:_-]+$",
+          "title": "Conflict Id",
+          "type": "string"
+        },
+        "assertion_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 2,
+          "title": "Assertion Ids",
+          "type": "array"
+        },
+        "explanation": {
+          "minLength": 1,
+          "title": "Explanation",
+          "type": "string"
+        },
+        "citations": {
+          "items": {
+            "$ref": "#/$defs/EvidenceCitation"
+          },
+          "minItems": 2,
+          "title": "Citations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "conflict_id",
+        "assertion_ids",
+        "explanation",
+        "citations"
+      ],
+      "title": "DossierEvidenceConflict",
+      "type": "object"
+    },
+    "DossierGenerationProvenance": {
+      "additionalProperties": false,
+      "properties": {
+        "prompt_version": {
+          "minLength": 1,
+          "title": "Prompt Version",
+          "type": "string"
+        },
+        "prompt_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Prompt Sha256",
+          "type": "string"
+        },
+        "model_identifier": {
+          "minLength": 1,
+          "title": "Model Identifier",
+          "type": "string"
+        },
+        "evidence_bundle_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Evidence Bundle Sha256",
+          "type": "string"
+        },
+        "output_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Output Sha256",
+          "type": "string"
+        },
+        "generated_at": {
+          "format": "date-time",
+          "title": "Generated At",
+          "type": "string"
+        },
+        "provider_response_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Response Id"
+        }
+      },
+      "required": [
+        "prompt_version",
+        "prompt_sha256",
+        "model_identifier",
+        "evidence_bundle_sha256",
+        "output_sha256",
+        "generated_at"
+      ],
+      "title": "DossierGenerationProvenance",
+      "type": "object"
+    },
+    "EvidenceCitation": {
+      "additionalProperties": false,
+      "description": "An exact character span used to support one generated claim.",
+      "properties": {
+        "source_id": {
+          "pattern": "^[a-z0-9][a-z0-9_-]+$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "passage_id": {
+          "pattern": "^passage:[a-z0-9][a-z0-9:_-]+$",
+          "title": "Passage Id",
+          "type": "string"
+        },
+        "start_char": {
+          "minimum": 0,
+          "title": "Start Char",
+          "type": "integer"
+        },
+        "end_char": {
+          "exclusiveMinimum": 0,
+          "title": "End Char",
+          "type": "integer"
+        },
+        "quote": {
+          "minLength": 1,
+          "title": "Quote",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "passage_id",
+        "start_char",
+        "end_char",
+        "quote"
+      ],
+      "title": "EvidenceCitation",
+      "type": "object"
+    },
+    "HumanDossierReview": {
+      "additionalProperties": false,
+      "properties": {
+        "reviewed_by": {
+          "minLength": 1,
+          "title": "Reviewed By",
+          "type": "string"
+        },
+        "reviewed_at": {
+          "format": "date-time",
+          "title": "Reviewed At",
+          "type": "string"
+        },
+        "notes": {
+          "minLength": 1,
+          "title": "Notes",
+          "type": "string"
+        },
+        "reviewed_claim_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Reviewed Claim Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "reviewed_by",
+        "reviewed_at",
+        "notes",
+        "reviewed_claim_ids"
+      ],
+      "title": "HumanDossierReview",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "draft_id": {
+      "pattern": "^dossier-draft:[a-f0-9]{16}$",
+      "title": "Draft Id",
+      "type": "string"
+    },
+    "editorial_state": {
+      "default": "machine_drafted",
+      "enum": [
+        "machine_drafted",
+        "human_reviewed",
+        "rejected"
+      ],
+      "title": "Editorial State",
+      "type": "string"
+    },
+    "bundle_id": {
+      "pattern": "^evidence-bundle:[a-z0-9][a-z0-9:_-]+$",
+      "title": "Bundle Id",
+      "type": "string"
+    },
+    "content": {
+      "$ref": "#/$defs/DossierDraftContent"
+    },
+    "generation": {
+      "$ref": "#/$defs/DossierGenerationProvenance"
+    },
+    "review": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/HumanDossierReview"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "rejection_reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Rejection Reason"
+    },
+    "rejected_by": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Rejected By"
+    },
+    "rejected_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Rejected At"
+    }
+  },
+  "required": [
+    "draft_id",
+    "bundle_id",
+    "content",
+    "generation"
+  ],
+  "title": "DossierDraft",
+  "type": "object"
+}

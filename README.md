@@ -108,6 +108,19 @@ one revision-pinned enriched record and bounded context plus one deliberate miss
 record, so browser tests cover map selection, search selection, successful joins, and honest
 missing-dossier states without live Wikimedia requests or generated prose.
 
+Build the separate, deterministic Copernicus editorial-dossier pilot:
+
+```bash
+make build-dossier-pilot
+```
+
+This ingests a saved schema-constrained model output without an API call, verifies every claim
+against the approved schema 1.10 assertions and exact evidence spans, records a human-review state,
+and reproduces a content-addressed published dossier under
+`data/editorial/copernicus-1543/published/`. Real generation is an explicit build-time CLI action
+requiring `OPENAI_API_KEY` and a `--model` identifier; the browser application contains no LLM
+client or credential. See the [editorial dossier pipeline](docs/editorial-dossier-pipeline.md).
+
 Reviewed labels come from first-class historical-name attestations rather than a timeless display
 string. Search and map labels choose the attestation active in the selected year and disclose when
 its chronology was merely inherited from the geometry interval. Clicking OHM detail opens a

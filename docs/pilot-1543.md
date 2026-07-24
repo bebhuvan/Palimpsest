@@ -28,9 +28,9 @@ supports the full journey.
 
 | Anchor | Geography | Primary lenses | Current status |
 | --- | --- | --- | --- |
-| Publication of *De revolutionibus* | Nuremberg | Knowledge, culture | Structured LOC slice and machine dossier draft |
-| Royal cedula to Vasco de Quiroga | Valladolid → Michoacán | Power, belief | Structured LOC slice |
-| Firearms traditions at Tanegashima | Japan and maritime East Asia | Trade, power, knowledge | Structured MLIT slice; late-source distance is explicit and scholarly reconciliation remains pending |
+| Publication of *De revolutionibus* | Nuremberg | Knowledge, culture | Structured LOC slice, machine dossier draft and reviewed Wikimedia seed links |
+| Royal cedula to Vasco de Quiroga | Valladolid → Michoacán | Power, belief | Structured LOC slice and reviewed Vasco de Quiroga Wikimedia seed |
+| Firearms traditions at Tanegashima | Japan and maritime East Asia | Trade, power, knowledge | Structured MLIT slice and reviewed firearm Wikimedia seed; late-source distance is explicit and scholarly reconciliation remains pending |
 | War between the Ethiopian kingdom and the Adal Sultanate | Horn of Africa | Power, belief, movement | Source selection required |
 | Indian Ocean courts, ports and exchange | South Asia and the western Indian Ocean | Trade, culture, power | Anchor and source selection required |
 | Ming frontier, maritime restrictions and exchange | East Asia | Power, trade | Anchor and source selection required |

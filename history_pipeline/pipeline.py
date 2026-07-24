@@ -424,9 +424,17 @@ class PipelineRun:
     ) -> EnrichmentCheckpoint:
         digest = hashlib.sha256()
         digest.update(config_fingerprint_bytes(self.config_path))
-        for feature_id in sorted(feature.feature_id for feature in features):
-            digest.update(b"\0")
-            digest.update(feature_id.encode("utf-8"))
+        enrichment_inputs = [
+            {
+                "feature_id": feature.feature_id,
+                "wikidata_ids": sorted(set(feature.wikidata_ids)),
+                "wikipedia_titles": feature.wikipedia_titles,
+            }
+            for feature in sorted(features, key=lambda item: item.feature_id)
+        ]
+        digest.update(
+            orjson.dumps(enrichment_inputs, option=orjson.OPT_SORT_KEYS)
+        )
         return EnrichmentCheckpoint(
             self.config.staged_dir / "enrichment" / "status.json",
             digest.hexdigest()[:16],

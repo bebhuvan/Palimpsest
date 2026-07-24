@@ -203,6 +203,25 @@ def test_pleiades_does_not_fill_gaps_between_attestations() -> None:
     assert PleiadesAdapter._date_ranges(place, {}) == [(-100, -50), (50, 100)]
 
 
+def test_pleiades_normalizes_published_geometry_to_two_dimensions() -> None:
+    geometry, origin = PleiadesAdapter._geometry(
+        {
+            "features": [
+                {
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [10, 20, 30],
+                    }
+                }
+            ]
+        }
+    )
+
+    assert origin == "published_geometry"
+    assert not geometry.has_z
+    assert geometry.coords[0] == (10, 20)
+
+
 def test_pleiades_adapter_reads_numbered_release_without_extracting(
     tmp_path: Path, httpx_mock: HTTPXMock
 ) -> None:
@@ -225,7 +244,7 @@ def test_pleiades_adapter_reads_numbered_release_without_extracting(
         "names": [{"romanized": "Dated place", "language": "en", "start": -10, "end": 10}],
         "references": [
             {"accessURI": "https://www.wikidata.org/wiki/Q123"},
-            {"accessURI": "https://fr.wikipedia.org/wiki/Lieu_test"},
+            {"accessURI": "https://fr.wikipedia.org/wiki/Lieu_test_%28ancien%29"},
         ],
         "placeTypes": ["settlement"],
     }
@@ -255,7 +274,7 @@ def test_pleiades_adapter_reads_numbered_release_without_extracting(
         context.downloads.close()
     assert len(result.features) == 1
     assert result.features[0].wikidata_ids == ["Q123"]
-    assert result.features[0].wikipedia_titles == {"fr": "Lieu test"}
+    assert result.features[0].wikipedia_titles == {"fr": "Lieu test (ancien)"}
 
 
 def test_periodo_adapter_preserves_competing_definition_and_authority(

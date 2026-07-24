@@ -42,6 +42,11 @@ features:
       - historyjoice:person:nicolaus-copernicus
       - historyjoice:institution:petreius-workshop
       - historyjoice:place:nuremberg
+    wikidata_ids:
+      - Q20951088
+      - Q845981
+    wikipedia_titles:
+      en: De revolutionibus orbium coelestium
     min_display_zoom: 2
     temporal_uncertainty:
       earliest_start: 1543
@@ -98,6 +103,10 @@ features:
       - historyjoice:place:valladolid
       - historyjoice:place:michoacan
       - historyjoice:concept:ordinances-for-treatment-in-the-indies
+    wikidata_ids:
+      - Q2990920
+    wikipedia_titles:
+      en: Vasco de Quiroga
     min_display_zoom: 3
     temporal_uncertainty:
       earliest_start: 1543
@@ -157,6 +166,10 @@ features:
       - historyjoice:artifact:matchlock-muskets
       - historyjoice:work:teppoki
       - historyjoice:group:portuguese-traders-tanegashima
+    wikidata_ids:
+      - Q358057
+    wikipedia_titles:
+      en: Tanegashima (gun)
     min_display_zoom: 4
     temporal_uncertainty:
       earliest_start: 1543

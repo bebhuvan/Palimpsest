@@ -4,6 +4,7 @@ import json
 import zipfile
 from pathlib import Path
 
+import httpx
 import pytest
 from pytest_httpx import HTTPXMock
 
@@ -45,6 +46,21 @@ def test_download_cache_retries_transient_server_errors(
 ) -> None:
     monkeypatch.setattr("history_pipeline.storage.time.sleep", lambda _: None)
     httpx_mock.add_response(status_code=503)
+    httpx_mock.add_response(content=b"recovered")
+    destination = tmp_path / "raw" / "source.bin"
+
+    with DownloadCache(tmp_path / "cache", "HistoryJoice/test") as downloads:
+        asset = downloads.fetch("https://example.org/source.bin", destination)
+
+    assert destination.read_bytes() == b"recovered"
+    assert asset.checksum_sha256
+
+
+def test_download_cache_retries_transport_errors(
+    tmp_path: Path, httpx_mock: HTTPXMock, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr("history_pipeline.storage.time.sleep", lambda _: None)
+    httpx_mock.add_exception(httpx.ReadTimeout("Wikimedia response stalled"))
     httpx_mock.add_response(content=b"recovered")
     destination = tmp_path / "raw" / "source.bin"
 

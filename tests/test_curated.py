@@ -35,6 +35,22 @@ def test_1543_slice_is_structured_sourced_and_multi_lens() -> None:
         EntityKind.PLACE,
     }
     assert len(records.features) == 3
+    wiki_seeds = {
+        item.feature_id: (item.wikidata_ids, item.wikipedia_titles)
+        for item in records.features
+    }
+    assert wiki_seeds["historyjoice:publication-de-revolutionibus:1543"] == (
+        ["Q20951088", "Q845981"],
+        {"en": "De revolutionibus orbium coelestium"},
+    )
+    assert wiki_seeds["historyjoice:royal-cedula-vasco-de-quiroga:1543"] == (
+        ["Q2990920"],
+        {"en": "Vasco de Quiroga"},
+    )
+    assert wiki_seeds["historyjoice:tanegashima-firearms-tradition:1543"] == (
+        ["Q358057"],
+        {"en": "Tanegashima (gun)"},
+    )
     feature = next(
         item
         for item in records.features

@@ -15,6 +15,8 @@ from pydantic import HttpUrl
 from history_pipeline.config import SourceConfig
 from history_pipeline.enrichment import EnrichmentCheckpoint
 from history_pipeline.models import (
+    Confidence,
+    ConfidenceGrade,
     EntityCoordinate,
     EntityDateClaim,
     EntityRelationship,
@@ -290,6 +292,31 @@ class WikidataEnricher:
             sitelinks = _sitelinks(item.get("sitelinks"), site_languages)
             revision = item.get("lastrevid")
             item_url = HttpUrl(f"https://www.wikidata.org/wiki/{qid}")
+            valid_from = _preferred_year(
+                date_claims, {"P571", "P569", "P580", "P585"}
+            )
+            valid_to = _preferred_year(
+                date_claims, {"P576", "P570", "P582", "P585"}
+            )
+            temporal_confidence = None
+            if (
+                valid_from is not None
+                and valid_to is not None
+                and valid_from > valid_to
+            ):
+                # Wikidata items can describe several physical incarnations or carry
+                # mutually incompatible community claims. Never swap, average, or
+                # silently select a continuous interval across those statements.
+                valid_from = None
+                valid_to = None
+                temporal_confidence = Confidence(
+                    grade=ConfidenceGrade.D,
+                    rationale=(
+                        "No convenience interval was derived because the selected "
+                        "Wikidata start and end claims are contradictory; the original "
+                        "dated statements remain available in date_claims."
+                    ),
+                )
             source_ref = SourceReference(
                 source_id=self.source.id,
                 record_id=qid,
@@ -308,12 +335,9 @@ class WikidataEnricher:
                     entity_type=entity_type,
                     names=names or {"und": qid},
                     aliases=aliases,
-                    valid_from=_preferred_year(
-                        date_claims, {"P571", "P569", "P580", "P585"}
-                    ),
-                    valid_to=_preferred_year(
-                        date_claims, {"P576", "P570", "P582", "P585"}
-                    ),
+                    valid_from=valid_from,
+                    valid_to=valid_to,
+                    temporal_confidence=temporal_confidence,
                     wikidata_id=qid,
                     descriptions=descriptions,
                     links={"wikidata": item_url},

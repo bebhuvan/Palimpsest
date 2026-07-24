@@ -113,14 +113,23 @@ class DownloadCache:
                 headers["If-Modified-Since"] = current_metadata["last_modified"]
 
         for attempt in range(3):
-            with self.client.stream("GET", url, headers=headers) as response:
-                if response.status_code in {429, 500, 502, 503, 504} and attempt < 2:
-                    retry_after = response.headers.get("retry-after", "")
-                    delay = min(float(retry_after), 30.0) if retry_after.isdigit() else 2**attempt
-                else:
-                    return self._store_response(
-                        response, destination, metadata_path, url, metadata
-                    )
+            try:
+                with self.client.stream("GET", url, headers=headers) as response:
+                    if response.status_code in {429, 500, 502, 503, 504} and attempt < 2:
+                        retry_after = response.headers.get("retry-after", "")
+                        delay = (
+                            min(float(retry_after), 30.0)
+                            if retry_after.isdigit()
+                            else 2**attempt
+                        )
+                    else:
+                        return self._store_response(
+                            response, destination, metadata_path, url, metadata
+                        )
+            except httpx.TransportError:
+                if attempt >= 2:
+                    raise
+                delay = 2**attempt
             time.sleep(delay)
         raise RuntimeError(f"Unreachable retry state while downloading {url}")
 

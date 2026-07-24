@@ -8,9 +8,11 @@ import tarfile
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
+from urllib.parse import unquote
 
 import orjson
 from pydantic import ValidationError
+from shapely import force_2d
 from shapely.geometry import GeometryCollection, Point, mapping, shape
 from shapely.ops import unary_union
 
@@ -221,7 +223,7 @@ class PleiadesAdapter:
                 if not candidate.is_empty:
                     geometries.append(candidate)
         if geometries:
-            merged = unary_union(geometries)
+            merged = force_2d(unary_union(geometries))
             if not isinstance(merged, GeometryCollection) or not merged.is_empty:
                 return merged, "published_geometry"
         point = place.get("reprPoint")
@@ -304,7 +306,7 @@ class PleiadesAdapter:
             match = re.search(r"https?://([a-z-]+)\.wikipedia\.org/wiki/([^?#]+)", url)
             if match:
                 language, title = match.groups()
-                titles.setdefault(language, title.replace("_", " "))
+                titles.setdefault(language, unquote(title).replace("_", " "))
         return titles
 
 

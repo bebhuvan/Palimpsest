@@ -180,3 +180,40 @@ test('the 1543 Knowledge lens opens Copernicus structured evidence', async ({
   ).toBeVisible();
   await expect(page.getByText('Knowledge Events')).toBeVisible();
 });
+
+test('the 1543 browse page frames the year before listing the archive', async ({
+  page
+}) => {
+  const errors: string[] = [];
+  page.on('console', (message) => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+  const timeBand = page.waitForResponse(
+    (response) =>
+      response.url().includes('/search/time/') && response.ok()
+  );
+
+  await page.goto('/browse?year=1543');
+  await timeBand;
+
+  await expect(
+    page.getByRole('heading', { name: 'The world in 1,543' })
+  ).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: /A year is a cross-section/ })
+  ).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Evidence-backed paths into 1,543 CE' })
+  ).toBeVisible();
+  await expect(page.getByText('Publication of De revolutionibus')).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: /Publication of De revolutionibus/ })
+  ).toHaveAttribute(
+    'href',
+    /feature=historyjoice%3Apublication-de-revolutionibus%3A1543/
+  );
+  await expect(
+    page.getByRole('heading', { name: 'Read 1,543 CE through a lens' })
+  ).toBeVisible();
+  expect(errors).toEqual([]);
+});

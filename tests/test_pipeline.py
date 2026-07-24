@@ -113,6 +113,36 @@ def test_pipeline_merges_duplicate_relationship_rows_without_losing_provenance(
     ]
 
 
+def test_enrichment_checkpoint_fingerprints_authority_inputs(
+    tmp_path: Path, historical_feature: HistoricalFeature
+) -> None:
+    config = PipelineConfig(
+        raw_dir=tmp_path / "raw",
+        staged_dir=tmp_path / "staged",
+        cache_dir=tmp_path / "cache",
+        dist_dir=tmp_path / "dist",
+        sources=[],
+        license_policy={"allowed": []},
+    )
+    config_path = tmp_path / "pipeline.yml"
+    config_path.write_text("sources: []\n", encoding="utf-8")
+    run = PipelineRun(config, config_path, user_agent="HistoryJoice/test")
+
+    original = run._enrichment_checkpoint([historical_feature]).run_id
+    changed_qid = run._enrichment_checkpoint(
+        [historical_feature.model_copy(update={"wikidata_ids": ["Q2"]})]
+    ).run_id
+    changed_title = run._enrichment_checkpoint(
+        [
+            historical_feature.model_copy(
+                update={"wikipedia_titles": {"en": "Different article"}}
+            )
+        ]
+    ).run_id
+
+    assert len({original, changed_qid, changed_title}) == 3
+
+
 def test_online_enrichment_requires_contactable_user_agent(tmp_path: Path) -> None:
     source = SourceConfig.model_validate(
         {

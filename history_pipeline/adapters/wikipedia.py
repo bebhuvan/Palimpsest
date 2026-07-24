@@ -49,7 +49,6 @@ class WikipediaEnricher:
                 "explaintext": "1",
                 "inprop": "url",
                 "rvprop": "ids|timestamp",
-                "rvlimit": "1",
                 "redirects": "1",
                 "maxlag": "5",
                 "titles": "|".join(batch),
@@ -86,7 +85,7 @@ class WikipediaEnricher:
                 checkpoint.batch_completed(stage, bucket)
         if checkpoint:
             checkpoint.stage_completed(stage)
-        return sorted(dossiers, key=lambda dossier: dossier.dossier_id), assets
+        return _merge_duplicate_pages(dossiers), assets
 
     def _parse(
         self,
@@ -104,10 +103,30 @@ class WikipediaEnricher:
         title_targets = _title_targets(query)
         dossiers: list[HistoricalDossier] = []
         for page in query["pages"]:
-            if not isinstance(page, dict) or page.get("missing"):
+            if (
+                not isinstance(page, dict)
+                or page.get("missing")
+                or page.get("invalid")
+                or not isinstance(page.get("pageid"), int)
+            ):
                 continue
             revision = (page.get("revisions") or [{}])[0]
-            page_url = HttpUrl(str(page.get("fullurl") or self.source.url))
+            if not isinstance(revision, dict) or not revision.get("revid"):
+                raise ValueError(
+                    f"Wikipedia page {page['pageid']} has no pinned revision ID"
+                )
+            if not revision.get("timestamp"):
+                raise ValueError(
+                    f"Wikipedia page {page['pageid']} has no revision timestamp"
+                )
+            if not page.get("fullurl"):
+                raise ValueError(
+                    f"Wikipedia page {page['pageid']} has no canonical full URL"
+                )
+            extract = str(page.get("extract", "")).strip()
+            if not extract:
+                continue
+            page_url = HttpUrl(str(page["fullurl"]))
             canonical_title = str(page["title"])
             matched_titles = sorted(
                 title
@@ -122,7 +141,6 @@ class WikipediaEnricher:
                     for entity_id in entity_ids_by_title.get(title, [])
                 }
             )
-            extract = str(page.get("extract", ""))
             source_ref = SourceReference(
                 source_id=self.source.id,
                 record_id=str(page["pageid"]),
@@ -157,6 +175,62 @@ class WikipediaEnricher:
                 )
             )
         return dossiers
+
+
+def _merge_duplicate_pages(
+    dossiers: Iterable[HistoricalDossier],
+) -> list[HistoricalDossier]:
+    """Publish one dossier per Wikipedia page while retaining every resolved join.
+
+    Different requested titles can resolve to the same canonical page from separate
+    stable hash buckets. Keep the newest pinned revision and merge the titles and
+    entity links that led to it.
+    """
+
+    by_id: dict[str, list[HistoricalDossier]] = {}
+    for dossier in dossiers:
+        by_id.setdefault(dossier.dossier_id, []).append(dossier)
+    merged: list[HistoricalDossier] = []
+    for dossier_id in sorted(by_id):
+        candidates = by_id[dossier_id]
+        selected = max(
+            candidates,
+            key=lambda dossier: (
+                dossier.revision_timestamp.isoformat()
+                if dossier.revision_timestamp
+                else "",
+                dossier.revision_id or -1,
+                dossier.content_checksum_sha256,
+            ),
+        )
+        merged.append(
+            selected.model_copy(
+                update={
+                    "entity_ids": sorted(
+                        {
+                            entity_id
+                            for candidate in candidates
+                            for entity_id in candidate.entity_ids
+                        }
+                    ),
+                    "requested_titles": sorted(
+                        {
+                            title
+                            for candidate in candidates
+                            for title in candidate.requested_titles
+                        }
+                    ),
+                    "redirects_from": sorted(
+                        {
+                            title
+                            for candidate in candidates
+                            for title in candidate.redirects_from
+                        }
+                    ),
+                }
+            )
+        )
+    return merged
 
 
 def _title_targets(query: dict[str, Any]) -> dict[str, str]:

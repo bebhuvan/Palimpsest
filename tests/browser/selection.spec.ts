@@ -135,6 +135,17 @@ test('a feature with missing enrichment shows an explicit dossier gap', async ({
 test('an enriched selection loads entity, dossier, and bounded context', async ({
   page
 }) => {
+  let releaseOptionalContext = (): void => {};
+  const optionalContextGate = new Promise<void>((resolve) => {
+    releaseOptionalContext = resolve;
+  });
+  await page.route(
+    /\/(?:context\/features|region-time\/buckets)\//,
+    async (route) => {
+      await optionalContextGate;
+      await route.continue();
+    }
+  );
   await openPilot(page);
   await selectSearchResult(page, 'Enriched Pilot Place');
 
@@ -148,6 +159,7 @@ test('an enriched selection loads entity, dossier, and bounded context', async (
       /saved browser-pilot introduction verifies that revision-pinned tertiary summaries/
     )
   ).toBeVisible();
+  releaseOptionalContext();
   await expect(
     page.getByText('Historical context near this record', { exact: true })
   ).toBeVisible();

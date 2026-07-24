@@ -276,6 +276,7 @@ export interface WikiContextIndex {
 export interface SelectedWikiContext {
   context: WikiFeatureContext;
   items: Array<WikiContextItem & { entity: HistoricalEntity; dossiers: HistoricalDossier[] }>;
+  total_items: number;
 }
 
 export interface RegionTimeEntry {
@@ -848,6 +849,9 @@ const themeIndexCache = new Map<string, Promise<ThemeIndex>>();
 const themeShardCache = new Map<string, Promise<Record<string, unknown>>>();
 const assertionIndexCache = new Map<string, Promise<AssertionIndex>>();
 const assertionShardCache = new Map<string, Promise<Record<string, unknown>>>();
+const MAX_VISIBLE_CONTEXT_ITEMS = 20;
+const MAX_VISIBLE_LINKED_ENTITIES = 12;
+const MAX_VISIBLE_RELATIONSHIP_TARGETS = 12;
 
 export async function loadLayerCatalog(release: LoadedRelease): Promise<LayerCatalog | null> {
   const path = release.manifest.layer_catalog_path;
@@ -1062,10 +1066,46 @@ export async function loadFeatureContent(
   const links = await loadContentShard(release, index, 'feature_links', linkShard);
   const link = links[featureId] as FeatureContentLink | undefined;
   if (!link) return null;
-  const [entities, dossiers] = await Promise.all([
-    loadContentRecords<HistoricalEntity>(release, index, 'entities', [...new Set([...link.available_entity_ids, ...link.related_entity_ids])]),
+  const directlyLinkedIds = [
+    link.primary_entity_id,
+    ...link.available_entity_ids
+  ]
+    .filter((entityId, position, values) => values.indexOf(entityId) === position)
+    .filter((entityId) => link.available_entity_ids.includes(entityId))
+    .slice(0, MAX_VISIBLE_LINKED_ENTITIES);
+  const [directlyLinkedEntities, dossiers] = await Promise.all([
+    loadContentRecords<HistoricalEntity>(release, index, 'entities', directlyLinkedIds),
     loadContentRecords<HistoricalDossier>(release, index, 'dossiers', link.dossier_ids)
   ]);
+  const primaryEntity =
+    directlyLinkedEntities.find(
+      (entity) => entity.entity_id === link.primary_entity_id
+    ) ?? directlyLinkedEntities[0];
+  const relationshipTargetIds = [
+    ...new Set(
+      (primaryEntity?.relationships ?? []).map(
+        (relationship) => relationship.target_entity_id
+      )
+    )
+  ]
+    .filter((entityId) => !directlyLinkedIds.includes(entityId))
+    .slice(0, MAX_VISIBLE_RELATIONSHIP_TARGETS);
+  const relationshipEntities = relationshipTargetIds.length
+    ? await loadContentRecords<HistoricalEntity>(
+        release,
+        index,
+        'entities',
+        relationshipTargetIds
+      )
+    : [];
+  const entities = [
+    ...new Map(
+      [...directlyLinkedEntities, ...relationshipEntities].map((entity) => [
+        entity.entity_id,
+        entity
+      ])
+    ).values()
+  ];
   return { link, entities, dossiers };
 }
 
@@ -1157,16 +1197,18 @@ export async function loadWikiContext(
     const end = item.valid_to ?? item.valid_from ?? year;
     return start <= year + margin && end >= year - margin;
   });
+  const visibleItems = activeItems.slice(0, MAX_VISIBLE_CONTEXT_ITEMS);
   const contentIndex = await loadContentIndex(release, contentPath);
   const [entities, dossiers] = await Promise.all([
-    loadContentRecords<HistoricalEntity>(release, contentIndex, 'entities', activeItems.map((item) => item.context_entity_id)),
-    loadContentRecords<HistoricalDossier>(release, contentIndex, 'dossiers', [...new Set(activeItems.flatMap((item) => item.dossier_ids))])
+    loadContentRecords<HistoricalEntity>(release, contentIndex, 'entities', visibleItems.map((item) => item.context_entity_id)),
+    loadContentRecords<HistoricalDossier>(release, contentIndex, 'dossiers', [...new Set(visibleItems.flatMap((item) => item.dossier_ids))])
   ]);
   const entitiesById = new Map(entities.map((entity) => [entity.entity_id, entity]));
   const dossiersById = new Map(dossiers.map((dossier) => [dossier.dossier_id, dossier]));
   return {
     context,
-    items: activeItems.flatMap((item) => {
+    total_items: activeItems.length,
+    items: visibleItems.flatMap((item) => {
       const entity = entitiesById.get(item.context_entity_id);
       return entity ? [{ ...item, entity, dossiers: item.dossier_ids.flatMap((id) => dossiersById.get(id) ?? []) }] : [];
     })
@@ -1216,11 +1258,18 @@ export async function loadRegionalContext(
       left.entry_id.localeCompare(right.entry_id)
     )
     .slice(0, index.maximum_results_per_selection);
+  const visibleEntries = entries.slice(0, MAX_VISIBLE_CONTEXT_ITEMS);
   const contentIndex = await loadContentIndex(release, contentPath);
-  const entityIds = entries
+  const entityIds = visibleEntries
     .filter((entry) => entry.entry_type === 'wikidata_entity')
     .map((entry) => entry.entity_id);
-  const dossierIds = [...new Set(entries.flatMap((entry) => entry.dossier_ids))];
+  const dossierIds = [
+    ...new Set(
+      visibleEntries
+        .filter((entry) => entry.entry_type === 'wikidata_entity')
+        .flatMap((entry) => entry.dossier_ids)
+    )
+  ];
   const [entities, dossiers] = await Promise.all([
     loadContentRecords<HistoricalEntity>(release, contentIndex, 'entities', entityIds),
     loadContentRecords<HistoricalDossier>(release, contentIndex, 'dossiers', dossierIds)

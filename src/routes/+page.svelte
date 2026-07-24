@@ -1058,6 +1058,9 @@
           selection.entityId,
           selection.wikidataId ? `wikidata:${selection.wikidataId}` : undefined
         ].filter(Boolean) as string[];
+        // Core reading material is ready. Optional historical context continues
+        // below without keeping the sidebar behind a loading state.
+        contentLoading = false;
         const [causal, periods, wikiContext, regionalContext, thematicAssertions, evidenceAssertions] = await Promise.all([
           loadCausalContext(release, entityIds),
           loadChronologyContext(release, entityIds, selectedYear),
@@ -2122,7 +2125,7 @@
           <section class="wiki-context" aria-labelledby="wiki-context-title">
             <p class="section-label" id="wiki-context-title">Historical context near this record</p>
             <p class="causal-caveat">These people, events, places, institutions and themes are a bounded, date-aware selection of explicit Wikidata relationships. A connection is not a claim of causation.</p>
-            {#each selectedWikiContext.items.slice(0, 20) as item (item.context_entity_id)}
+            {#each selectedWikiContext.items as item (item.context_entity_id)}
               <article class="context-card">
                 <span>{humanize(item.role)} · {item.relationship_types.map(humanize).join(' · ')}</span>
                 <strong>{contextName(item.entity)}</strong>
@@ -2140,7 +2143,7 @@
                 {/if}
               </article>
             {/each}
-            {#if selectedWikiContext.items.length > 20}<p class="join-note">{selectedWikiContext.items.length - 20} lower-ranked connections are retained in the release shard but collapsed in this first reading view.</p>{/if}
+            {#if selectedWikiContext.total_items > selectedWikiContext.items.length}<p class="join-note">{selectedWikiContext.total_items - selectedWikiContext.items.length} lower-ranked connections are retained in the release shard but collapsed in this first reading view.</p>{/if}
           </section>
         {/if}
 

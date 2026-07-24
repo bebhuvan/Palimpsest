@@ -295,6 +295,78 @@ def test_wikidata_retains_contradictory_dates_without_inventing_interval(
     }
 
 
+def test_wikidata_skips_wikimedia_disambiguation_entities(
+    tmp_path: Path,
+    httpx_mock: HTTPXMock,
+) -> None:
+    httpx_mock.add_response(
+        json={
+            "entities": {
+                "Q16879646": {
+                    "id": "Q16879646",
+                    "lastrevid": 1,
+                    "labels": {
+                        "en": {"language": "en", "value": "Portuguese Africa"}
+                    },
+                    "descriptions": {
+                        "en": {
+                            "language": "en",
+                            "value": "Wikimedia disambiguation page",
+                        }
+                    },
+                    "claims": {
+                        "P31": [
+                            {
+                                "rank": "normal",
+                                "mainsnak": {
+                                    "snaktype": "value",
+                                    "datavalue": {
+                                        "value": {"id": "Q4167410"}
+                                    },
+                                },
+                            }
+                        ]
+                    },
+                    "sitelinks": {
+                        "enwiki": {
+                            "site": "enwiki",
+                            "title": "Portuguese Africa",
+                        }
+                    },
+                }
+            }
+        }
+    )
+    with DownloadCache(tmp_path / "cache", "HistoryJoice/test") as downloads:
+        entities, _assets = WikidataEnricher(
+            _wikidata_source(), downloads, tmp_path / "raw" / "wikidata"
+        ).enrich(["Q16879646"])
+
+    assert entities == []
+
+
+def test_wikipedia_skips_disambiguation_pages(
+    tmp_path: Path,
+    httpx_mock: HTTPXMock,
+) -> None:
+    page = _page("Portuguese Africa", 14174598)["query"]["pages"][0]
+    page["pageprops"] = {"disambiguation": ""}
+    httpx_mock.add_response(json={"query": {"pages": [page]}})
+
+    with DownloadCache(tmp_path / "cache", "HistoryJoice/test") as downloads:
+        dossiers, _assets = WikipediaEnricher(
+            _wikipedia_source(), downloads, tmp_path / "raw" / "wikipedia"
+        ).enrich(
+            ["Portuguese Africa"],
+            entity_ids_by_title={
+                "Portuguese Africa": ["wikidata:Q16879646"]
+            },
+        )
+
+    assert dossiers == []
+    assert "pageprops" in httpx_mock.get_requests()[0].url.params["prop"]
+
+
 def test_wikipedia_skips_invalid_titles_but_requires_revision_provenance(
     tmp_path: Path,
     httpx_mock: HTTPXMock,

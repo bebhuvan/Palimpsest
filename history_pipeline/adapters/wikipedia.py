@@ -44,7 +44,7 @@ class WikipediaEnricher:
                 "action": "query",
                 "format": "json",
                 "formatversion": "2",
-                "prop": "extracts|info|revisions",
+                "prop": "extracts|info|pageprops|revisions",
                 "exintro": "1",
                 "explaintext": "1",
                 "inprop": "url",
@@ -108,6 +108,10 @@ class WikipediaEnricher:
                 or page.get("missing")
                 or page.get("invalid")
                 or not isinstance(page.get("pageid"), int)
+                or (
+                    isinstance(page.get("pageprops"), dict)
+                    and "disambiguation" in page["pageprops"]
+                )
             ):
                 continue
             revision = (page.get("revisions") or [{}])[0]

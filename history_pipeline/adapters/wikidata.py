@@ -89,6 +89,11 @@ ENTITY_TYPE_NAMES = {
     "Q131569": "treaty",
     "Q43229": "organization",
 }
+WIKIMEDIA_NAVIGATION_ENTITY_TYPES = {
+    # These items describe Wikimedia's navigation infrastructure, not historical
+    # subjects that should be joined to map features.
+    "Q4167410",  # Wikimedia disambiguation page
+}
 
 
 class WikidataEnricher:
@@ -281,6 +286,8 @@ class WikidataEnricher:
                 for relation in relationships
                 if relation.predicate == "P31"
             ]
+            if set(type_ids) & WIKIMEDIA_NAVIGATION_ENTITY_TYPES:
+                continue
             entity_type = next(
                 (
                     ENTITY_TYPE_NAMES[type_id]

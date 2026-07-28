@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
 dependencies = [
-  "duckdb>=1.4,<2",
+  "duckdb>=1.5.5,<2",
   "geopandas>=1.1,<2",
   "httpx>=0.28,<1",
   "orjson>=3.10,<4",

@@ -28,7 +28,7 @@ dev = [
   "pytest>=8.4,<10",
   "pytest-cov>=6.2,<8",
   "pytest-httpx>=0.35,<1",
-  "ruff>=0.12,<1",
+  "ruff>=0.16.0,<1",
   "types-PyYAML>=6.0,<7"
 ]
 

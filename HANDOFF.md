@@ -2,7 +2,7 @@
 
 I'm building **Palimpsest** — a "portal of serendipity" for discovering history. A map is the
 way in; you scroll to a place, pick a year, and get readable history rather than gazetteer prose.
-Repo: `~/Documents/Bhuvan projects/Palimpsest`. Python pipeline + SvelteKit static frontend.
+Repo: `https://github.com/bebhuvan/Palimpsest`. Python pipeline + SvelteKit static frontend.
 Read `README.md` and `docs/dossier-restatement.md` before changing anything.
 
 I want you to **improve the generated year dossiers**. A previous session built the pipeline and

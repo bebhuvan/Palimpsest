@@ -15,7 +15,7 @@ let origin;
 let server;
 
 before(async () => {
-  temporaryRoot = await mkdtemp(join(tmpdir(), 'history-joice-local-data-'));
+  temporaryRoot = await mkdtemp(join(tmpdir(), 'palimpsest-local-data-'));
   await mkdir(join(temporaryRoot, 'builds', 'test', 'tiles'), { recursive: true });
   await writeFile(join(temporaryRoot, 'latest.json'), '{"build_id":"test"}\n');
   await writeFile(

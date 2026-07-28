@@ -39,30 +39,31 @@ def test_1543_slice_is_structured_sourced_and_multi_lens() -> None:
         item.feature_id: (item.wikidata_ids, item.wikipedia_titles)
         for item in records.features
     }
-    assert wiki_seeds["historyjoice:publication-de-revolutionibus:1543"] == (
+    assert wiki_seeds["palimpsest:publication-de-revolutionibus:1543"] == (
         ["Q20951088", "Q845981"],
         {"en": "De revolutionibus orbium coelestium"},
     )
-    assert wiki_seeds["historyjoice:royal-cedula-vasco-de-quiroga:1543"] == (
+    assert wiki_seeds["palimpsest:royal-cedula-vasco-de-quiroga:1543"] == (
         ["Q2990920"],
         {"en": "Vasco de Quiroga"},
     )
-    assert wiki_seeds["historyjoice:tanegashima-firearms-tradition:1543"] == (
+    assert wiki_seeds["palimpsest:tanegashima-firearms-tradition:1543"] == (
         ["Q358057"],
         {"en": "Tanegashima (gun)"},
     )
     feature = next(
         item
         for item in records.features
-        if item.feature_id == "historyjoice:publication-de-revolutionibus:1543"
+        if item.feature_id == "palimpsest:publication-de-revolutionibus:1543"
     )
+    assert feature.properties["year_dossier_years"] == [1543]
     assertions = classify_features(records.features, rules)
     classified = {
         item.feature_id: item
         for item in apply_thematic_assertions(records.features, assertions)
     }
     assert "knowledge" in classified[feature.feature_id].model_dump(mode="json")["themes"]
-    cedula = classified["historyjoice:royal-cedula-vasco-de-quiroga:1543"]
+    cedula = classified["palimpsest:royal-cedula-vasco-de-quiroga:1543"]
     assert set(cedula.model_dump(mode="json")["themes"]) == {"power"}
     cedula_lenses = {
         assertion.theme.value
@@ -71,7 +72,7 @@ def test_1543_slice_is_structured_sourced_and_multi_lens() -> None:
     }
     assert cedula_lenses == {"belief", "power"}
     tanegashima = classified[
-        "historyjoice:tanegashima-firearms-tradition:1543"
+        "palimpsest:tanegashima-firearms-tradition:1543"
     ]
     assert set(tanegashima.model_dump(mode="json")["themes"]) == {
         "knowledge",

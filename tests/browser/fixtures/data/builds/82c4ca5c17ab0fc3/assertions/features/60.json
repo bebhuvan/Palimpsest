@@ -1,0 +1,14 @@
+{
+  "palimpsest:royal-cedula-vasco-de-quiroga:1543": {
+    "assertion_ids": [
+      "assertion:royal-cedula-addressed-to-vasco-de-quiroga",
+      "assertion:royal-cedula-assigned-ecclesiastical-oversight",
+      "assertion:royal-cedula-catalog-date-correction",
+      "assertion:royal-cedula-concerned-treatment-ordinances",
+      "assertion:royal-cedula-directed-to-michoacan",
+      "assertion:royal-cedula-issued-at-valladolid",
+      "assertion:royal-cedula-issued-by-prince-philip"
+    ],
+    "subject_id": "palimpsest:royal-cedula-vasco-de-quiroga:1543"
+  }
+}

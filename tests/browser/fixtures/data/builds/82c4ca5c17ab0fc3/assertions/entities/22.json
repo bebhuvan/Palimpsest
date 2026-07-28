@@ -1,0 +1,10 @@
+{
+  "palimpsest:event:de-revolutionibus-publication": {
+    "assertion_ids": [
+      "assertion:publication-event-occurred-in-nuremberg",
+      "assertion:publication-event-printed-by-petreius",
+      "assertion:publication-event-published-work"
+    ],
+    "subject_id": "palimpsest:event:de-revolutionibus-publication"
+  }
+}

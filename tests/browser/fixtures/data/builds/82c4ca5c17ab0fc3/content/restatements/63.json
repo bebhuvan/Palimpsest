@@ -1,0 +1,53 @@
+{
+  "wikipedia:en:100": {
+    "content_checksum_sha256": "784b07bae2be4722b69d3cdf5596929fc6b5635b916e725a6b90f3cb5134318e",
+    "content_role": "source_restatement",
+    "dossier_id": "wikipedia:en:100",
+    "dossier_kind": "restatement",
+    "entity_ids": [
+      "wikidata:Q100"
+    ],
+    "generation": {
+      "generated_at": "2026-07-23T06:00:00Z",
+      "model_identifier": "fixture:deterministic-restatement-v1",
+      "output_sha256": "04cf8fe69939ed376f80dc96345a47a5bd45e259fbfeaccd9c8001b103bb1850",
+      "prompt_sha256": "72d888974353b36a29b17f7516873538020a761a0f19df851a4561289a825fea",
+      "prompt_version": "dossier-restate-v1",
+      "provider_response_id": null,
+      "source_sha256": "971b2f412efe795b8fd4221b2870464783db08905fb70b4ed56acd42716653d9"
+    },
+    "headline": "A synthetic settlement that became a provincial seat",
+    "language": "en",
+    "restatement_id": "restatement:a760745da25dde2c",
+    "schema_version": "1.0.0",
+    "source_content_checksum_sha256": "971b2f412efe795b8fd4221b2870464783db08905fb70b4ed56acd42716653d9",
+    "source_revision_id": 1000,
+    "text": "Enriched Pilot Place is a synthetic settlement.\nIt was founded in 60 and became a provincial seat in 95, keeping that role until the administration moved elsewhere. A synthetic archive records that its walls were rebuilt in 140.",
+    "timeline": [
+      {
+        "sort_year": 60,
+        "text": "The settlement was founded",
+        "year_text": "60"
+      },
+      {
+        "sort_year": 95,
+        "text": "It became a provincial seat",
+        "year_text": "95"
+      },
+      {
+        "sort_year": 140,
+        "text": "Its walls were rebuilt",
+        "year_text": "140"
+      }
+    ],
+    "validation": {
+      "denied_phrases": [],
+      "policy_version": "closed-world-v1",
+      "restatement_chars": 228,
+      "retained_furniture": [],
+      "source_chars": 435,
+      "unsupported_names": [],
+      "unsupported_numbers": []
+    }
+  }
+}

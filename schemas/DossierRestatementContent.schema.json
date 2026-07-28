@@ -1,0 +1,99 @@
+{
+  "$defs": {
+    "RestatementResult": {
+      "enum": [
+        "restated",
+        "unsuitable"
+      ],
+      "title": "RestatementResult",
+      "type": "string"
+    },
+    "RestatementTimelineEntry": {
+      "additionalProperties": false,
+      "description": "One dated moment already present in the source extract.\n\nThe date is retained exactly as the source wrote it. Deriving a century or a decade from a\nsource year is a new claim, so `year_text` may only reuse digits the source already contains.",
+      "properties": {
+        "year_text": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Year Text",
+          "type": "string"
+        },
+        "sort_year": {
+          "maximum": 2100,
+          "minimum": -50000,
+          "title": "Sort Year",
+          "type": "integer"
+        },
+        "text": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "year_text",
+        "sort_year",
+        "text"
+      ],
+      "title": "RestatementTimelineEntry",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The strict payload a model may return when restating one source extract.\n\nA restatement is a lossy, faithful transformation of exactly one revision-pinned source. It\nreorders, compresses and plainly rewords that source. It may not add a historical claim, so it\ncarries no citations: its single citation is the source dossier it was derived from.",
+  "properties": {
+    "result": {
+      "$ref": "#/$defs/RestatementResult"
+    },
+    "headline": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Headline"
+    },
+    "text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Text"
+    },
+    "timeline": {
+      "items": {
+        "$ref": "#/$defs/RestatementTimelineEntry"
+      },
+      "title": "Timeline",
+      "type": "array"
+    },
+    "unsuitable_reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Unsuitable Reason"
+    }
+  },
+  "required": [
+    "result",
+    "headline",
+    "text",
+    "timeline",
+    "unsuitable_reason"
+  ],
+  "title": "DossierRestatementContent",
+  "type": "object"
+}

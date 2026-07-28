@@ -38,7 +38,7 @@ The public application and historical data have separate deployment lifecycles:
    ```bash
    npm run data:verify-origin -- \
      https://data.example.org \
-     https://history-joice.pages.dev
+     https://palimpsest.pages.dev
    ```
 
 ## Static site

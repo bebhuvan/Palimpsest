@@ -1,0 +1,15 @@
+{
+  "palimpsest:tanegashima-firearms-tradition:1543": {
+    "assertion_ids": [
+      "theme:183bf9280741599f",
+      "theme:2c384feded2f3536",
+      "theme:631a9a249881762d"
+    ],
+    "feature_id": "palimpsest:tanegashima-firearms-tradition:1543",
+    "themes": [
+      "knowledge",
+      "power",
+      "trade"
+    ]
+  }
+}

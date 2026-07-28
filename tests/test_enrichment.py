@@ -101,7 +101,7 @@ def test_wikipedia_enrichment_resumes_completed_batches_and_reports_status(
     httpx_mock.add_response(json=_page("Beta", 2))
     for _ in range(3):
         httpx_mock.add_response(status_code=503)
-    with DownloadCache(tmp_path / "cache", "HistoryJoice/test") as downloads:
+    with DownloadCache(tmp_path / "cache", "Palimpsest/test") as downloads:
         enricher = WikipediaEnricher(
             source, downloads, tmp_path / "raw" / "wikipedia"
         )
@@ -125,7 +125,7 @@ def test_wikipedia_enrichment_resumes_completed_batches_and_reports_status(
     )
     assert second_checkpoint.resumed
     httpx_mock.add_response(json=_page("Alpha", 1))
-    with DownloadCache(tmp_path / "cache", "HistoryJoice/test") as downloads:
+    with DownloadCache(tmp_path / "cache", "Palimpsest/test") as downloads:
         dossiers, assets = WikipediaEnricher(
             source, downloads, tmp_path / "raw" / "wikipedia"
         ).enrich(
@@ -181,7 +181,7 @@ def test_wikipedia_merges_titles_that_resolve_to_the_same_page(
 
     httpx_mock.add_callback(canonical_page)
     httpx_mock.add_callback(canonical_page)
-    with DownloadCache(tmp_path / "cache", "HistoryJoice/test") as downloads:
+    with DownloadCache(tmp_path / "cache", "Palimpsest/test") as downloads:
         dossiers, _ = WikipediaEnricher(
             _wikipedia_source(), downloads, tmp_path / "raw" / "wikipedia"
         ).enrich(
@@ -211,7 +211,7 @@ def test_wikidata_enrichment_resumes_completed_batches(
     httpx_mock.add_response(json=_entity("Q1"))
     for _ in range(3):
         httpx_mock.add_response(status_code=503)
-    with DownloadCache(tmp_path / "cache", "HistoryJoice/test") as downloads:
+    with DownloadCache(tmp_path / "cache", "Palimpsest/test") as downloads:
         with pytest.raises(Exception) as error:
             WikidataEnricher(
                 source, downloads, tmp_path / "raw" / "wikidata"
@@ -220,7 +220,7 @@ def test_wikidata_enrichment_resumes_completed_batches(
 
     second_checkpoint = EnrichmentCheckpoint(status_path, "same-input")
     httpx_mock.add_response(json=_entity("Q2"))
-    with DownloadCache(tmp_path / "cache", "HistoryJoice/test") as downloads:
+    with DownloadCache(tmp_path / "cache", "Palimpsest/test") as downloads:
         entities, assets = WikidataEnricher(
             source, downloads, tmp_path / "raw" / "wikidata"
         ).enrich(["Q1", "Q2"], checkpoint=second_checkpoint)
@@ -279,7 +279,7 @@ def test_wikidata_retains_contradictory_dates_without_inventing_interval(
             }
         }
     )
-    with DownloadCache(tmp_path / "cache", "HistoryJoice/test") as downloads:
+    with DownloadCache(tmp_path / "cache", "Palimpsest/test") as downloads:
         entities, _assets = WikidataEnricher(
             source, downloads, tmp_path / "raw" / "wikidata"
         ).enrich(["Q12506"])
@@ -337,7 +337,7 @@ def test_wikidata_skips_wikimedia_disambiguation_entities(
             }
         }
     )
-    with DownloadCache(tmp_path / "cache", "HistoryJoice/test") as downloads:
+    with DownloadCache(tmp_path / "cache", "Palimpsest/test") as downloads:
         entities, _assets = WikidataEnricher(
             _wikidata_source(), downloads, tmp_path / "raw" / "wikidata"
         ).enrich(["Q16879646"])
@@ -353,7 +353,7 @@ def test_wikipedia_skips_disambiguation_pages(
     page["pageprops"] = {"disambiguation": ""}
     httpx_mock.add_response(json={"query": {"pages": [page]}})
 
-    with DownloadCache(tmp_path / "cache", "HistoryJoice/test") as downloads:
+    with DownloadCache(tmp_path / "cache", "Palimpsest/test") as downloads:
         dossiers, _assets = WikipediaEnricher(
             _wikipedia_source(), downloads, tmp_path / "raw" / "wikipedia"
         ).enrich(
@@ -390,7 +390,7 @@ def test_wikipedia_skips_invalid_titles_but_requires_revision_provenance(
         if "Valid article" in batch:
             pages.append(valid_page)
         httpx_mock.add_response(json={"query": {"pages": pages}})
-    with DownloadCache(tmp_path / "cache", "HistoryJoice/test") as downloads:
+    with DownloadCache(tmp_path / "cache", "Palimpsest/test") as downloads:
         dossiers, _assets = WikipediaEnricher(
             source, downloads, tmp_path / "raw" / "wikipedia"
         ).enrich(

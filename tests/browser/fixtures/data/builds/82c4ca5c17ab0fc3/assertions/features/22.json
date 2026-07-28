@@ -1,0 +1,12 @@
+{
+  "palimpsest:publication-de-revolutionibus:1543": {
+    "assertion_ids": [
+      "assertion:copernicus-authored-de-revolutionibus",
+      "assertion:de-revolutionibus-subject-heliocentric-astronomy",
+      "assertion:publication-event-occurred-in-nuremberg",
+      "assertion:publication-event-printed-by-petreius",
+      "assertion:publication-event-published-work"
+    ],
+    "subject_id": "palimpsest:publication-de-revolutionibus:1543"
+  }
+}

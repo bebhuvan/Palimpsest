@@ -1,0 +1,27 @@
+{
+  "browser-pilot:missing-dossier-place:50:150:bbbb": {
+    "available_entity_ids": [],
+    "dossier_ids": [],
+    "entity_ids": [
+      "wikidata:Q200"
+    ],
+    "feature_id": "browser-pilot:missing-dossier-place:50:150:bbbb",
+    "missing_entity_ids": [
+      "wikidata:Q200"
+    ],
+    "primary_entity_id": "wikidata:Q200",
+    "reading_eligibility": [
+      {
+        "entity_id": "wikidata:Q200",
+        "identity_basis": "source_asserted",
+        "identity_relation": "exact_match",
+        "reading_eligible": false,
+        "reason_codes": [
+          "entity_not_enriched"
+        ],
+        "temporal_overlap": "unknown"
+      }
+    ],
+    "related_entity_ids": []
+  }
+}

@@ -1,5 +1,6 @@
 from history_pipeline.adapters.cliopatria import CliopatriaAdapter
 from history_pipeline.adapters.curated import CuratedSourceAdapter
+from history_pipeline.adapters.direct_authority import DirectAuthorityAdapter
 from history_pipeline.adapters.geojson import GeoJsonAdapter
 from history_pipeline.adapters.iiif_maps import IiifMapAdapter
 from history_pipeline.adapters.linked_places import LinkedPlacesAdapter
@@ -8,11 +9,13 @@ from history_pipeline.adapters.owid import OwidAdapter
 from history_pipeline.adapters.periodo import PeriodoAdapter
 from history_pipeline.adapters.pleiades import PleiadesAdapter
 from history_pipeline.adapters.reconciliation import AuthorityReconciliationAdapter
+from history_pipeline.adapters.seshat import SeshatApiAdapter
 
 __all__ = [
     "AuthorityReconciliationAdapter",
     "CliopatriaAdapter",
     "CuratedSourceAdapter",
+    "DirectAuthorityAdapter",
     "GeoJsonAdapter",
     "IiifMapAdapter",
     "LinkedPlacesAdapter",
@@ -20,4 +23,5 @@ __all__ = [
     "OwidAdapter",
     "PeriodoAdapter",
     "PleiadesAdapter",
+    "SeshatApiAdapter",
 ]

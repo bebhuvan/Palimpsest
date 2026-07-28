@@ -60,10 +60,10 @@ The default map composition is, from bottom to top:
    modern reference geography;
 2. live OpenHistoricalMap contributor detail;
 3. an optional rights-approved historical map image, disabled by default;
-4. the release's reviewed History Joice PMTiles reconstruction;
+4. the release's reviewed Palimpsest PMTiles reconstruction;
 5. OpenHistoricalMap historical labels.
 
-OpenHistoricalMap is context, not a source in the immutable History Joice release. Its geometry
+OpenHistoricalMap is context, not a source in the immutable Palimpsest release. Its geometry
 must not be merged with the reviewed PMTiles or used to overwrite canonical confidence,
 interpretation, dispute or provenance fields. The layer control exposes `Combined`, `Historical
 detail`, and `Reviewed reconstructions`; combined is the default.
@@ -85,6 +85,17 @@ Every schema 1.10-or-newer release also declares `assertion_index_path` and
 surface composes labels from its structured predicate and typed object, labels the records as
 sourced facts rather than narrative, and exposes confidence and source links. It must not turn
 these records into causal claims.
+
+An assertion object may also be a `number_range`, with independently optional lower and upper
+bounds plus a required unit. Do not collapse a range to its midpoint or present either bound as a
+precise measurement.
+
+Selected Seshat assertions can carry an original `source_excerpt`, references named inside that
+excerpt, and an optional `restatement`. The restatement modernizes and shortens only that one
+explanation. Render the structured value first, identify the generating model, and keep the
+original explanation reachable in the same record. Ignore a restatement whose
+`source_excerpt_checksum_sha256` differs from its assertion. Missing Seshat assertions mean
+“not coded in this release,” never that the institution or technology was historically absent.
 
 Map-source controls, thematic lenses and evidence overlays remain separate controls. A confidence
 overlay styles one declared confidence axis; a provenance overlay styles source identity/licence.
@@ -109,7 +120,7 @@ The official source contracts are `https://vtiles.openhistoricalmap.org/maps/ohm
 by those documents so browser startup does not depend on cross-origin access to the TileJSON
 documents. The style must retain OpenHistoricalMap and Natural Earth attribution.
 
-Every rendered OHM layer is filtered for the selected no-year-zero History Joice year. A feature
+Every rendered OHM layer is filtered for the selected no-year-zero Palimpsest year. A feature
 is visible when `start_decdate` is absent or no later than the selected year and `end_decdate` is
 absent or no earlier than it. Filters update without replacing the source when the year changes.
 Labels prefer `name` and use `name_en` only when `name` is absent. Low zoom is reserved for major
@@ -124,9 +135,23 @@ copyright, attribution, changeset and retrieval date.
 OHM detail and label features are selectable. Their reading surface must say that they are live
 contributor context, show the vector source layer, element ID and whatever date/source/licence tags
 the tile actually supplies, and disclose missing per-element provenance. An OHM click must never be
-sent through the History Joice feature-content join or presented with canonical confidence grades.
+sent through the Palimpsest feature-content join or presented with canonical confidence grades.
 
 ## Search and reading
+
+`integrations/index.json` declares the immutable authority-match artifact and its expected record
+count. The client verifies both files against the release manifest and accepts only
+`review_status=accepted` records whose relation is `exact_match` or `close_match` and whose rights
+scope is metadata. Proposed candidates, rejected candidates, and unlicensed links never reach the
+reader.
+
+When a reviewed record is selected, match `subject_id` against its feature ID, entity ID,
+Wikidata ID, primary entity, and linked entities. Display resulting links in the record drawer
+under **Authority connections**, after structured facts and before the primary reading. Each entry
+links to the direct authority record and shows the authority namespace and ID, reviewed relation,
+attribution, and licence. The explanatory copy must state that these links identify related
+records and do not replace the release's dates or geometry. The browser pilot contains an accepted
+synthetic link so this complete release-to-reader join remains covered by an end-to-end test.
 
 `search.ndjson` remains the compatible bulk entity export with names, dated `name_attestations`,
 year range, representative point, non-exclusive themes, related feature IDs, dossier IDs and a
@@ -153,7 +178,8 @@ available shards and these path templates:
 
 - `content/links/{shard}.json`, keyed by exact `feature_id`;
 - `content/entities/{shard}.json`, keyed by namespaced `entity_id`;
-- `content/dossiers/{shard}.json`, keyed by `dossier_id`.
+- `content/dossiers/{shard}.json`, keyed by `dossier_id`;
+- `content/restatements/{shard}.json`, keyed by the `dossier_id` each entry restates.
 
 On map selection, use the tile's `content_shard` to fetch one feature-link shard. Do not scan a bulk
 NDJSON collection. A link has this public shape:
@@ -175,6 +201,20 @@ and together equal `entity_ids`, so absent enrichment cannot masquerade as a bro
 available entity/dossier ID to fetch only the additional shards needed. Dossiers use canonical page
 IDs namespaced by project and language, preserve requested/redirected titles, and carry revision,
 timestamp, URL, extract checksum, licence and attribution. Never join by title.
+
+The `restatements` collection is optional and absent from releases built before the tier existed;
+a reader must treat a missing collection as "show the source extract", never as an error. A
+restatement is keyed by the dossier it restates, so it needs no additional shard lookup beyond the
+dossier shard a reader already fetched. It carries `content_role: source_restatement`,
+`dossier_kind: restatement`, a `headline`, `text`, an ordered `timeline`, the source revision it is
+bound to, and the closed-world validation report.
+
+A restatement is Palimpsest wording, not the source's. The reader must label it as such, name
+the generating model, and keep the original extract reachable in the same panel. It may never be
+presented as a quotation, and its licence is not the source's licence. Restated prose is generated
+once per source revision and is deliberately year-agnostic; year-awareness comes from anchoring the
+`timeline` against the selected year in the client, not from refetching prose. A restatement whose
+`source_content_checksum_sha256` does not match its published dossier must be ignored.
 
 The frontend verifies the SHA-256 and byte length declared in the manifest for the content index,
 each fetched search shard, quality and every fetched content shard. PMTiles are range-read and are protected by the
@@ -246,6 +286,64 @@ and sources. It must not call the material a definitive causal chain.
 Indicator observations remain attached to `original_geographic_unit`. Only render one against a
 map geometry when `spatial_mapping_valid` is true; otherwise use charts or a clearly labelled
 context panel.
+
+## Year pages
+
+A release may carry one dossier per year. It is optional: a release without any is complete, not
+degraded, and the interface must work when `years/index.json` is absent.
+
+- `years/index.json`: every year the release carries, in chronological order. One fetch, small
+  enough to hold. Fetch it before offering a year anywhere in the interface;
+- `years/{year}.json`: the page for one year, addressed by the year itself. The key is a small
+  integer the reader already has, because it came from the time slider, so there is no shard
+  lookup and no second index.
+
+### Assembled and generated are different things and must look different
+
+Most of a year page was never written by anything. These parts are the sources' own words,
+rearranged, and carry no generated claim:
+
+`lede` and `headlines`, `register_entries`, `works`, `related_years`, `incumbents`, `conflicts`,
+`overview.months`, and every `anchors[].records` list and `anchors[].quote`.
+
+These parts are machine-written prose: `overview.prose`, `anchors[].prose`, `sections[].prose`,
+and every `gloss` on a register entry or a work.
+
+The disclosure applies to the second set and must not be applied to the first. `lede_kind` is
+`assembled` precisely so a reader's warning can be accurate rather than uniform: a sentence
+nobody generated should not carry the same warning as one somebody did. The disclosure wording is
+fixed:
+
+> This dossier was written by a machine and has not been read by a person. Every name and date in
+> the prose appears in the records it was written from — checked, not trusted. The connections are
+> ours.
+
+### Links are offsets, not text
+
+Every `links` and `gloss_links` array holds character offsets into its sibling prose string, with
+the exact substring in `text`. Slice at the offsets. Do not re-tokenise, re-match by string, or
+re-flow the prose before slicing: the offsets were verified against that exact string at build
+time and any transformation invalidates them. `text` must equal the slice; if it does not, render
+the prose unlinked rather than guessing.
+
+### Doors must not lead nowhere
+
+`related_years` is every other year this one names, parsed from the records. A year in that list
+is only reachable if it also appears in `years/index.json`. Cross-reference the two and render an
+unavailable year as plain text, not as a link. Do not fetch a year page to discover whether it
+exists.
+
+### Pictures carry their licence with them
+
+Every image carries `attribution`, `license_id` and `descriptor_url`. Render the attribution
+visibly and link the descriptor. Cropping the credit out of the layout is not a styling decision;
+a file is redistributable on the terms attached to it and on no others.
+
+### What the browser may not do
+
+Nothing on a year page is generated at request time, and no part of this contract may be
+satisfied by asking a model. `removed_sentences` records prose the evidence check could not
+support, deleted before publication; it is inspectable and needs no reader-facing treatment.
 
 ## Accessibility and performance budget
 

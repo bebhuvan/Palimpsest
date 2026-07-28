@@ -14,6 +14,7 @@ from pytest_httpx import HTTPXMock
 from history_pipeline.adapters.base import AdapterContext
 from history_pipeline.adapters.cliopatria import CliopatriaAdapter
 from history_pipeline.adapters.curated import CuratedSourceAdapter
+from history_pipeline.adapters.direct_authority import DirectAuthorityAdapter
 from history_pipeline.adapters.iiif_maps import IiifMapAdapter
 from history_pipeline.adapters.linked_places import LinkedPlacesAdapter
 from history_pipeline.adapters.open_context import OpenContextAdapter
@@ -21,6 +22,7 @@ from history_pipeline.adapters.owid import OwidAdapter
 from history_pipeline.adapters.periodo import PeriodoAdapter
 from history_pipeline.adapters.pleiades import PleiadesAdapter
 from history_pipeline.adapters.reconciliation import AuthorityReconciliationAdapter
+from history_pipeline.adapters.seshat import SeshatApiAdapter
 from history_pipeline.adapters.wikidata import WikidataEnricher
 from history_pipeline.adapters.wikipedia import WikipediaEnricher
 from history_pipeline.config import PipelineConfig, SourceConfig
@@ -46,7 +48,7 @@ def _config(source: SourceConfig, tmp_path: Path) -> PipelineConfig:
 
 def _context(source: SourceConfig, tmp_path: Path) -> AdapterContext:
     config = _config(source, tmp_path)
-    downloads = DownloadCache(config.cache_dir, "HistoryJoice/test")
+    downloads = DownloadCache(config.cache_dir, "Palimpsest/test")
     return AdapterContext(
         pipeline=config,
         source=source,
@@ -84,6 +86,38 @@ def test_curated_adapter_snapshots_and_pins_authority_record(
 
     assert result.raw_assets[0].path.read_bytes() == payload
     assert result.raw_assets[0].checksum_sha256 == source.expected_checksum_sha256
+
+
+def test_curated_adapter_can_reuse_a_reviewed_snapshot(
+    tmp_path: Path, httpx_mock: HTTPXMock
+) -> None:
+    payload = b'{"item":{"id":"reviewed"}}'
+    source = SourceConfig.model_validate(
+        {
+            "id": "curated-reviewed-record",
+            "adapter": "curated",
+            "title": "Reviewed authority record",
+            "publisher": "Example archive",
+            "url": "https://example.org/reviewed.json",
+            "license_id": "PDM-1.0",
+            "citation": "Example archive record",
+            "expected_checksum_sha256": hashlib.sha256(payload).hexdigest(),
+            "options": {
+                "snapshot_filename": "catalog.json",
+                "reuse_reviewed_snapshot": True,
+            },
+        }
+    )
+    httpx_mock.add_response(url=str(source.url), content=payload)
+    context = _context(source, tmp_path)
+    try:
+        first = CuratedSourceAdapter().run(context)
+        second = CuratedSourceAdapter().run(context)
+    finally:
+        context.downloads.close()
+
+    assert first.raw_assets[0].checksum_sha256 == source.expected_checksum_sha256
+    assert second.raw_assets[0].checksum_sha256 == source.expected_checksum_sha256
 
 
 def test_cliopatria_adapter_normalizes_and_rejects_bad_chronology(
@@ -452,6 +486,77 @@ def test_owid_adapter_reads_current_grapher_metadata_shape(
     assert result.indicators[0].value == 1234
 
 
+def test_seshat_adapter_preserves_range_uncertainty_and_explanation(
+    tmp_path: Path, httpx_mock: HTTPXMock
+) -> None:
+    source = SourceConfig.model_validate(
+        {
+            "id": "seshat_api",
+            "adapter": "seshat_api",
+            "title": "Selected Seshat variables",
+            "publisher": "Seshat",
+            "url": "https://example.org/api/",
+            "license_id": "CC-BY-SA-4.0",
+            "citation": "Seshat variables",
+            "options": {
+                "page_size": 1000,
+                "variables": [
+                    {
+                        "endpoint": "sc/polity-populations",
+                        "field": "polity_population",
+                        "label": "Polity population",
+                        "kind": "number_range",
+                        "unit": "people",
+                    }
+                ],
+            },
+        }
+    )
+    httpx_mock.add_response(
+        url="https://example.org/api/sc/polity-populations/?page_size=1000",
+        json={
+            "count": 1,
+            "next": None,
+            "results": [
+                {
+                    "id": 9,
+                    "polity": {
+                        "name": "eg_example",
+                        "start_year": -300,
+                        "end_year": -100,
+                    },
+                    "year_from": -200,
+                    "year_to": -200,
+                    "polity_population_from": 1000,
+                    "polity_population_to": 1500,
+                    "is_disputed": False,
+                    "is_uncertain": True,
+                    "description": (
+                        "The surviving evidence supports only an estimate. "
+                        "§REF§Example Author. Example Book.§REF§"
+                    ),
+                }
+            ],
+        },
+    )
+    context = _context(source, tmp_path)
+    try:
+        result = SeshatApiAdapter().run(context)
+    finally:
+        context.downloads.close()
+
+    [assertion] = result.evidence_assertions
+    assert assertion.subject_entity_ids == ["seshat-polity:eg_example"]
+    assert assertion.object.value_from == 1000
+    assert assertion.object.value_to == 1500
+    assert assertion.object.unit == "people"
+    assert assertion.valid_from == -200
+    assert assertion.confidence.grade.value == "C"
+    assert assertion.source_refs[0].modified is True
+    assert assertion.source_citations == ["Example Author. Example Book."]
+    assert assertion.source_excerpt == "The surviving evidence supports only an estimate."
+
+
 def test_wikimedia_enrichment_is_snapshotted_and_rebuilds_offline(
     tmp_path: Path, httpx_mock: HTTPXMock
 ) -> None:
@@ -564,7 +669,7 @@ def test_wikimedia_enrichment_is_snapshotted_and_rebuilds_offline(
         }
     )
     cache_dir = tmp_path / "cache"
-    with DownloadCache(cache_dir, "HistoryJoice/test") as downloads:
+    with DownloadCache(cache_dir, "Palimpsest/test") as downloads:
         entities, wikidata_assets = WikidataEnricher(
             wikidata, downloads, tmp_path / "raw" / "wikidata"
         ).enrich(["Q1", "Q1"])
@@ -586,7 +691,7 @@ def test_wikimedia_enrichment_is_snapshotted_and_rebuilds_offline(
     assert dossiers[0].redirects_from == ["The Universe"]
     assert dossiers[0].dossier_id == "wikipedia:en:1"
 
-    with DownloadCache(cache_dir, "HistoryJoice/test", offline=True) as downloads:
+    with DownloadCache(cache_dir, "Palimpsest/test", offline=True) as downloads:
         offline_entities, _ = WikidataEnricher(
             wikidata, downloads, tmp_path / "raw" / "wikidata"
         ).enrich(["Q1"])
@@ -652,6 +757,82 @@ def test_linked_places_requires_chronology_and_preserves_names(
     assert result.features[0].names == {"und": "Example place", "la": "Exemplum"}
 
 
+def test_linked_places_reads_whg_dataset_entity_properties(
+    tmp_path: Path, httpx_mock: HTTPXMock
+) -> None:
+    source = SourceConfig.model_validate(
+        {
+            "id": "whg-selected-dataset",
+            "adapter": "linked_places",
+            "title": "Selected WHG dataset",
+            "publisher": "World Historical Gazetteer",
+            "url": "https://whgazetteer.org/entity/dataset:693/api",
+            "license_id": "CC-BY-NC-4.0",
+            "citation": "Rees, Buddhist monasteries of the Western Ghats",
+            "defaults": {
+                "kind": "archaeological_site",
+                "spatial_meaning": "location",
+                "date_precision": "range",
+                "temporal_confidence": "B",
+                "spatial_confidence": "B",
+                "interpretive_confidence": "B",
+            },
+            "options": {"chronology": "historical"},
+        }
+    )
+    httpx_mock.add_response(
+        json={
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "MultiPoint",
+                        "coordinates": [[73.497052, 19.018668]],
+                    },
+                    "properties": {
+                        "title": "Ambivale",
+                        "src_id": "1",
+                        "url": "https://whgazetteer.org/places/123",
+                        "dataset": "Buddhist monasteries of the Western Ghats",
+                        "dataset_id": 693,
+                        "names": [
+                            {"toponym": "Ambivale", "lang": "en"},
+                            {"toponym": "Ambivali", "lang": "mr"},
+                        ],
+                        "whens": [
+                            {
+                                "timespans": [
+                                    {
+                                        "start": {"earliest": "-0100"},
+                                        "end": {"latest": "0449"},
+                                    }
+                                ]
+                            }
+                        ],
+                        "types": [{"sourceLabel": "Buddhist monastery"}],
+                        "links": [{"type": "closeMatch", "identifier": "wd:Q60785397"}],
+                        "descriptions": [{"value": "Rock-cut Buddhist monastery"}],
+                    },
+                }
+            ],
+        }
+    )
+    context = _context(source, tmp_path)
+    try:
+        result = LinkedPlacesAdapter().run(context)
+    finally:
+        context.downloads.close()
+
+    assert not result.rejections
+    [feature] = result.features
+    assert (feature.valid_from, feature.valid_to) == (-100, 449)
+    assert feature.names == {"und": "Ambivale", "en": "Ambivale", "mr": "Ambivali"}
+    assert feature.source_refs[0].record_id == "https://whgazetteer.org/places/123"
+    assert feature.properties["dataset_id"] == 693
+    assert feature.properties["links"][0]["identifier"] == "wd:Q60785397"
+
+
 def test_authority_reconciliation_preserves_review_and_lineage(
     tmp_path: Path, httpx_mock: HTTPXMock
 ) -> None:
@@ -666,7 +847,7 @@ def test_authority_reconciliation_preserves_review_and_lineage(
         "queries": [
             {
                 "query_id": "query:nuremberg",
-                "subject_id": "historyjoice:place:nuremberg",
+                "subject_id": "palimpsest:place:nuremberg",
                 "result": [
                     {
                         "id": "http://vocab.getty.edu/tgn/7004333",
@@ -725,6 +906,77 @@ def test_authority_reconciliation_preserves_review_and_lineage(
         "query:nuremberg",
         "http://vocab.getty.edu/tgn/7004333",
     ]
+
+
+def test_direct_authority_publishes_reviewed_source_not_discovery_mirror(
+    tmp_path: Path, httpx_mock: HTTPXMock
+) -> None:
+    payload = {
+        "@context": "https://linked.art/ns/v1/linked-art.json",
+        "id": "http://vocab.getty.edu/tgn/1032455",
+        "type": "Place",
+        "identified_by": [
+            {"type": "Name", "content": "Cavaillon"},
+            {"type": "Name", "content": "Cabellio"},
+        ],
+    }
+    encoded = json.dumps(payload, separators=(",", ":")).encode()
+    url = "https://vocab.getty.edu/tgn/1032455.json"
+    source = SourceConfig.model_validate(
+        {
+            "id": "getty-authority",
+            "adapter": "direct_authority",
+            "title": "Getty TGN reviewed links",
+            "publisher": "J. Paul Getty Trust",
+            "url": "https://www.getty.edu/research/tools/vocabularies/",
+            "license_id": "ODC-By-1.0",
+            "license_reviewed": True,
+            "license_notes": "Official Getty licence reviewed.",
+            "commercial_redistribution": "allowed",
+            "citation": "Getty Thesaurus of Geographic Names",
+            "version": "record reviewed 2026-07-26",
+            "rights": {
+                "metadata": {
+                    "license_id": "ODC-By-1.0",
+                    "attribution": "Getty TGN, J. Paul Getty Trust",
+                    "rights_uri": "https://opendatacommons.org/licenses/by/1-0/",
+                    "review_notes": "Official licensing guidance.",
+                }
+            },
+            "options": {
+                "records": [
+                    {
+                        "subject_id": "pleiades:148027",
+                        "discovery_query_id": "query:cabellio",
+                        "authority_id": "tgn:1032455",
+                        "authority_namespace": "tgn",
+                        "label": "Cavaillon",
+                        "relation": "close_match",
+                        "url": url,
+                        "checksum_sha256": hashlib.sha256(encoded).hexdigest(),
+                        "rationale": "Getty supplies Cabellio as an alternate name.",
+                    }
+                ]
+            },
+        }
+    )
+    httpx_mock.add_response(url=url, content=encoded)
+    context = _context(source, tmp_path)
+    try:
+        result = DirectAuthorityAdapter().run(context)
+    finally:
+        context.downloads.close()
+
+    [match] = result.authority_matches
+    assert match.review_status == "accepted"
+    assert match.relation == "close_match"
+    assert match.authority_id == "tgn:1032455"
+    assert str(match.source_ref.url) == url
+    assert match.source_ref.license_id == "ODC-By-1.0"
+    assert match.rights.attribution == "Getty TGN, J. Paul Getty Trust"
+    assert match.lineage[0].parameters["discovery_route"].startswith(
+        "World Historical Gazetteer"
+    )
 
 
 def test_authority_reconciliation_fails_closed_without_snapshot_rights(

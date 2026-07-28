@@ -27,12 +27,20 @@ CURATED_PATH = ROOT / "data" / "curation" / "knowledge-1543.yml"
 PROMPT_PATH = ROOT / "prompts" / "dossier-draft-v1.txt"
 SNAPSHOT_PATH = ROOT / "data" / "raw" / "loc_copernicus" / "catalog-record.json"
 GENERATED_AT = datetime(2026, 7, 23, 7, 5, tzinfo=UTC)
+SOURCE_ID = "loc_copernicus"
 
 
 def build_pilot(output_root: Path, snapshot_path: Path = SNAPSHOT_PATH) -> None:
     curated, _checksum = load_curated_records(CURATED_PATH)
-    source_ref = curated.assertions[0].source_refs[0]
-    if any(assertion.source_refs != [source_ref] for assertion in curated.assertions):
+    assertions = [
+        assertion
+        for assertion in curated.assertions
+        if {source.source_id for source in assertion.source_refs} == {SOURCE_ID}
+    ]
+    if not assertions:
+        raise ValueError("The Copernicus pilot has no curated assertions")
+    source_ref = assertions[0].source_refs[0]
+    if any(assertion.source_refs != [source_ref] for assertion in assertions):
         raise ValueError("Copernicus pilot assertions must retain one identical source revision")
     if source_ref.version is None:
         raise ValueError("Copernicus evidence source must have a revision identifier")
@@ -46,7 +54,7 @@ def build_pilot(output_root: Path, snapshot_path: Path = SNAPSHOT_PATH) -> None:
     if not isinstance(snapshot, dict) or not isinstance(snapshot.get("item"), dict):
         raise ValueError("LOC snapshot must contain an item object")
     item = snapshot["item"]
-    assertions = {assertion.assertion_id: assertion for assertion in curated.assertions}
+    assertions_by_id = {assertion.assertion_id: assertion for assertion in assertions}
     field_specs = (
         (
             "passage:loc-item-title",
@@ -81,7 +89,7 @@ def build_pilot(output_root: Path, snapshot_path: Path = SNAPSHOT_PATH) -> None:
     if any(not isinstance(text, str) or not text for _, _, text, _ in field_specs):
         raise ValueError("LOC snapshot is missing a required exact evidence field")
     if any(
-        assertion_id not in assertions
+        assertion_id not in assertions_by_id
         for _, _, _, assertion_ids in field_specs
         for assertion_id in assertion_ids
     ):
@@ -121,12 +129,12 @@ def build_pilot(output_root: Path, snapshot_path: Path = SNAPSHOT_PATH) -> None:
     bundle = ApprovedEvidenceBundle(
         bundle_id="evidence-bundle:copernicus-1543-v1",
         subject_entity_ids=sorted(
-            {entity_id for item in curated.assertions for entity_id in item.subject_entity_ids}
+            {entity_id for item in assertions for entity_id in item.subject_entity_ids}
         ),
         feature_ids=sorted(
-            {feature_id for item in curated.assertions for feature_id in item.feature_ids}
+            {feature_id for item in assertions for feature_id in item.feature_ids}
         ),
-        assertions=curated.assertions,
+        assertions=assertions,
         sources=[document],
         approved_by="fixture:derived-from-data/curation/knowledge-1543.yml",
         approved_at=datetime(2026, 7, 23, 7, 0, tzinfo=UTC),

@@ -14,10 +14,12 @@ from history_pipeline.artifacts import build_artifacts, compute_build_id
 from history_pipeline.curated import load_curated_records
 from history_pipeline.models import (
     ArtifactFile,
+    AuthorityMatch,
     BuildManifest,
     Confidence,
     ConfidenceGrade,
     DatePrecision,
+    DossierRestatementContent,
     EntityRelationship,
     FeatureKind,
     HistoricalDossier,
@@ -36,6 +38,7 @@ from history_pipeline.models import (
     SpatialMeaning,
     TransformationStep,
 )
+from history_pipeline.restatement import build_restatement
 from history_pipeline.storage import sha256_file
 from history_pipeline.themes import (
     apply_thematic_assertions,
@@ -152,8 +155,8 @@ def main() -> None:
     geometry_source = source(
         "browser-pilot",
         title="Browser pilot reviewed geometry",
-        publisher="History Joice test suite",
-        url="https://example.org/history-joice/browser-pilot",
+        publisher="Palimpsest test suite",
+        url="https://example.org/palimpsest/browser-pilot",
         license_id="CC0-1.0",
         record_id="geometry-v1",
     )
@@ -176,18 +179,55 @@ def main() -> None:
     map_metadata_source = source(
         "browser-map-metadata",
         title="Deterministic IIIF historical-map fixture",
-        publisher="History Joice test suite",
-        url="https://example.org/history-joice/iiif/manifest",
+        publisher="Palimpsest test suite",
+        url="https://example.org/palimpsest/iiif/manifest",
         license_id="CC0-1.0",
         record_id="fixture-manifest-v1",
     )
     map_georeference_source = source(
         "browser-map-georef",
         title="Deterministic IIIF georeference fixture",
-        publisher="History Joice test suite",
-        url="https://example.org/history-joice/iiif/georeference",
+        publisher="Palimpsest test suite",
+        url="https://example.org/palimpsest/iiif/georeference",
         license_id="CC-BY-4.0",
         record_id="fixture-georeference-v1",
+    )
+    authority_source = source(
+        "browser-authority",
+        title="Synthetic gazetteer authority fixture",
+        publisher="Palimpsest test suite",
+        url="https://example.org/palimpsest/authority/pilot-place",
+        license_id="CC0-1.0",
+        record_id="pilot-place",
+    )
+    authority_match = AuthorityMatch(
+        match_id="match:0123456789abcdef",
+        subject_id="wikidata:Q100",
+        authority_id="tgn:test-pilot-place",
+        authority_namespace="tgn",
+        label="Pilot Gazetteer Place",
+        relation="close_match",
+        review_status="accepted",
+        confidence_score=92,
+        confidence=Confidence(
+            grade=ConfidenceGrade.B,
+            rationale="Synthetic accepted match used to verify reader-facing release joins.",
+        ),
+        source_ref=authority_source,
+        rights=RightsReference(
+            scope=RightsScope.METADATA,
+            license_id="CC0-1.0",
+            attribution="Palimpsest test suite synthetic authority fixture",
+        ),
+        lineage=[
+            TransformationStep(
+                operation="create_browser_authority_fixture",
+                tool="scripts.build-browser-pilot",
+                tool_version="1.0.0",
+                input_record_ids=["wikidata:Q100", "tgn:test-pilot-place"],
+                parameters={"test_fixture": True},
+            )
+        ],
     )
     map_image = historical_map_fixture_png()
     map_image_checksum = hashlib.sha256(map_image).hexdigest()
@@ -198,31 +238,31 @@ def main() -> None:
     )
     historical_map = HistoricalMapMetadata(
         map_id="map:0123456789abcdef",
-        manifest_id=HttpUrl("https://example.org/history-joice/iiif/manifest"),
-        canvas_id=HttpUrl("https://example.org/history-joice/iiif/canvas"),
+        manifest_id=HttpUrl("https://example.org/palimpsest/iiif/manifest"),
+        canvas_id=HttpUrl("https://example.org/palimpsest/iiif/canvas"),
         annotation_id=HttpUrl(
-            "https://example.org/history-joice/iiif/georeference"
+            "https://example.org/palimpsest/iiif/georeference"
         ),
         label="Browser fixture map sheet",
         depicted_date="circa 1750",
-        providers=["History Joice test suite"],
+        providers=["Palimpsest test suite"],
         required_statement=(
-            "Synthetic historical-map image © History Joice test suite; test use only."
+            "Synthetic historical-map image © Palimpsest test suite; test use only."
         ),
         metadata_rights=RightsReference(
             scope=RightsScope.METADATA,
             license_id="CC0-1.0",
-            attribution="History Joice test suite",
+            attribution="Palimpsest test suite",
         ),
         image_rights=RightsReference(
             scope=RightsScope.MEDIA,
             license_id="PDM-1.0",
-            attribution="History Joice test suite synthetic fixture",
+            attribution="Palimpsest test suite synthetic fixture",
         ),
         georeference_rights=RightsReference(
             scope=RightsScope.GEOREFERENCE,
             license_id="CC-BY-4.0",
-            attribution="History Joice test suite georeference fixture",
+            attribution="Palimpsest test suite georeference fixture",
         ),
         georeference_confidence=Confidence(
             grade=ConfidenceGrade.C,
@@ -240,7 +280,7 @@ def main() -> None:
                 scope=RightsScope.METADATA,
                 status="approved",
                 decision_id="rights:browser-map:metadata",
-                reviewed_by="History Joice test suite",
+                reviewed_by="Palimpsest test suite",
                 reviewed_at=GENERATED_AT,
                 rationale="Synthetic fixture metadata is approved for deterministic tests.",
             ),
@@ -248,7 +288,7 @@ def main() -> None:
                 scope=RightsScope.MEDIA,
                 status="approved",
                 decision_id="rights:browser-map:media",
-                reviewed_by="History Joice test suite",
+                reviewed_by="Palimpsest test suite",
                 reviewed_at=GENERATED_AT,
                 rationale="Synthetic fixture pixels are approved for deterministic tests.",
             ),
@@ -256,7 +296,7 @@ def main() -> None:
                 scope=RightsScope.GEOREFERENCE,
                 status="approved",
                 decision_id="rights:browser-map:georeference",
-                reviewed_by="History Joice test suite",
+                reviewed_by="Palimpsest test suite",
                 reviewed_at=GENERATED_AT,
                 rationale="Synthetic fixture georeference is approved for deterministic tests.",
             ),
@@ -329,8 +369,13 @@ def main() -> None:
         source_refs=[wikidata_source.model_copy(update={"record_id": "Q101"})],
     )
     selected_extract = (
-        "This saved browser-pilot introduction verifies that revision-pinned "
-        "tertiary summaries reach the reading sidebar."
+        "Enriched Pilot Place is a synthetic settlement used to verify that revision-pinned "
+        "tertiary summaries reach the reading sidebar.\n"
+        "The settlement was founded in 60. It became a provincial seat in 95 and kept that role "
+        "until the administration moved elsewhere. A synthetic archive records that its walls "
+        "were rebuilt in 140.\n"
+        "This saved browser-pilot introduction verifies that revision-pinned tertiary summaries "
+        "reach the reading sidebar."
     )
     selected_dossier = HistoricalDossier(
         dossier_id="wikipedia:en:100",
@@ -346,6 +391,43 @@ def main() -> None:
         content_checksum_sha256=hashlib.sha256(selected_extract.encode()).hexdigest(),
         source_ref=wikipedia_source,
     )
+    # One restated dossier and one left raw, so the pilot covers both reading states.
+    selected_restatement = build_restatement(
+        DossierRestatementContent.model_validate(
+            {
+                "result": "restated",
+                "headline": "A synthetic settlement that became a provincial seat",
+                "text": (
+                    "Enriched Pilot Place is a synthetic settlement.\n"
+                    "It was founded in 60 and became a provincial seat in 95, keeping that role "
+                    "until the administration moved elsewhere. A synthetic archive records that "
+                    "its walls were rebuilt in 140."
+                ),
+                "timeline": [
+                    {
+                        "year_text": "60",
+                        "sort_year": 60,
+                        "text": "The settlement was founded",
+                    },
+                    {
+                        "year_text": "95",
+                        "sort_year": 95,
+                        "text": "It became a provincial seat",
+                    },
+                    {"year_text": "140", "sort_year": 140, "text": "Its walls were rebuilt"},
+                ],
+                "unsuitable_reason": None,
+            }
+        ),
+        selected_dossier,
+        prompt_version="dossier-restate-v1",
+        prompt_sha256=hashlib.sha256(
+            (ROOT / "prompts" / "dossier-restate-v1.txt").read_bytes()
+        ).hexdigest(),
+        model_identifier="fixture:deterministic-restatement-v1",
+        generated_at=GENERATED_AT,
+    )
+
     context_dossier = HistoricalDossier(
         dossier_id="wikipedia:en:101",
         title="Pilot Context Event",
@@ -420,7 +502,9 @@ def main() -> None:
         maximum_year=2026,
         language_fallbacks=("en",),
         sources=[],
+        authority_matches=[authority_match],
         historical_maps=[historical_map],
+        restatements=[selected_restatement],
     )
     map_image_path = work / map_rendering.image_path
     map_image_path.parent.mkdir(parents=True, exist_ok=True)
@@ -448,7 +532,7 @@ def main() -> None:
         )
     )
     build_id = compute_build_id(
-        b"history-joice-browser-pilot-v3",
+        b"palimpsest-browser-pilot-v3",
         [artifact.checksum_sha256 for artifact in artifacts],
     )
     build_dir = OUTPUT / "builds" / build_id
@@ -465,6 +549,7 @@ def main() -> None:
             wikipedia_source,
             map_metadata_source,
             map_georeference_source,
+            authority_source,
             curated_features[0].source_refs[0],
         ],
         artifacts=artifacts,

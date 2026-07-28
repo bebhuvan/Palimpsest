@@ -1,0 +1,51 @@
+{
+  "assertion:royal-cedula-catalog-date-correction": {
+    "assertion_id": "assertion:royal-cedula-catalog-date-correction",
+    "confidence": {
+      "grade": "A",
+      "rationale": "The Library of Congress catalog note explicitly records the written and corrected years."
+    },
+    "date_precision": "exact",
+    "evidence_basis": "primary_source_metadata",
+    "feature_ids": [
+      "palimpsest:royal-cedula-vasco-de-quiroga:1543"
+    ],
+    "object": {
+      "entity_id": null,
+      "kind": "text",
+      "unit": null,
+      "value": "the year on the copy was changed from 1544 to 1543",
+      "value_from": null,
+      "value_to": null,
+      "year": null
+    },
+    "predicate": "catalog_date_note",
+    "representation": "structured_sourced_assertion",
+    "restatement": null,
+    "review_status": "provisional",
+    "source_citations": [],
+    "source_excerpt": null,
+    "source_excerpt_checksum_sha256": null,
+    "source_refs": [
+      {
+        "checksum_sha256": "295aea5847ce5d9afa801bbd2f46ab4c45a437e5dacfc37b7157a284011a6aab",
+        "citation": "Library of Congress, Hans Peter Kraus Collection, item mss31013-03800, royal cedula dated 23 August 1543.",
+        "license_id": "PDM-1.0",
+        "modified": false,
+        "publisher": "Library of Congress",
+        "record_id": "mss31013-03800",
+        "retrieved_at": "2026-07-23T06:00:00Z",
+        "source_id": "loc_new_laws",
+        "title": "Hans Peter Kraus Collection: Notarized copy of a royal cedula to Vasco de Quiroga, bishop of Michoacán",
+        "url": "https://www.loc.gov/item/mss31013-03800/",
+        "version": "browser-pilot-curated-snapshot-v1"
+      }
+    ],
+    "subject_entity_ids": [
+      "palimpsest:event:royal-cedula-vasco-de-quiroga"
+    ],
+    "temporal_uncertainty": null,
+    "valid_from": 1543,
+    "valid_to": 1543
+  }
+}

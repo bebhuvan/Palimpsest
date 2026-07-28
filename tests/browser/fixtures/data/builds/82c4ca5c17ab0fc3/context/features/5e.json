@@ -1,0 +1,15 @@
+{
+  "palimpsest:tanegashima-firearms-tradition:1543": {
+    "feature_id": "palimpsest:tanegashima-firearms-tradition:1543",
+    "items": [],
+    "seed_entity_ids": [
+      "palimpsest:artifact:matchlock-muskets",
+      "palimpsest:event:tanegashima-firearms-encounter",
+      "palimpsest:group:portuguese-traders-tanegashima",
+      "palimpsest:person:tanegashima-tokitaka",
+      "palimpsest:person:yaita-kinbei",
+      "palimpsest:place:tanegashima",
+      "palimpsest:work:teppoki"
+    ]
+  }
+}

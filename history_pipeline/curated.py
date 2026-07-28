@@ -61,7 +61,7 @@ class CuratedRecords(BaseModel):
 
 def load_curated_records(path: Path | None) -> tuple[CuratedRecords, str | None]:
     if path is None:
-        return CuratedRecords(authored_by="History Joice", features=[], entities=[]), None
+        return CuratedRecords(authored_by="Palimpsest", features=[], entities=[]), None
     if not path.is_file():
         raise FileNotFoundError(f"Configured curated record file is missing: {path}")
     payload = path.read_bytes()

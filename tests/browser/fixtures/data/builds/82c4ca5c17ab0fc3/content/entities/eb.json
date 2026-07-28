@@ -1,0 +1,45 @@
+{
+  "palimpsest:person:vasco-de-quiroga": {
+    "aliases": {},
+    "commons_categories": [],
+    "commons_images": [],
+    "context_depth": 0,
+    "coordinates": [],
+    "date_claims": [],
+    "date_precision": null,
+    "descriptions": {},
+    "discovered_from_entity_ids": [],
+    "discovery_predicates": [],
+    "entity_id": "palimpsest:person:vasco-de-quiroga",
+    "entity_kind": "person",
+    "entity_type": "human",
+    "links": {},
+    "names": {
+      "en": "Vasco de Quiroga"
+    },
+    "redirects_from": [],
+    "relationships": [],
+    "review_status": "provisional",
+    "sitelinks": {},
+    "source_refs": [
+      {
+        "checksum_sha256": "295aea5847ce5d9afa801bbd2f46ab4c45a437e5dacfc37b7157a284011a6aab",
+        "citation": "Library of Congress, Hans Peter Kraus Collection, item mss31013-03800, royal cedula dated 23 August 1543.",
+        "license_id": "PDM-1.0",
+        "modified": false,
+        "publisher": "Library of Congress",
+        "record_id": "mss31013-03800",
+        "retrieved_at": "2026-07-23T06:00:00Z",
+        "source_id": "loc_new_laws",
+        "title": "Hans Peter Kraus Collection: Notarized copy of a royal cedula to Vasco de Quiroga, bishop of Michoacán",
+        "url": "https://www.loc.gov/item/mss31013-03800/",
+        "version": "browser-pilot-curated-snapshot-v1"
+      }
+    ],
+    "temporal_confidence": null,
+    "temporal_uncertainty": null,
+    "valid_from": null,
+    "valid_to": null,
+    "wikidata_id": null
+  }
+}

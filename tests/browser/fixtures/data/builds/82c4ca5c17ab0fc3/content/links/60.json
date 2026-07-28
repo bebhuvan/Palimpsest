@@ -1,0 +1,92 @@
+{
+  "palimpsest:royal-cedula-vasco-de-quiroga:1543": {
+    "available_entity_ids": [
+      "palimpsest:concept:ordinances-for-treatment-in-the-indies",
+      "palimpsest:event:royal-cedula-vasco-de-quiroga",
+      "palimpsest:person:philip-prince-later-philip-ii",
+      "palimpsest:person:vasco-de-quiroga",
+      "palimpsest:place:michoacan",
+      "palimpsest:place:valladolid"
+    ],
+    "dossier_ids": [],
+    "entity_ids": [
+      "palimpsest:event:royal-cedula-vasco-de-quiroga",
+      "palimpsest:person:philip-prince-later-philip-ii",
+      "palimpsest:person:vasco-de-quiroga",
+      "palimpsest:place:valladolid",
+      "palimpsest:place:michoacan",
+      "palimpsest:concept:ordinances-for-treatment-in-the-indies"
+    ],
+    "feature_id": "palimpsest:royal-cedula-vasco-de-quiroga:1543",
+    "missing_entity_ids": [],
+    "primary_entity_id": "palimpsest:event:royal-cedula-vasco-de-quiroga",
+    "reading_eligibility": [
+      {
+        "entity_id": "palimpsest:event:royal-cedula-vasco-de-quiroga",
+        "identity_basis": "source_asserted",
+        "identity_relation": "exact_match",
+        "reading_eligible": true,
+        "reason_codes": [
+          "feature_entity_intervals_overlap"
+        ],
+        "temporal_overlap": "overlaps"
+      },
+      {
+        "entity_id": "palimpsest:person:philip-prince-later-philip-ii",
+        "identity_basis": "source_asserted",
+        "identity_relation": "broader_topic",
+        "reading_eligible": false,
+        "reason_codes": [
+          "entity_interval_unbounded",
+          "entity_kind_incompatible_with_feature"
+        ],
+        "temporal_overlap": "unknown"
+      },
+      {
+        "entity_id": "palimpsest:person:vasco-de-quiroga",
+        "identity_basis": "source_asserted",
+        "identity_relation": "broader_topic",
+        "reading_eligible": false,
+        "reason_codes": [
+          "entity_interval_unbounded",
+          "entity_kind_incompatible_with_feature"
+        ],
+        "temporal_overlap": "unknown"
+      },
+      {
+        "entity_id": "palimpsest:place:valladolid",
+        "identity_basis": "source_asserted",
+        "identity_relation": "broader_topic",
+        "reading_eligible": false,
+        "reason_codes": [
+          "entity_interval_unbounded",
+          "entity_kind_incompatible_with_feature"
+        ],
+        "temporal_overlap": "unknown"
+      },
+      {
+        "entity_id": "palimpsest:place:michoacan",
+        "identity_basis": "source_asserted",
+        "identity_relation": "broader_topic",
+        "reading_eligible": false,
+        "reason_codes": [
+          "entity_interval_unbounded",
+          "entity_kind_incompatible_with_feature"
+        ],
+        "temporal_overlap": "unknown"
+      },
+      {
+        "entity_id": "palimpsest:concept:ordinances-for-treatment-in-the-indies",
+        "identity_basis": "source_asserted",
+        "identity_relation": "broader_topic",
+        "reading_eligible": false,
+        "reason_codes": [
+          "entity_interval_unbounded",
+          "entity_kind_incompatible_with_feature"
+        ],
+        "temporal_overlap": "unknown"
+      }
+    ],
+    "related_entity_ids": []
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "palimpsest:event:tanegashima-firearms-encounter": {
+    "content_shard": "b3",
+    "dossier_ids": [],
+    "entity_id": "palimpsest:event:tanegashima-firearms-encounter",
+    "feature_ids": [
+      "palimpsest:tanegashima-firearms-tradition:1543"
+    ],
+    "kind": "event",
+    "latitude": 30.57,
+    "longitude": 130.96,
+    "name_attestations": [
+      {
+        "date_precision": "year",
+        "feature_id": "palimpsest:tanegashima-firearms-tradition:1543",
+        "language": "en",
+        "name_id": "name:816c4cf1d8db0c44",
+        "name_kind": "unknown",
+        "perspective": null,
+        "primary": true,
+        "script": null,
+        "source_ids": [
+          "mlit_tanegashima"
+        ],
+        "temporal_basis": "feature_interval",
+        "temporal_confidence": "C",
+        "text": "Tanegashima firearms encounter",
+        "valid_from": 1543,
+        "valid_to": 1543
+      },
+      {
+        "date_precision": "year",
+        "feature_id": "palimpsest:tanegashima-firearms-tradition:1543",
+        "language": "ja",
+        "name_id": "name:5f78a83e2bb6afca",
+        "name_kind": "unknown",
+        "perspective": null,
+        "primary": false,
+        "script": null,
+        "source_ids": [
+          "mlit_tanegashima"
+        ],
+        "temporal_basis": "feature_interval",
+        "temporal_confidence": "C",
+        "text": "種子島への鉄砲伝来",
+        "valid_from": 1543,
+        "valid_to": 1543
+      }
+    ],
+    "names": {
+      "en": "Tanegashima firearms encounter",
+      "ja": "種子島への鉄砲伝来"
+    },
+    "source_ids": [
+      "mlit_tanegashima"
+    ],
+    "themes": [
+      "knowledge",
+      "trade"
+    ],
+    "valid_from": 1543,
+    "valid_to": 1543,
+    "year_dossier_years": []
+  }
+}

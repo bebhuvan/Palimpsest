@@ -1,0 +1,72 @@
+{
+  "collections": {
+    "dossiers": {
+      "count": 2,
+      "path_template": "content/dossiers/{shard}.json",
+      "shards": [
+        "17",
+        "63"
+      ]
+    },
+    "entities": {
+      "count": 20,
+      "path_template": "content/entities/{shard}.json",
+      "shards": [
+        "19",
+        "22",
+        "2b",
+        "2d",
+        "35",
+        "38",
+        "3f",
+        "6c",
+        "7e",
+        "80",
+        "8b",
+        "8e",
+        "97",
+        "b3",
+        "bb",
+        "df",
+        "e4",
+        "eb",
+        "ec",
+        "ef"
+      ]
+    },
+    "feature_links": {
+      "count": 5,
+      "path_template": "content/links/{shard}.json",
+      "shards": [
+        "22",
+        "35",
+        "5e",
+        "60",
+        "70"
+      ]
+    },
+    "restatements": {
+      "count": 1,
+      "path_template": "content/restatements/{shard}.json",
+      "shards": [
+        "63"
+      ]
+    }
+  },
+  "language_policy": {
+    "available": [
+      "en"
+    ],
+    "fallback_order": [
+      "en"
+    ],
+    "no_indiscriminate_duplication": true,
+    "selection": "requested-language-then-configured-fallback"
+  },
+  "schema_version": "1.0.0",
+  "sharding": {
+    "algorithm": "sha256",
+    "encoding": "utf-8",
+    "prefix_length": 2
+  }
+}

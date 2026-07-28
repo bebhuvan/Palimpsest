@@ -65,7 +65,7 @@ def build_pmtiles(
             "--quiet",
             "--drop-densest-as-needed",
             "--name",
-            f"History Joice: {era}",
+            f"Palimpsest: {era}",
             "--description",
             "Historical features with explicit validity intervals and uncertainty",
             "--attribution",
@@ -114,7 +114,13 @@ def _write_sequence(path: Path, features: Iterable[HistoricalFeature]) -> None:
                 "spatial_uncertainty": bool(feature.spatial_uncertainty),
                 "source_id": primary_source.source_id,
                 "source_record_id": primary_source.record_id,
+                "source_title": primary_source.title,
+                "source_publisher": primary_source.publisher,
+                "source_url": str(primary_source.url),
+                "source_citation": primary_source.citation,
+                "source_version": primary_source.version,
                 "license_id": primary_source.license_id,
+                "year_dossier_years": feature.properties.get("year_dossier_years", []),
             }
             record = {
                 "type": "Feature",

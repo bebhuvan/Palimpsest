@@ -1,0 +1,49 @@
+{
+  "palimpsest:event:tanegashima-firearms-encounter": {
+    "aliases": {},
+    "commons_categories": [],
+    "commons_images": [],
+    "context_depth": 0,
+    "coordinates": [],
+    "date_claims": [],
+    "date_precision": "year",
+    "descriptions": {},
+    "discovered_from_entity_ids": [],
+    "discovery_predicates": [],
+    "entity_id": "palimpsest:event:tanegashima-firearms-encounter",
+    "entity_kind": "event",
+    "entity_type": "maritime_encounter",
+    "links": {},
+    "names": {
+      "en": "Tanegashima firearms encounter",
+      "ja": "種子島への鉄砲伝来"
+    },
+    "redirects_from": [],
+    "relationships": [],
+    "review_status": "provisional",
+    "sitelinks": {},
+    "source_refs": [
+      {
+        "checksum_sha256": "295aea5847ce5d9afa801bbd2f46ab4c45a437e5dacfc37b7157a284011a6aab",
+        "citation": "Ministry of Land, Infrastructure, Transport and Tourism, Japan, Early Modern Firearms in Japan, page R4-00195.",
+        "license_id": "PDL-1.0",
+        "modified": false,
+        "publisher": "Ministry of Land, Infrastructure, Transport and Tourism, Japan",
+        "record_id": "R4-00195",
+        "retrieved_at": "2026-07-23T06:00:00Z",
+        "source_id": "mlit_tanegashima",
+        "title": "Early modern firearms in Japan",
+        "url": "https://www.mlit.go.jp/tagengo-db/R4-00195.html",
+        "version": "browser-pilot-curated-snapshot-v1"
+      }
+    ],
+    "temporal_confidence": {
+      "grade": "C",
+      "rationale": "The 1543 date is reported by the MLIT summary, which identifies the Teppoki as an early-seventeenth-century account."
+    },
+    "temporal_uncertainty": null,
+    "valid_from": 1543,
+    "valid_to": 1543,
+    "wikidata_id": null
+  }
+}

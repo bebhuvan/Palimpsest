@@ -27,9 +27,12 @@ from history_pipeline.models import (
     ThemeIndex,
     WikiContextIndex,
     WikiFeatureContext,
+    YearDossier,
+    YearIndex,
 )
 from history_pipeline.region_time import cell_for_point
 from history_pipeline.storage import sha256_file
+from history_pipeline.year_layers import COMMONS_LICENSES
 
 
 def verify_latest_build(
@@ -113,6 +116,10 @@ def verify_latest_build(
             paths,
             content_records,
         )
+    # Optional, and deliberately not gated on a schema bump: a release that carries no year
+    # dossiers is complete rather than degraded, and one that carries them must prove them.
+    if manifest.year_index_path in paths:
+        _verify_year_contract(manifest_path.parent, manifest.year_index_path, paths)
     if _schema_at_least(manifest.schema_version, 1, 8):
         _verify_theme_contract(
             manifest_path.parent,
@@ -187,6 +194,63 @@ def _read_ndjson(path: Path) -> list[Any]:
         return [orjson.loads(line) for line in handle if line.strip()]
 
 
+def _verify_year_contract(
+    build_dir: Path, index_path: str, artifacts: set[str]
+) -> None:
+    """Re-prove what a year dossier claimed, from the release alone.
+
+    The build enforced this release's own licence policy on every picture. This cannot repeat that
+    check, because a profile lives in `config/pipeline.yml` and a release has to be verifiable
+    without it — so it enforces the weaker invariant that survives on its own: every picture
+    carries a licence the pipeline recognises, an attribution, and an address. A file whose
+    licence nothing recognises never came through the Commons gate.
+
+    Everything else is structural, and structural is the point: a year file that was hand-edited
+    after the build, or one the index does not list, fails here rather than in a browser.
+    """
+
+    index = YearIndex.model_validate(_read_object(build_dir / _safe_relative(index_path)))
+    listed = {entry.year for entry in index.years}
+    present = {
+        int(path.rsplit("/", 1)[-1].removesuffix(".json"))
+        for path in artifacts
+        if path.startswith("years/") and not path.endswith("index.json")
+    }
+    if listed != present:
+        raise ValueError(
+            "Year index does not list exactly the year files in the release: "
+            f"{sorted(listed.symmetric_difference(present))}"
+        )
+    for entry in index.years:
+        if entry.path not in artifacts:
+            raise ValueError(f"Year index names an absent artifact: {entry.path}")
+        dossier = YearDossier.model_validate(
+            _read_object(build_dir / _safe_relative(entry.path))
+        )
+        if dossier.year != entry.year or dossier.dossier_id != entry.dossier_id:
+            raise ValueError(f"Year artifact does not match its index entry: {entry.path}")
+        if dossier.chronicle_revision_id != entry.chronicle_revision_id:
+            raise ValueError(f"Year {entry.year} is indexed against another chronicle revision")
+        if [item.year for item in dossier.related_years] != entry.related_years:
+            raise ValueError(f"Year {entry.year} does not reach the years its index claims")
+        # A reader is told the prose is machine-written and the lede is not. Both have to stay
+        # true of the artifact, not just of the code that made it.
+        if dossier.editorial_state != "machine_generated":
+            raise ValueError(f"Year {entry.year} is not labelled as machine generated")
+        if dossier.lede_kind != "assembled":
+            raise ValueError(f"Year {entry.year} does not declare an assembled lede")
+        images = [anchor.image for anchor in dossier.anchors if anchor.image]
+        images.extend(item.image for item in dossier.register_entries if item.image)
+        for image in images:
+            if image.license_id not in set(COMMONS_LICENSES.values()):
+                raise ValueError(
+                    f"Year {entry.year} carries a picture under an unrecognised licence: "
+                    f"{image.license_id}"
+                )
+            if not image.attribution.strip():
+                raise ValueError(f"Year {entry.year} carries a picture with no attribution")
+
+
 def _verify_integration_contract(
     build_dir: Path,
     index_path: str,
@@ -242,8 +306,13 @@ def _verify_content_contract(
     if not isinstance(collections, dict):
         raise ValueError("Content index has no collections")
     records_by_collection: dict[str, dict[str, Any]] = {}
-    for name in ("feature_links", "entities", "dossiers"):
+    # Restatements are optional: a release built without them is complete, not degraded.
+    optional = {"restatements"}
+    for name in ("feature_links", "entities", "dossiers", "restatements"):
         collection = collections.get(name)
+        if collection is None and name in optional:
+            records_by_collection[name] = {}
+            continue
         if not isinstance(collection, dict):
             raise ValueError(f"Content index is missing {name}")
         template = collection.get("path_template")
@@ -283,6 +352,20 @@ def _verify_content_contract(
         for dossier_id in link.get("dossier_ids", []):
             if dossier_id not in dossiers:
                 raise ValueError(f"Feature link references missing dossier: {dossier_id}")
+
+    # A restatement without its source would be unattributable prose, so refuse to publish one.
+    for source_id, restatement in records_by_collection["restatements"].items():
+        if not isinstance(restatement, dict) or restatement.get("dossier_id") != source_id:
+            raise ValueError(f"Malformed dossier restatement: {source_id}")
+        source = dossiers.get(source_id)
+        if source is None:
+            raise ValueError(f"Restatement has no source dossier in this release: {source_id}")
+        if restatement.get("source_content_checksum_sha256") != source.get(
+            "content_checksum_sha256"
+        ):
+            raise ValueError(f"Restatement does not match its published source: {source_id}")
+        if restatement.get("content_role") != "source_restatement":
+            raise ValueError(f"Restatement declares the wrong content role: {source_id}")
     return records_by_collection
 
 
@@ -482,13 +565,25 @@ def _verify_assertion_contract(
     expected_entities: dict[str, set[str]] = {}
     expected_features: dict[str, set[str]] = {}
     for assertion_id, assertion in assertions.items():
+        feature_subjects = {
+            entity_id
+            for feature_id in assertion.feature_ids
+            for entity_id in feature_links.get(feature_id, {}).get("entity_ids", [])
+        }
         linked_entities = set(assertion.subject_entity_ids)
-        if assertion.object.entity_id:
-            linked_entities.add(assertion.object.entity_id)
-        if any(entity_id not in entities for entity_id in linked_entities):
+        if any(
+            entity_id not in entities and entity_id not in feature_subjects
+            for entity_id in linked_entities
+        ):
             raise ValueError(
                 f"Evidence assertion references a missing entity: {assertion_id}"
             )
+        if assertion.object.entity_id and assertion.object.entity_id not in entities:
+            raise ValueError(
+                f"Evidence assertion object references a missing entity: {assertion_id}"
+            )
+        if assertion.object.entity_id:
+            linked_entities.add(assertion.object.entity_id)
         if any(feature_id not in feature_links for feature_id in assertion.feature_ids):
             raise ValueError(
                 f"Evidence assertion references a missing feature: {assertion_id}"

@@ -7,8 +7,8 @@
       "claim_id": "draft-claim:copernicus-authorship",
       "text": "The Library of Congress record names Nicolaus Copernicus as creator and associates him with De revolutionibus in its publication note.",
       "entity_ids": [
-        "historyjoice:person:nicolaus-copernicus",
-        "historyjoice:work:de-revolutionibus"
+        "palimpsest:person:nicolaus-copernicus",
+        "palimpsest:work:de-revolutionibus"
       ],
       "valid_from": 1543,
       "valid_to": 1543,
@@ -37,10 +37,10 @@
       "claim_id": "draft-claim:publication",
       "text": "The publication note places De revolutionibus in Nuremberg in 1543 and names I. Petreius in the imprint.",
       "entity_ids": [
-        "historyjoice:event:de-revolutionibus-publication",
-        "historyjoice:institution:petreius-workshop",
-        "historyjoice:place:nuremberg",
-        "historyjoice:work:de-revolutionibus"
+        "palimpsest:event:de-revolutionibus-publication",
+        "palimpsest:institution:petreius-workshop",
+        "palimpsest:place:nuremberg",
+        "palimpsest:work:de-revolutionibus"
       ],
       "valid_from": 1543,
       "valid_to": 1543,
@@ -71,7 +71,7 @@
       "claim_id": "draft-claim:subject",
       "text": "The catalog title describes the title page as stating that the sun, rather than Earth, is the center of the universe.",
       "entity_ids": [
-        "historyjoice:work:de-revolutionibus"
+        "palimpsest:work:de-revolutionibus"
       ],
       "valid_from": 1543,
       "valid_to": 1543,

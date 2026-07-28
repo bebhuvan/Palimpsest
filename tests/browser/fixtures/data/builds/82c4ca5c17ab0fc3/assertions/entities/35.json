@@ -1,0 +1,8 @@
+{
+  "palimpsest:institution:petreius-workshop": {
+    "assertion_ids": [
+      "assertion:publication-event-printed-by-petreius"
+    ],
+    "subject_id": "palimpsest:institution:petreius-workshop"
+  }
+}

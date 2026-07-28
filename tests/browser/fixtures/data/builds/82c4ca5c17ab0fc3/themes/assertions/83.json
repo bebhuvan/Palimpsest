@@ -1,0 +1,49 @@
+{
+  "theme:5b5f48a7e65db003": {
+    "assertion_id": "theme:5b5f48a7e65db003",
+    "classification_basis": "explicit_source_type",
+    "confidence": {
+      "grade": "B",
+      "rationale": "The event has an explicit structured cultural type."
+    },
+    "entity_ids": [
+      "palimpsest:event:de-revolutionibus-publication",
+      "palimpsest:institution:petreius-workshop",
+      "palimpsest:person:nicolaus-copernicus",
+      "palimpsest:place:nuremberg",
+      "palimpsest:work:de-revolutionibus"
+    ],
+    "feature_ids": [
+      "palimpsest:publication-de-revolutionibus:1543"
+    ],
+    "matched_values": [
+      "kind:event",
+      "properties.event_types:publication"
+    ],
+    "rationale": "The event directly concerns public culture, art, performance, commemoration, or publishing.",
+    "review_status": "provisional",
+    "role": "primary",
+    "rule_id": "theme-rule:event-culture-types",
+    "source_refs": [
+      {
+        "checksum_sha256": "295aea5847ce5d9afa801bbd2f46ab4c45a437e5dacfc37b7157a284011a6aab",
+        "citation": "Library of Congress, item 92516339, title page from the 1543 Nuremberg edition.",
+        "license_id": "PDM-1.0",
+        "modified": false,
+        "publisher": "Library of Congress",
+        "record_id": "92516339",
+        "retrieved_at": "2026-07-23T06:00:00Z",
+        "source_id": "loc_copernicus",
+        "title": "Title page of De revolutionibus orbium coelestium",
+        "url": "https://www.loc.gov/pictures/item/92516339/",
+        "version": "browser-pilot-curated-snapshot-v1"
+      }
+    ],
+    "subject_id": "palimpsest:publication-de-revolutionibus:1543",
+    "subject_kind": "event",
+    "subtheme": "cultural_events",
+    "theme": "culture",
+    "valid_from": 1543,
+    "valid_to": 1543
+  }
+}

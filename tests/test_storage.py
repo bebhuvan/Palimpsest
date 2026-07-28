@@ -16,15 +16,15 @@ def test_offline_cache_requires_same_url_and_valid_checksum(
 ) -> None:
     destination = tmp_path / "raw" / "source.json"
     httpx_mock.add_response(url="https://example.org/v1.json", content=b'{"version":1}')
-    with DownloadCache(tmp_path / "cache", "HistoryJoice/test") as downloads:
+    with DownloadCache(tmp_path / "cache", "Palimpsest/test") as downloads:
         downloads.fetch("https://example.org/v1.json", destination)
 
-    with DownloadCache(tmp_path / "cache", "HistoryJoice/test", offline=True) as downloads:
+    with DownloadCache(tmp_path / "cache", "Palimpsest/test", offline=True) as downloads:
         with pytest.raises(ValueError, match="URL differs"):
             downloads.fetch("https://example.org/v2.json", destination)
 
     destination.write_bytes(b"tampered")
-    with DownloadCache(tmp_path / "cache", "HistoryJoice/test", offline=True) as downloads:
+    with DownloadCache(tmp_path / "cache", "Palimpsest/test", offline=True) as downloads:
         with pytest.raises(ValueError, match="checksum mismatch"):
             downloads.fetch("https://example.org/v1.json", destination)
 
@@ -36,7 +36,7 @@ def test_offline_cache_rejects_old_transport_metadata(tmp_path: Path) -> None:
     destination.with_suffix(".json.metadata.json").write_text(
         json.dumps({"transport_cache_version": 1}), encoding="utf-8"
     )
-    with DownloadCache(tmp_path / "cache", "HistoryJoice/test", offline=True) as downloads:
+    with DownloadCache(tmp_path / "cache", "Palimpsest/test", offline=True) as downloads:
         with pytest.raises(ValueError, match="stale"):
             downloads.fetch("https://example.org/source.json", destination)
 
@@ -49,7 +49,7 @@ def test_download_cache_retries_transient_server_errors(
     httpx_mock.add_response(content=b"recovered")
     destination = tmp_path / "raw" / "source.bin"
 
-    with DownloadCache(tmp_path / "cache", "HistoryJoice/test") as downloads:
+    with DownloadCache(tmp_path / "cache", "Palimpsest/test") as downloads:
         asset = downloads.fetch("https://example.org/source.bin", destination)
 
     assert destination.read_bytes() == b"recovered"
@@ -64,7 +64,7 @@ def test_download_cache_retries_transport_errors(
     httpx_mock.add_response(content=b"recovered")
     destination = tmp_path / "raw" / "source.bin"
 
-    with DownloadCache(tmp_path / "cache", "HistoryJoice/test") as downloads:
+    with DownloadCache(tmp_path / "cache", "Palimpsest/test") as downloads:
         asset = downloads.fetch("https://example.org/source.bin", destination)
 
     assert destination.read_bytes() == b"recovered"
@@ -79,7 +79,7 @@ def test_download_cache_preserves_content_addressed_versions(
     httpx_mock.add_response(url=url, content=b'{"version":1}')
     httpx_mock.add_response(url=url, content=b'{"version":2}')
 
-    with DownloadCache(tmp_path / "cache", "HistoryJoice/test") as downloads:
+    with DownloadCache(tmp_path / "cache", "Palimpsest/test") as downloads:
         first = downloads.fetch(url, destination)
         second = downloads.fetch(url, destination, force=True)
 
@@ -96,9 +96,9 @@ def test_download_cache_can_resume_a_checkpointed_response_without_network(
     url = "https://example.org/source.json"
     httpx_mock.add_response(url=url, content=b'{"complete":true}')
 
-    with DownloadCache(tmp_path / "cache", "HistoryJoice/test") as downloads:
+    with DownloadCache(tmp_path / "cache", "Palimpsest/test") as downloads:
         first = downloads.fetch(url, destination)
-    with DownloadCache(tmp_path / "cache", "HistoryJoice/test") as downloads:
+    with DownloadCache(tmp_path / "cache", "Palimpsest/test") as downloads:
         resumed = downloads.fetch(url, destination, reuse_cached=True)
 
     assert resumed == first
@@ -109,7 +109,7 @@ def test_download_cache_rejects_oversized_response(
 ) -> None:
     httpx_mock.add_response(content=b"12345")
     with DownloadCache(
-        tmp_path / "cache", "HistoryJoice/test", max_download_bytes=4
+        tmp_path / "cache", "Palimpsest/test", max_download_bytes=4
     ) as downloads:
         with pytest.raises(ValueError, match="size limit"):
             downloads.fetch("https://example.org/large", tmp_path / "raw" / "large")

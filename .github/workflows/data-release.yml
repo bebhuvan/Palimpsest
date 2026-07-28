@@ -38,8 +38,8 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: data/raw
-          key: raw-${{ hashFiles('config/pipeline.yml') }}-${{ github.run_id }}
-          restore-keys: raw-${{ hashFiles('config/pipeline.yml') }}-
+          key: raw-${{ hashFiles('config/pipeline.yml', 'config/research-overlay.yml') }}-${{ github.run_id }}
+          restore-keys: raw-${{ hashFiles('config/pipeline.yml', 'config/research-overlay.yml') }}-
       - uses: actions/cache@v4
         with:
           path: .tools
@@ -55,7 +55,7 @@ jobs:
         run: bash scripts/install-tippecanoe.sh
       - name: Build and verify immutable release
         run: |
-          /usr/bin/time -v -o build-metrics.txt uv run history-data build --enrich --tiles
+          /usr/bin/time -v -o build-metrics.txt uv run history-data build --config config/research-overlay.yml --enrich --tiles --advance-latest
           uv run history-data verify-build --require-tiles
           du -sh data/raw data/staged dist/data >> build-metrics.txt
           {

@@ -1,0 +1,52 @@
+{
+  "assertion:tanegashima-became-matchlock-term": {
+    "assertion_id": "assertion:tanegashima-became-matchlock-term",
+    "confidence": {
+      "grade": "B",
+      "rationale": "The MLIT page explicitly states the later generic usage but does not date when that usage became established."
+    },
+    "date_precision": "year",
+    "evidence_basis": "tertiary_summary",
+    "feature_ids": [
+      "palimpsest:tanegashima-firearms-tradition:1543"
+    ],
+    "object": {
+      "entity_id": null,
+      "kind": "text",
+      "unit": null,
+      "value": "tanegashima became a generic term for matchlock musket",
+      "value_from": null,
+      "value_to": null,
+      "year": null
+    },
+    "predicate": "later_name_association",
+    "representation": "structured_sourced_assertion",
+    "restatement": null,
+    "review_status": "provisional",
+    "source_citations": [],
+    "source_excerpt": null,
+    "source_excerpt_checksum_sha256": null,
+    "source_refs": [
+      {
+        "checksum_sha256": "295aea5847ce5d9afa801bbd2f46ab4c45a437e5dacfc37b7157a284011a6aab",
+        "citation": "Ministry of Land, Infrastructure, Transport and Tourism, Japan, Early Modern Firearms in Japan, page R4-00195.",
+        "license_id": "PDL-1.0",
+        "modified": false,
+        "publisher": "Ministry of Land, Infrastructure, Transport and Tourism, Japan",
+        "record_id": "R4-00195",
+        "retrieved_at": "2026-07-23T06:00:00Z",
+        "source_id": "mlit_tanegashima",
+        "title": "Early modern firearms in Japan",
+        "url": "https://www.mlit.go.jp/tagengo-db/R4-00195.html",
+        "version": "browser-pilot-curated-snapshot-v1"
+      }
+    ],
+    "subject_entity_ids": [
+      "palimpsest:place:tanegashima",
+      "palimpsest:artifact:matchlock-muskets"
+    ],
+    "temporal_uncertainty": null,
+    "valid_from": 1543,
+    "valid_to": 1543
+  }
+}

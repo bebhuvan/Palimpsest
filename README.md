@@ -1,6 +1,6 @@
-# History Joice
+# Palimpsest
 
-History Joice is an evidence-backed historical geodata pipeline and interactive public map
+Palimpsest is an evidence-backed historical geodata pipeline and interactive public map
 experience spanning 3400 BCE to the present. It does not treat every historical society as a
 precisely bordered state and does not conceal uncertainty or missing coverage.
 
@@ -12,7 +12,8 @@ Each build emits an immutable, content-addressed release under `dist/data/builds
 - PMTiles v3 archives containing separate reviewed geometry and time-sensitive label layers when
   `--tiles` is enabled;
 - indicator observations that retain their original geographic units;
-- static revision-pinned Wiki entities and Wikipedia dossiers when `--enrich` is enabled;
+- static revision-pinned Wiki entities and Wikipedia dossiers when `--enrich` is enabled,
+  plus optional plain-English restatements of those dossiers;
 - a sharded feature → entity → dossier content index for map-click lookup;
 - bounded, date-aware feature context shards for related people, events, places and themes;
 - a coarse region/time discovery index for nearby dated records on map selection;
@@ -49,7 +50,7 @@ contact channel: an email address, an HTTP(S) project/contact page, or a Wikimed
 `User:Name`. It does not require both a URL and an email:
 
 ```bash
-export WIKIMEDIA_USER_AGENT='HistoryJoice/0.1 (https://example.org/history-joice/contact)'
+export WIKIMEDIA_USER_AGENT='Palimpsest/0.1 (https://example.org/palimpsest/contact)'
 uv run history-data build --limit 100 --enrich
 ```
 
@@ -104,6 +105,37 @@ confidence and limitations and never treats the scan as authoritative geography.
 institutional map is enabled in the open-core profile; the browser pilot uses a deterministic
 synthetic fixture.
 
+Selected public Seshat variables enrich Cliopatria polities at build time through the exact
+`SeshatID` carried by the geometry release. Population and territory estimates remain numeric
+ranges; institutional variables retain their coded value, date interval, uncertainty/dispute
+flags, original explanation, named references, API snapshot checksum and CC BY-SA attribution.
+An uncoded variable remains a coverage gap.
+
+After a build has staged those assertions, DeepSeek Flash can make the explanatory notes easier to
+read:
+
+```bash
+make restate-seshat
+uv run history-data build --offline --enrich
+```
+
+This changes wording, not data. Each one- or two-sentence restatement is derived from exactly one
+Seshat explanation, checked so it introduces no new number or proper noun, and bound to the source
+text's checksum. The selected-year panel shows the structured value first, labels the generated
+wording with its actual model, and keeps the original Seshat explanation and references available.
+A failed or stale restatement is omitted. See the complete
+[Seshat integration guide](docs/seshat-integration.md) for its screen placement, data flow,
+supported variables, operational commands, fallbacks, and licensing rules.
+
+World Historical Gazetteer serves a different purpose: historical-name reconciliation and
+reviewed authority links rather than polity facts or replacement geometry. Because Palimpsest
+is non-commercial, a bounded WHG pilot can live in the separate research distribution profile
+after authenticated responses, per-namespace attribution, checksums, and editorial decisions are
+captured. With a local `WHG_API_TOKEN`, run `make acquire-whg`; all returned identities remain
+proposed until review. Run `make acquire-whg-western-ghats` to refresh the bounded,
+non-production ten-record specialist-dataset preview. It does not enable or publish the layer.
+See the [WHG integration decision](docs/whg-integration.md).
+
 Build the deterministic schema 1.10 browser pilot and exercise place selection end to end:
 
 ```bash
@@ -116,6 +148,63 @@ one revision-pinned enriched record and bounded context plus one deliberate miss
 record, so browser tests cover map selection, search selection, successful joins, and honest
 missing-dossier states without live Wikimedia requests or generated prose. It also contains the
 synthetic rights-approved historical-map fixture used to test image rendering.
+
+Wikipedia leads answer "what is this now, administratively". A visitor standing on a map at a
+chosen year asked something else. The restatement tier re-serves one revision-pinned extract in
+plain English with the history first, and publishes it beside the original rather than instead of
+it:
+
+```bash
+uv run history-data restate-dossiers \
+  --dossiers data/staged/canonical/dossiers.ndjson \
+  --output data/editorial/restatements.ndjson \
+  --provider deepseek --model deepseek-v4-flash --limit 25
+```
+
+A restatement combines nothing and adds no claim, so it needs no per-claim human review. What it
+needs instead is mechanical proof that it stayed inside its source: every number and proper noun in
+the output must already appear in the input, a deny list rejects unlicensed evaluative register,
+and the output may not be longer than the source. Failures are dropped and the reader falls back to
+the source extract, so a false positive costs coverage and never correctness. A restatement is
+bound to one source checksum and disappears from the release when that revision changes. Like real
+dossier generation, this is an explicit build-time action needing an API key and a named `--model`;
+the browser application contains no LLM client or credential. OpenAI and DeepSeek are both
+supported; a provider that cannot enforce a response schema receives the contract in the prompt
+and is validated locally instead. See the
+[restatement tier](docs/dossier-restatement.md).
+
+A year page answers a different question again: not "what is this place" but "what was happening".
+`build-chronicle` ingests a Wikipedia year article and its topic and country companions as dated
+records; `build-year-context` adds what the year article does not know about itself, namely which
+wars Wikidata records as running across the year and which Commons pictures clear the release
+licence policy file by file; `year-dossier` writes the prose:
+
+```bash
+uv run history-data build-chronicle --year 1543 --output data/chronicle/1543.json
+uv run history-data build-year-context --year 1543 \
+  --chronicle data/chronicle/1543.json --output data/chronicle/1543-context.json
+uv run history-data year-dossier --chronicle data/chronicle/1543.json \
+  --lenses data/chronicle/1543-lenses.json --context data/chronicle/1543-context.json \
+  --output data/chronicle/1543-dossier.json --provider deepseek --model deepseek-v4-flash
+```
+
+Most of a year dossier is not written. The lede is assembled from the year's three
+most-written-about records in the sources' own words, the register carries every record verbatim,
+the offices held, the wars in progress and the cross-links to the 44 other years a single year
+names are all rendered rather than narrated, and who was born, who died and what was made are
+shown as faces and rows rather than as paragraphs of commas. The prominent few carry one restated
+sentence saying who or what they were — never why they mattered, which is the claim an unreviewed
+tier cannot earn.
+
+A build publishes whatever years are ready as `years/{year}.json` plus a `years/index.json`, and
+`verify-build` re-proves them from the release alone: every picture cleared again against the
+release licence policy, every file still matching its own checksum, and the index agreeing with
+each dossier about which other years it reaches. What is left for prose is checked twice: once against
+the whole year and once against each block's own evidence, so a paragraph cannot borrow a name
+from a record it is not about. Render one and read it with
+`scripts/render-year-dossier.py`. See the [year dossier](docs/year-dossier.md), which also records
+the measured rate at which two true facts get fused into a false one, and what that measurement
+does and does not support.
 
 Build the deterministic 1543 editorial-dossier pilots:
 
@@ -190,3 +279,10 @@ releases.
 The build-time [source integration framework](docs/source-integration-framework.md) covers reviewed
 authority-reconciliation snapshots and IIIF georeference metadata. These artifacts never cause the
 visitor-facing application to query WHG, Getty, Allmaps, IIIF providers, or any other third party.
+
+Because this deployment is non-commercial, `make build-release` and the data-release workflow use
+the reviewed `config/research-overlay.yml` profile. That makes accepted Getty TGN and
+OpenStreetMap authority links available to the record drawer. To produce the narrower,
+commercially redistributable release instead, run
+`make build-release PIPELINE_CONFIG=config/pipeline.yml`; the profiles remain deliberately
+separate, and the effective configuration participates in the immutable build ID.

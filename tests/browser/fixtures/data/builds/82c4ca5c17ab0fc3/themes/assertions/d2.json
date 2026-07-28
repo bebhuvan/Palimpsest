@@ -1,0 +1,52 @@
+{
+  "theme:183bf9280741599f": {
+    "assertion_id": "theme:183bf9280741599f",
+    "classification_basis": "explicit_source_relation",
+    "confidence": {
+      "grade": "C",
+      "rationale": "The page identifies matchlock weapons and later military importance, but this event alone does not establish their political effects."
+    },
+    "entity_ids": [
+      "palimpsest:artifact:matchlock-muskets",
+      "palimpsest:event:tanegashima-firearms-encounter",
+      "palimpsest:group:portuguese-traders-tanegashima",
+      "palimpsest:person:tanegashima-tokitaka",
+      "palimpsest:person:yaita-kinbei",
+      "palimpsest:place:tanegashima",
+      "palimpsest:work:teppoki"
+    ],
+    "feature_ids": [
+      "palimpsest:tanegashima-firearms-tradition:1543"
+    ],
+    "matched_values": [
+      "source:mlit_tanegashima",
+      "kind:event",
+      "properties.event_types:weapons_transfer"
+    ],
+    "rationale": "The power lens marks the weapon context without claiming that one encounter caused later unification or military change.",
+    "review_status": "provisional",
+    "role": "contextual",
+    "rule_id": "theme-rule:tanegashima-weapons",
+    "source_refs": [
+      {
+        "checksum_sha256": "295aea5847ce5d9afa801bbd2f46ab4c45a437e5dacfc37b7157a284011a6aab",
+        "citation": "Ministry of Land, Infrastructure, Transport and Tourism, Japan, Early Modern Firearms in Japan, page R4-00195.",
+        "license_id": "PDL-1.0",
+        "modified": false,
+        "publisher": "Ministry of Land, Infrastructure, Transport and Tourism, Japan",
+        "record_id": "R4-00195",
+        "retrieved_at": "2026-07-23T06:00:00Z",
+        "source_id": "mlit_tanegashima",
+        "title": "Early modern firearms in Japan",
+        "url": "https://www.mlit.go.jp/tagengo-db/R4-00195.html",
+        "version": "browser-pilot-curated-snapshot-v1"
+      }
+    ],
+    "subject_id": "palimpsest:tanegashima-firearms-tradition:1543",
+    "subject_kind": "event",
+    "subtheme": "military_technology",
+    "theme": "power",
+    "valid_from": 1543,
+    "valid_to": 1543
+  }
+}

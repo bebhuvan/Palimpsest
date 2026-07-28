@@ -47,6 +47,7 @@ def source_reference(
     url: str | None = None,
     title: str | None = None,
     retrieved_at: datetime | None = None,
+    modified: bool = False,
 ) -> SourceReference:
     return SourceReference(
         source_id=source.id,
@@ -59,6 +60,7 @@ def source_reference(
         version=source.version,
         checksum_sha256=asset.checksum_sha256,
         citation=source.citation,
+        modified=modified,
     )
 
 

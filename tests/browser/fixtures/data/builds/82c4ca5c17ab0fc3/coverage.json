@@ -1,0 +1,87 @@
+[
+  {
+    "bounds": [
+      120.0,
+      30.0,
+      150.0,
+      60.0
+    ],
+    "cell_id": "g30:10:4",
+    "confidence_counts": {
+      "C": 1
+    },
+    "feature_count": 1,
+    "layer": "event",
+    "reviewed_count": 0,
+    "valid_from": 1500,
+    "valid_to": 1799
+  },
+  {
+    "bounds": [
+      -30.0,
+      30.0,
+      0.0,
+      60.0
+    ],
+    "cell_id": "g30:5:4",
+    "confidence_counts": {
+      "B": 1
+    },
+    "feature_count": 1,
+    "layer": "event",
+    "reviewed_count": 0,
+    "valid_from": 1500,
+    "valid_to": 1799
+  },
+  {
+    "bounds": [
+      0.0,
+      0.0,
+      30.0,
+      30.0
+    ],
+    "cell_id": "g30:6:3",
+    "confidence_counts": {
+      "B": 2
+    },
+    "feature_count": 2,
+    "layer": "polity",
+    "reviewed_count": 2,
+    "valid_from": 1,
+    "valid_to": 499
+  },
+  {
+    "bounds": [
+      0.0,
+      30.0,
+      30.0,
+      60.0
+    ],
+    "cell_id": "g30:6:4",
+    "confidence_counts": {
+      "C": 1
+    },
+    "feature_count": 1,
+    "layer": "event",
+    "reviewed_count": 0,
+    "valid_from": 1500,
+    "valid_to": 1799
+  },
+  {
+    "bounds": [
+      30.0,
+      0.0,
+      60.0,
+      30.0
+    ],
+    "cell_id": "g30:7:3",
+    "confidence_counts": {
+      "B": 1
+    },
+    "feature_count": 1,
+    "layer": "polity",
+    "reviewed_count": 1,
+    "valid_from": 1,
+    "valid_to": 499
+  }
+]

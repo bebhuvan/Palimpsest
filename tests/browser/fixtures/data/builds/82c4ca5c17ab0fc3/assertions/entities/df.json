@@ -1,0 +1,9 @@
+{
+  "palimpsest:place:tanegashima": {
+    "assertion_ids": [
+      "assertion:tanegashima-became-matchlock-term",
+      "assertion:tanegashima-encounter-occurred-on-island"
+    ],
+    "subject_id": "palimpsest:place:tanegashima"
+  }
+}

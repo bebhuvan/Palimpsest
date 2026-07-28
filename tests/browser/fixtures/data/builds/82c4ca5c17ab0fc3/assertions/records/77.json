@@ -1,0 +1,51 @@
+{
+  "assertion:tanegashima-encounter-described-in-teppoki": {
+    "assertion_id": "assertion:tanegashima-encounter-described-in-teppoki",
+    "confidence": {
+      "grade": "A",
+      "rationale": "The MLIT page explicitly says that the events are described in the Teppoki."
+    },
+    "date_precision": "year",
+    "evidence_basis": "tertiary_summary",
+    "feature_ids": [
+      "palimpsest:tanegashima-firearms-tradition:1543"
+    ],
+    "object": {
+      "entity_id": "palimpsest:work:teppoki",
+      "kind": "entity",
+      "unit": null,
+      "value": null,
+      "value_from": null,
+      "value_to": null,
+      "year": null
+    },
+    "predicate": "described_in",
+    "representation": "structured_sourced_assertion",
+    "restatement": null,
+    "review_status": "provisional",
+    "source_citations": [],
+    "source_excerpt": null,
+    "source_excerpt_checksum_sha256": null,
+    "source_refs": [
+      {
+        "checksum_sha256": "295aea5847ce5d9afa801bbd2f46ab4c45a437e5dacfc37b7157a284011a6aab",
+        "citation": "Ministry of Land, Infrastructure, Transport and Tourism, Japan, Early Modern Firearms in Japan, page R4-00195.",
+        "license_id": "PDL-1.0",
+        "modified": false,
+        "publisher": "Ministry of Land, Infrastructure, Transport and Tourism, Japan",
+        "record_id": "R4-00195",
+        "retrieved_at": "2026-07-23T06:00:00Z",
+        "source_id": "mlit_tanegashima",
+        "title": "Early modern firearms in Japan",
+        "url": "https://www.mlit.go.jp/tagengo-db/R4-00195.html",
+        "version": "browser-pilot-curated-snapshot-v1"
+      }
+    ],
+    "subject_entity_ids": [
+      "palimpsest:event:tanegashima-firearms-encounter"
+    ],
+    "temporal_uncertainty": null,
+    "valid_from": 1543,
+    "valid_to": 1543
+  }
+}

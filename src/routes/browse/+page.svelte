@@ -15,8 +15,10 @@
     type SearchRecord,
     type StaticSearchIndex
   } from '$lib/data';
-  import { formatRange, formatYear, normalizeYear } from '$lib/history';
+  import { eraForYear, eraLabel, formatRange, formatYear, normalizeYear } from '$lib/history';
   import { HISTORICAL_LENSES, isHistoricalLens, lensDefinition, recordMatchesLens, type HistoricalLens } from '$lib/lenses';
+  import { availableYears, loadYearIndex } from '$lib/year-data';
+  import LensMark from '$lib/components/LensMark.svelte';
 
   const DATA_BASE = (import.meta.env.VITE_DATA_BASE as string | undefined) || '/data';
   let release: LoadedRelease | null = null;
@@ -31,6 +33,7 @@
   let visibleCount = 48;
   let loadedPageCount = 0;
   let filterRequest = 0;
+  let yearsWithDossier: Set<number> = new Set();
 
   $: normalizedQuery = query.trim().toLocaleLowerCase();
   $: filtered = records.filter((record) => {
@@ -41,7 +44,7 @@
     return matchesQuery && matchesEntity && matchesLens && matchesYear;
   }).sort(compareRecords);
   $: yearRecords = year === null ? records : records.filter((record) => recordActiveInYear(record, year!));
-  $: featuredRecords = filtered.filter((record) => record.entity_id.startsWith('historyjoice:')).slice(0, 6);
+  $: featuredRecords = filtered.filter((record) => record.entity_id.startsWith('palimpsest:')).slice(0, 6);
   $: featuredIds = new Set(featuredRecords.map((record) => record.entity_id));
   $: showEditorialFrame = year !== null && !normalizedQuery && !entity;
   $: archiveRecords = showEditorialFrame ? filtered.filter((record) => !featuredIds.has(record.entity_id)) : filtered;
@@ -50,6 +53,7 @@
     .filter((option) => option.id !== 'all')
     .map((option) => ({ ...option, count: yearRecords.filter((record) => recordMatchesLens(record, option.id)).length }));
   $: selectedLens = lensDefinition(lens);
+  $: hasDossier = year !== null && yearsWithDossier.has(year);
 
   function displayName(record: SearchRecord): string {
     return displayNameForYear(record, year ?? record.valid_from);
@@ -71,8 +75,8 @@
   }
 
   function compareRecords(left: SearchRecord, right: SearchRecord): number {
-    const leftCurated = left.entity_id.startsWith('historyjoice:') ? 0 : 1;
-    const rightCurated = right.entity_id.startsWith('historyjoice:') ? 0 : 1;
+    const leftCurated = left.entity_id.startsWith('palimpsest:') ? 0 : 1;
+    const rightCurated = right.entity_id.startsWith('palimpsest:') ? 0 : 1;
     const leftSpan = left.valid_to - left.valid_from;
     const rightSpan = right.valid_to - right.valid_from;
     return leftCurated - rightCurated || leftSpan - rightSpan || displayName(left).localeCompare(displayName(right));
@@ -154,6 +158,9 @@
     if (Number.isFinite(candidateYear) && candidateYear !== 0) year = normalizeYear(candidateYear);
     try {
       release = await loadRelease(DATA_BASE);
+      void loadYearIndex(release).then((index) => {
+        yearsWithDossier = availableYears(index);
+      });
       staticSearchIndex = await loadStaticSearchIndex(release);
       if (staticSearchIndex) {
         await refreshRecords();
@@ -170,42 +177,70 @@
   });
 </script>
 
+
 <svelte:head>
-  <title>{year ? `The world in ${formatYear(year)}` : 'Browse history'} — History Joice</title>
-  <meta name="description" content={year ? `Explore source-backed places and stories active in ${formatYear(year)}.` : 'An accessible text view of the historical records published in the current History Joice release.'} />
+  <title>{year ? `The world in ${formatYear(year)}` : 'Browse history'} — Palimpsest</title>
+  <meta name="description" content={year ? `Explore source-backed places and stories active in ${formatYear(year)}.` : 'An accessible text view of the historical records published in the current Palimpsest release.'} />
 </svelte:head>
 
-<header class="browse-header">
-  <a class="brand" href="/"><span>History Joice</span><small>World history map</small></a>
-  <a class="map-link" href={`/?${new URLSearchParams({ ...(year ? { year: String(year) } : {}), ...(lens !== 'all' ? { lens } : {}) })}`}>Return to the map <span aria-hidden="true">↗</span></a>
+<header class="masthead">
+  <a class="brand" href="/">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <span>Palimpsest</span>
+  </a>
+  <a class="to-map" href={`/?${new URLSearchParams({ ...(year ? { year: String(year) } : {}), ...(lens !== 'all' ? { lens } : {}) })}`}>Return to the map <span aria-hidden="true">↗</span></a>
 </header>
 
 <main>
-  <header class="year-hero">
-    <div class="hero-kicker"><span>Year view</span><i></i><span>{year ? 'Early modern archive' : 'Across the archive'}</span></div>
-    <div class="hero-copy">
-      <p class="year-mark">{year ? formatYear(year) : 'All years'}</p>
-      <h1>{year ? `The world in ${year < 0 ? `${Math.abs(year).toLocaleString('en')} BCE` : year.toLocaleString('en')}` : 'Explore the historical record'}</h1>
-      <p>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="hero-kicker">
+        <span class="hj-numeral">{year ? formatYear(year) : 'All years'}</span>
+        <i></i>
+        <span>{year ? eraLabel(eraForYear(year)).replace('Archive · ', 'Archive ') : 'Across the archive'}</span>
+      </p>
+
+      <h1>{year ? `The world in ${year < 0 ? `${Math.abs(year)} BCE` : year}` : 'Explore the historical record'}</h1>
+
+      <p class="hero-note">
         {year
-          ? `A source-aware reading of places, events and longer historical continuities that intersect ${formatYear(year)}. Start with the deliberately researched stories, then explore the wider archive.`
+          ? `A source-aware reading of the places, events and longer continuities that intersect ${formatYear(year)}. Start with the deliberately researched records, then follow the wider archive.`
           : 'Search places and historical records across the published archive, with source roles and uncertainty kept visible.'}
       </p>
+
+      {#if year}
+        <nav class="year-nav" aria-label="Move between years">
+          <a href={`/browse?year=${normalizeYear(year - 1, year)}`}><span aria-hidden="true">←</span> {formatYear(normalizeYear(year - 1, year))}</a>
+          {#if hasDossier}
+            <a class="map-cta" href={`/year?year=${year}`}>Read {formatYear(year)} <span aria-hidden="true">→</span></a>
+            <a class="secondary-cta" href={`/?year=${year}${lens !== 'all' ? `&lens=${lens}` : ''}`}>Open on the map <span aria-hidden="true">↗</span></a>
+          {:else}
+            <a class="map-cta" href={`/?year=${year}${lens !== 'all' ? `&lens=${lens}` : ''}`}>Open {formatYear(year)} on the map <span aria-hidden="true">↗</span></a>
+          {/if}
+          <a href={`/browse?year=${normalizeYear(year + 1, year)}`}>{formatYear(normalizeYear(year + 1, year))} <span aria-hidden="true">→</span></a>
+        </nav>
+      {/if}
     </div>
-    {#if year}
-      <nav class="year-nav" aria-label="Move between years">
-        <a href={`/browse?year=${normalizeYear(year - 1, year)}`} aria-label={`Open ${formatYear(normalizeYear(year - 1, year))}`}>← {formatYear(normalizeYear(year - 1, year))}</a>
-        <a class="map-cta" href={`/?year=${year}${lens !== 'all' ? `&lens=${lens}` : ''}`}>Explore {formatYear(year)} on the map <span>↗</span></a>
-        <a href={`/browse?year=${normalizeYear(year + 1, year)}`} aria-label={`Open ${formatYear(normalizeYear(year + 1, year))}`}>{formatYear(normalizeYear(year + 1, year))} →</a>
-      </nav>
-    {/if}
   </header>
 
   <section class="filters" aria-label="Filter historical records">
-    <label><span>Name or alternate name</span><input type="search" bind:value={query} oninput={() => { entity = ''; visibleCount = 48; void refreshRecords(); }} placeholder="Search this historical world" /></label>
-    <label><span>Active in year <small>(negative for BCE)</small></span><input type="number" value={year ?? ''} min="-3400" max="2026" oninput={applyYear} placeholder="Any year" /></label>
-    <label><span>Historical lens</span><select bind:value={lens} onchange={() => (visibleCount = 48)}>{#each HISTORICAL_LENSES as option}<option value={option.id}>{option.label}</option>{/each}</select></label>
-    {#if query || year !== null || entity || lens !== 'all'}<button onclick={() => { query = ''; year = null; entity = ''; lens = 'all'; visibleCount = 48; void refreshRecords(); }}>Clear filters</button>{/if}
+    <label>
+      <span class="hj-label">Name or alternate name</span>
+      <input type="search" bind:value={query} oninput={() => { entity = ''; visibleCount = 48; void refreshRecords(); }} placeholder="Search this historical world" />
+    </label>
+    <label>
+      <span class="hj-label">Active in year</span>
+      <input type="number" value={year ?? ''} min="-3400" max="2026" oninput={applyYear} placeholder="Any year — negative for BCE" />
+    </label>
+    <label>
+      <span class="hj-label">Historical lens</span>
+      <select bind:value={lens} onchange={() => (visibleCount = 48)}>
+        {#each HISTORICAL_LENSES as option}<option value={option.id}>{option.label}</option>{/each}
+      </select>
+    </label>
+    {#if query || year !== null || entity || lens !== 'all'}
+      <button onclick={() => { query = ''; year = null; entity = ''; lens = 'all'; visibleCount = 48; void refreshRecords(); }}>Clear filters</button>
+    {/if}
   </section>
 
   {#if loading}
@@ -214,202 +249,315 @@
     <p class="status error" role="alert">{errorMessage}</p>
   {:else}
     {#if showEditorialFrame}
-      <section class="year-reading" aria-labelledby="year-reading-title">
-        <div class="reading-intro">
-          <p class="eyebrow">How to read this year</p>
-          <h2 id="year-reading-title">A year is a cross-section,<br />not a list of events.</h2>
-          <p>{yearRecords.length.toLocaleString()} records intersect this date, but only {exactYearRecords.toLocaleString()} are bounded to {formatYear(year!)} itself. The rest are places, institutions or reconstructions with longer date ranges. Presence here means “active or attested,” not “began this year.”</p>
+      <section class="cross-section" aria-labelledby="cross-section-title">
+        <div class="cross-copy">
+          <p class="hj-section-label">How to read this year</p>
+          <h2 id="cross-section-title">A year is a cross-section, not a list of events.</h2>
+          <p class="hj-prose">
+            {yearRecords.length.toLocaleString('en')} records intersect {formatYear(year!)}, but only
+            {exactYearRecords.toLocaleString('en')} {exactYearRecords === 1 ? 'is' : 'are'} bounded to the year itself.
+            The rest are places, institutions and reconstructions with longer date ranges. Presence here means
+            “active or attested”, never “began this year”.
+          </p>
         </div>
-        <dl class="year-stats">
-          <div><dt>{yearRecords.length.toLocaleString()}</dt><dd>records intersect this year</dd></div>
-          <div><dt>{exactYearRecords.toLocaleString()}</dt><dd>records bounded to this year</dd></div>
-          <div><dt>{featuredRecords.length.toLocaleString()}</dt><dd>deliberately researched starting points</dd></div>
-        </dl>
+
+        <!-- The proportion is the argument, so it is measured rather than asserted:
+             the sliver of year-bounded records is exactly the point being made. -->
+        <figure class="proportion">
+          <div class="bar" role="img" aria-label={`${exactYearRecords} of ${yearRecords.length} records are bounded to this year`}>
+            <span class="bounded" style={`width: ${yearRecords.length ? Math.max((exactYearRecords / yearRecords.length) * 100, 0.6) : 0}%`}></span>
+          </div>
+          <figcaption>
+            <span><b class="hj-numeral">{exactYearRecords.toLocaleString('en')}</b> bounded to {formatYear(year!)}</span>
+            <span class="rest"><b class="hj-numeral">{(yearRecords.length - exactYearRecords).toLocaleString('en')}</b> spanning it</span>
+          </figcaption>
+        </figure>
       </section>
 
       {#if featuredRecords.length}
         <section class="featured" aria-labelledby="featured-title">
           <header>
-            <div><p class="eyebrow">Begin with a story</p><h2 id="featured-title">Evidence-backed paths into {formatYear(year!)}</h2></div>
-            <p>These records were deliberately curated for this pilot. Their map locations are reading anchors, not claims that history happened at a single point.</p>
+            <div>
+              <p class="hj-section-label">Begin with a record</p>
+              <h2 id="featured-title">Evidence-backed paths into {formatYear(year!)}</h2>
+            </div>
+            <p class="hj-note">Deliberately curated for this pilot. Their map locations are reading anchors, not claims that history happened at a single point.</p>
           </header>
-          <ol>
-            {#each featuredRecords as record, index (record.entity_id)}
+          <ul>
+            {#each featuredRecords as record (record.entity_id)}
               <li>
                 <a href={mapHref(record)}>
-                  <div class="feature-number">0{index + 1}</div>
-                  <div class="feature-body">
-                    <p class="source-line">{sourceLabel(record)} · {record.kind.replaceAll('_', ' ')}</p>
-                    <h3>{displayName(record)}</h3>
-                    {#if alternateNames(record).length}<p class="alternate">{alternateNames(record).slice(0, 2).join(' · ')}</p>{/if}
-                    <div class="theme-row">{#each record.themes ?? [] as theme}<span>{lensDefinition(theme as HistoricalLens).marker} {lensDefinition(theme as HistoricalLens).shortLabel}</span>{/each}</div>
+                  <p class="source-line">{sourceLabel(record)} · {record.kind.replaceAll('_', ' ')}</p>
+                  <h3>{displayName(record)}</h3>
+                  {#if alternateNames(record).length}<p class="alternate">{alternateNames(record).slice(0, 2).join(' · ')}</p>{/if}
+                  <div class="marks">
+                    {#each record.themes ?? [] as theme}
+                      <span><LensMark lens={theme as HistoricalLens} size={11} />{lensDefinition(theme as HistoricalLens).shortLabel}</span>
+                    {/each}
                   </div>
-                  <span class="feature-action">Open story on map ↗</span>
+                  <span class="go">Open on the map <i aria-hidden="true">↗</i></span>
                 </a>
               </li>
             {/each}
-          </ol>
+          </ul>
         </section>
       {/if}
 
-      <section class="lens-overview" aria-labelledby="lens-title">
-        <header><p class="eyebrow">Change the question</p><h2 id="lens-title">Read {formatYear(year!)} through a lens</h2></header>
-        <div class="lens-grid">
+      <section class="lenses" aria-labelledby="lens-title">
+        <header>
+          <p class="hj-section-label">Change the question</p>
+          <h2 id="lens-title">Read {formatYear(year!)} through a lens</h2>
+        </header>
+        <ul>
           {#each lensCounts as option}
-            <a class:active={lens === option.id} href={`/browse?year=${year}&lens=${option.id}`} style={`--accent:${option.accent}`}>
-              <span>{option.marker}</span>
-              <strong>{option.shortLabel}</strong>
-              <p>{option.description}</p>
-              <small>{option.count.toLocaleString()} sourced classification{option.count === 1 ? '' : 's'} →</small>
-            </a>
+            <li>
+              <a class:active={lens === option.id} href={`/browse?year=${year}&lens=${option.id}`}>
+                <span class="mark"><LensMark lens={option.id} size={22} /></span>
+                <strong>{option.shortLabel}</strong>
+                <p>{option.description}</p>
+                <small class="hj-numeral">{option.count.toLocaleString('en')} sourced classification{option.count === 1 ? '' : 's'} <i aria-hidden="true">→</i></small>
+              </a>
+            </li>
           {/each}
-        </div>
+        </ul>
       </section>
     {/if}
 
     <section class="results" aria-labelledby="results-title">
-      <div class="results-heading">
-        <div><p class="eyebrow">{showEditorialFrame ? 'Continue into the archive' : 'Search results'}</p><h2 id="results-title">{archiveRecords.length.toLocaleString()} {archiveRecords.length === 1 ? 'record' : 'records'}{staticSearchIndex && !query && year === null ? ' loaded' : ''}</h2></div>
-        <p>{year ? `${selectedLens.label} · ${formatYear(year)}` : 'Across all published years'}</p>
-      </div>
+      <header>
+        <div>
+          <p class="hj-section-label">{showEditorialFrame ? 'Continue into the archive' : 'Search results'}</p>
+          <h2 id="results-title"><span class="hj-numeral">{archiveRecords.length.toLocaleString('en')}</span> {archiveRecords.length === 1 ? 'record' : 'records'}{staticSearchIndex && !query && year === null ? ' loaded' : ''}</h2>
+        </div>
+        <p class="hj-meta">{year ? `${selectedLens.label} · ${formatYear(year)}` : 'Across all published years'}</p>
+      </header>
+
       {#if archiveRecords.length}
-        <ol>
+        <ul class="record-grid">
           {#each archiveRecords.slice(0, visibleCount) as record (record.entity_id)}
             <li>
               <a href={mapHref(record)}>
-                <span class="record-kind">{record.kind.replaceAll('_', ' ')} · {sourceLabel(record)}</span>
+                <p class="source-line">{record.kind.replaceAll('_', ' ')} · {sourceLabel(record)}</p>
                 <h3>{displayName(record)}</h3>
-                {#if alternateNames(record).length}<p>{alternateNames(record).slice(0, 3).join(' · ')}</p>{/if}
+                {#if alternateNames(record).length}<p class="alternate">{alternateNames(record).slice(0, 3).join(' · ')}</p>{/if}
                 <footer>
-                  <time>{formatRange(record.valid_from, record.valid_to)}</time>
-                  <span>{record.latitude.toFixed(2)}°, {record.longitude.toFixed(2)}°</span>
-                  {#if record.themes?.length}<em>{record.themes.map((theme) => lensDefinition(theme as HistoricalLens).shortLabel).join(' · ')}</em>{/if}
-                  <b>Read on map →</b>
+                  <time class="hj-numeral">{formatRange(record.valid_from, record.valid_to)}</time>
+                  <span class="hj-numeral">{record.latitude.toFixed(1)}°, {record.longitude.toFixed(1)}°</span>
+                  {#if record.themes?.length}
+                    <em>{record.themes.map((theme) => lensDefinition(theme as HistoricalLens).shortLabel).join(' · ')}</em>
+                  {/if}
                 </footer>
               </a>
             </li>
           {/each}
-        </ol>
-        {#if visibleCount < archiveRecords.length || (staticSearchIndex && !query && year === null && loadedPageCount < staticSearchIndex.pages.pages.length)}<button class="show-more" onclick={() => void showMore()}>Show 48 more <span>{Math.min(visibleCount, archiveRecords.length).toLocaleString()} shown</span></button>{/if}
-      {:else}<p class="empty">No records match these filters. A gap in this index is not evidence that nothing existed.</p>{/if}
+        </ul>
+        {#if visibleCount < archiveRecords.length || (staticSearchIndex && !query && year === null && loadedPageCount < staticSearchIndex.pages.pages.length)}
+          <button class="show-more" onclick={() => void showMore()}>
+            Show 48 more
+            <span class="hj-numeral">{Math.min(visibleCount, archiveRecords.length).toLocaleString('en')} shown</span>
+          </button>
+        {/if}
+      {:else}
+        <p class="empty">No records match these filters. A gap in this index is not evidence that nothing existed.</p>
+      {/if}
     </section>
   {/if}
 
-  <footer class="release-footer">{#if release}Release {release.manifest.build_id} · generated {new Date(release.manifest.generated_at).toLocaleDateString('en', { year: 'numeric', month: 'long', day: 'numeric' })}{/if}</footer>
+  <footer class="release-footer hj-mono">
+    {#if release}Release {release.manifest.build_id} · generated {new Date(release.manifest.generated_at).toLocaleDateString('en', { year: 'numeric', month: 'long', day: 'numeric' })}{/if}
+  </footer>
 </main>
 
 <style>
-  :global(*) { box-sizing: border-box; }
-  :global(:root) { font-family: 'Manrope', 'Inter', system-ui, sans-serif; color: #172320; background: #f3f0e8; }
-  :global(body) { margin: 0; }
-  :global(button), :global(input), :global(select) { font: inherit; }
-  :global(a:focus-visible), :global(button:focus-visible), :global(input:focus-visible), :global(select:focus-visible) { outline: 2px solid #c9874d; outline-offset: 3px; }
-  .browse-header { height: 68px; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; border-bottom: 1px solid rgba(220, 225, 216, .28); background: #162b28; color: #f4f0e6; }
-  .brand { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; color: inherit; text-decoration: none; }
-  .brand span { font-size: 14px; font-weight: 650; letter-spacing: -.01em; }
-  .brand small { color: #aab9b3; font-size: 8px; font-weight: 500; }
-  .map-link { color: #e6ddd0; font-size: 10px; font-weight: 600; letter-spacing: .01em; text-underline-offset: 4px; }
-  main { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
-  .year-hero { margin: 0 calc((100vw - min(1180px, calc(100vw - 48px))) / -2); padding: 42px max(24px, calc((100vw - 1180px) / 2)) 50px; background: #162b28; color: #f4f0e6; }
-  .hero-kicker { display: flex; align-items: center; gap: 12px; color: #b7c5bf; font: 9px 'DM Mono', monospace; letter-spacing: .11em; text-transform: uppercase; }
-  .hero-kicker i { width: 34px; height: 1px; background: #7e938b; }
-  .hero-copy { display: grid; grid-template-columns: 180px minmax(400px, 1fr) minmax(250px, 390px); gap: 28px; align-items: end; padding: 72px 0 54px; }
-  .year-mark { margin: 0; color: #d59a64; font: 15px 'DM Mono', monospace; }
-  .hero-copy h1 { margin: 0; max-width: 650px; font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(52px, 6.5vw, 92px); font-weight: 400; line-height: .88; letter-spacing: -.045em; }
-  .hero-copy > p:last-child { margin: 0; max-width: 380px; color: #c4cec9; font-size: 13px; line-height: 1.75; }
-  .year-nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 25px; border-top: 1px solid rgba(220, 225, 216, .25); padding-top: 20px; }
-  .year-nav a { color: #bdc9c4; font: 9px 'DM Mono', monospace; letter-spacing: .04em; text-decoration: none; text-transform: uppercase; }
-  .year-nav a:last-child { justify-self: end; }
-  .year-nav .map-cta { justify-self: center; padding: 13px 20px; border: 1px solid #d59a64; color: #f4f0e6; }
-  .year-nav .map-cta:hover { background: #d59a64; color: #162b28; }
-  .filters { position: sticky; top: 0; z-index: 5; display: grid; grid-template-columns: minmax(240px, 1fr) 190px 210px auto; align-items: end; gap: 18px; margin: 0 calc((100vw - min(1180px, calc(100vw - 48px))) / -2); padding: 18px max(24px, calc((100vw - 1180px) / 2)); border-bottom: 1px solid #aeb5ae; background: rgba(243, 240, 232, .96); backdrop-filter: blur(14px); }
-  .filters label { display: flex; flex-direction: column; gap: 7px; color: #5d6764; font: 8px 'DM Mono', monospace; letter-spacing: .07em; text-transform: uppercase; }
-  .filters label small { font-size: 7px; text-transform: none; }
-  .filters input, .filters select { height: 43px; padding: 0 12px; border: 1px solid #9fa6a1; border-radius: 0; background: #fbf9f3; color: #1c2725; font-size: 12px; }
-  .filters button { height: 43px; padding: 0 14px; border: 1px solid #46524f; background: transparent; color: #34413e; cursor: pointer; font-size: 9px; text-transform: uppercase; }
-  .status, .empty { padding: 50px 0; color: #5d6764; font-family: 'Instrument Serif', Georgia, serif; font-size: 24px; }
-  .status.error { color: #7f382e; }
-  .eyebrow { margin: 0 0 14px; color: #89536a; font: 8px 'DM Mono', monospace; letter-spacing: .1em; text-transform: uppercase; }
-  .year-reading { display: grid; grid-template-columns: 1.3fr 1fr; gap: 70px; padding: 80px 0; border-bottom: 1px solid #acb4ad; }
-  .reading-intro h2 { margin: 0 0 25px; font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(38px, 5vw, 63px); font-weight: 400; line-height: .98; letter-spacing: -.025em; }
-  .reading-intro > p:last-child { max-width: 650px; margin: 0; color: #58635f; font-size: 13px; line-height: 1.75; }
-  .year-stats { display: grid; grid-template-columns: repeat(3, 1fr); align-self: end; margin: 0; border-top: 1px solid #9ba59e; border-left: 1px solid #9ba59e; }
-  .year-stats div { min-height: 145px; padding: 20px 16px; border-right: 1px solid #9ba59e; border-bottom: 1px solid #9ba59e; }
-  .year-stats dt { color: #1d4741; font-family: 'Instrument Serif', Georgia, serif; font-size: 42px; line-height: 1; }
-  .year-stats dd { margin: 40px 0 0; color: #606b67; font: 8px/1.5 'DM Mono', monospace; text-transform: uppercase; }
-  .featured { padding: 78px 0; border-bottom: 1px solid #acb4ad; }
-  .featured > header { display: grid; grid-template-columns: 1fr 360px; gap: 50px; align-items: end; margin-bottom: 34px; }
-  .featured h2, .lens-overview h2 { margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(38px, 4.5vw, 58px); font-weight: 400; line-height: 1; letter-spacing: -.02em; }
-  .featured > header > p { margin: 0; color: #5d6864; font-size: 12px; line-height: 1.7; }
-  .featured ol { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin: 0; padding: 1px; background: #929c95; list-style: none; }
-  .featured li { min-width: 0; background: #f8f5ed; }
-  .featured a { min-height: 330px; display: flex; flex-direction: column; padding: 23px; color: inherit; text-decoration: none; transition: background .2s ease, transform .2s ease; }
-  .featured a:hover { background: #ede5d9; transform: translateY(-3px); }
-  .feature-number { color: #96724e; font: 9px 'DM Mono', monospace; }
-  .feature-body { margin-top: 68px; }
-  .source-line { margin: 0 0 12px; color: #7c4c60; font: 8px 'DM Mono', monospace; letter-spacing: .04em; text-transform: uppercase; }
-  .featured h3 { margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-size: 31px; font-weight: 400; line-height: 1.05; }
-  .featured .alternate { margin: 9px 0 0; color: #65706b; font-size: 9px; }
-  .theme-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 20px; }
-  .theme-row span { padding: 6px 8px; border: 1px solid #a8afa8; color: #52605b; font: 7px 'DM Mono', monospace; text-transform: uppercase; }
-  .feature-action { margin-top: auto; color: #24564f; font: 8px 'DM Mono', monospace; text-transform: uppercase; }
-  .lens-overview { padding: 78px 0; border-bottom: 1px solid #acb4ad; }
-  .lens-overview > header { margin-bottom: 32px; }
-  .lens-grid { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid #9aa39d; border-left: 1px solid #9aa39d; }
-  .lens-grid a { min-height: 230px; display: flex; flex-direction: column; padding: 20px 18px; border-right: 1px solid #9aa39d; border-bottom: 1px solid #9aa39d; color: inherit; text-decoration: none; }
-  .lens-grid a:hover, .lens-grid a.active { box-shadow: inset 0 4px var(--accent); background: #faf7ef; }
-  .lens-grid a > span { color: var(--accent); font-size: 20px; }
-  .lens-grid strong { margin-top: 32px; font-family: 'Instrument Serif', Georgia, serif; font-size: 24px; font-weight: 400; }
-  .lens-grid p { margin: 10px 0 0; color: #68716e; font-size: 9px; line-height: 1.5; }
-  .lens-grid small { margin-top: auto; color: #405852; font: 7px 'DM Mono', monospace; text-transform: uppercase; }
-  .results { padding: 76px 0 60px; }
-  .results-heading { display: flex; justify-content: space-between; align-items: end; padding-bottom: 18px; }
-  .results-heading h2 { margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-size: 38px; font-weight: 400; line-height: 1; }
-  .results-heading > p { margin: 0; color: #67716e; font: 8px 'DM Mono', monospace; text-transform: uppercase; }
-  .results ol { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0; padding: 0; border-top: 1px solid #929b96; border-left: 1px solid #929b96; list-style: none; }
-  .results li { min-width: 0; border-right: 1px solid #929b96; border-bottom: 1px solid #929b96; }
-  .results li a { min-height: 190px; display: flex; flex-direction: column; padding: 18px 20px; color: inherit; text-decoration: none; }
-  .results li a:hover { background: #e8e7df; }
-  .record-kind { color: #754259; font: 7px 'DM Mono', monospace; letter-spacing: .04em; }
-  .results h3 { margin: 12px 0 5px; font-family: 'Instrument Serif', Georgia, serif; font-size: 25px; line-height: 1.05; font-weight: 400; letter-spacing: -.01em; }
-  .results li p { margin: 0; color: #66706d; font-size: 9px; }
-  .results li footer { display: grid; grid-template-columns: 1fr auto; gap: 5px 15px; margin-top: auto; padding-top: 18px; color: #626c69; font: 7px 'DM Mono', monospace; text-transform: uppercase; }
-  .results li footer em { grid-column: 1 / -1; color: #7d5666; font-style: normal; }
-  .results li footer b { grid-column: 1 / -1; color: #294b47; font-weight: 600; }
-  .show-more { width: 100%; display: flex; justify-content: space-between; margin-top: 15px; padding: 13px 16px; border: 1px solid #8e9692; background: transparent; color: #35423f; cursor: pointer; font: 9px 'DM Mono', monospace; text-transform: uppercase; }
-  .show-more:hover { background: #e6e7e1; }
-  .release-footer { padding: 20px 0 35px; border-top: 1px solid #bfc3bf; color: #707976; font: 7px 'DM Mono', monospace; text-transform: uppercase; }
-  @media (max-width: 980px) {
-    .hero-copy { grid-template-columns: 130px 1fr; }
-    .hero-copy > p:last-child { grid-column: 2; }
-    .year-reading { grid-template-columns: 1fr; gap: 40px; }
-    .featured ol { grid-template-columns: repeat(2, 1fr); }
-    .lens-grid { grid-template-columns: repeat(2, 1fr); }
-    .results ol { grid-template-columns: repeat(2, 1fr); }
+  :global(body) { background: var(--bg); color: var(--text); }
+
+  .masthead {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--s-6);
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--text);
   }
+  .brand { display: flex; align-items: center; gap: var(--s-3); color: inherit; font-family: var(--font-display); font-size: var(--t-md); text-decoration: none; }
+  .brand-mark {
+    width: 17px;
+    height: 17px;
+    flex: none;
+    border: 1px solid var(--accent);
+    background: linear-gradient(to right, transparent calc(50% - 0.5px), var(--accent) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+  }
+  .to-map { color: var(--accent); font-size: var(--t-sm); font-weight: 500; text-decoration: none; }
+  .to-map:hover { color: var(--accent-hover); text-decoration: underline; text-underline-offset: 4px; }
+
+  main { --gutter: max(var(--s-5), calc((100vw - 1180px) / 2)); }
+
+  /* A single left-aligned column. The previous hero end-aligned three columns with
+     72px of internal padding, which left a dead band across its middle. */
+  .hero { padding: var(--s-8) var(--gutter) var(--s-7); border-bottom: 1px solid var(--line); background: var(--surface); color: var(--text); }
+  /* The hero is a column, not a spread. Constraining it keeps the rule under the
+     headline the same width as the headline instead of stranding the text at the left. */
+  .hero-inner { max-width: 940px; }
+  .hero-kicker { display: flex; align-items: center; gap: var(--s-3); margin: 0 0 var(--s-5); color: var(--accent); font-size: var(--t-xs); font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; }
+  .hero-kicker i { width: 32px; height: 1px; background: var(--accent-line); }
+
+  .hero h1 {
+    max-width: 15ch;
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(44px, 6.4vw, 86px);
+    font-weight: 300;
+    line-height: 0.96;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+  }
+  .hero-note { max-width: 56ch; margin: var(--s-5) 0 0; color: var(--text-dim); font-family: var(--font-display); font-size: var(--t-md); line-height: var(--lh-body); }
+
+  .year-nav { display: flex; align-items: center; gap: var(--s-5); margin-top: var(--s-7); padding-top: var(--s-4); border-top: 1px solid var(--line); }
+  .year-nav a { color: var(--text-dim); font-size: var(--t-sm); text-decoration: none; }
+  .year-nav a:hover { color: var(--accent); }
+  .year-nav a:last-child { margin-left: auto; }
+  .year-nav .map-cta { margin-left: auto; padding: var(--s-3) var(--s-4); border: 1px solid var(--accent); background: var(--accent); color: #fff; font-weight: 600; }
+  .year-nav .map-cta:hover { border-color: var(--accent-hover); background: var(--accent-hover); color: #fff; }
+  .year-nav .secondary-cta { padding: var(--s-3) var(--s-4); border: 1px solid var(--line-strong); color: var(--text-dim); }
+  .year-nav .secondary-cta:hover { border-color: var(--accent); color: var(--accent); }
+
+  .filters {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: minmax(240px, 1fr) 200px 220px auto;
+    align-items: end;
+    gap: var(--s-4);
+    padding: var(--s-4) var(--gutter);
+    border-bottom: 1px solid var(--line-strong);
+    background: rgb(246 247 252 / 0.92);
+    backdrop-filter: blur(12px);
+  }
+  .filters label { display: flex; flex-direction: column; gap: var(--s-2); color: var(--text-faint); }
+  .filters input, .filters select {
+    height: 42px;
+    padding: 0 var(--s-3);
+    border: 1px solid var(--line-strong);
+    border-radius: 0;
+    background: var(--surface);
+    color: var(--text);
+    font-size: var(--t-sm);
+  }
+  .filters input:focus-visible, .filters select:focus-visible { outline-color: var(--accent); }
+  .filters button { height: 42px; padding: 0 var(--s-4); border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; font-size: var(--t-xs); font-weight: 600; }
+  .filters button:hover { background: var(--accent); color: #fff; }
+
+  main > section, main > .status, main > .release-footer { padding-inline: var(--gutter); }
+
+  .status, .empty { padding-block: var(--s-8); color: var(--text-dim); font-family: var(--font-display); font-size: var(--t-lg); }
+  .status.error { color: var(--conf-d); }
+
+  h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(30px, 3.6vw, 46px);
+    font-weight: 300;
+    line-height: 1.02;
+    letter-spacing: -0.028em;
+    text-wrap: balance;
+  }
+
+  .cross-section { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: var(--s-8); padding-block: var(--s-9); border-bottom: 1px solid var(--line); }
+  .cross-copy h2 { max-width: 24ch; margin-bottom: var(--s-5); }
+  .cross-copy .hj-prose { max-width: 60ch; }
+
+  .proportion { align-self: end; margin: 0; }
+  .proportion .bar { height: 14px; border: 1px solid var(--line-strong); background: repeating-linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px 5px); }
+  .proportion .bounded { display: block; height: 100%; min-width: 3px; background: var(--accent); }
+  .proportion figcaption { display: flex; justify-content: space-between; gap: var(--s-4); margin-top: var(--s-3); color: var(--text-dim); font-size: var(--t-sm); }
+  .proportion b { font-family: var(--font-display); font-size: var(--t-lg); font-weight: 400; }
+  .proportion .rest { color: var(--text-faint); text-align: right; }
+
+  .featured, .lenses { padding-block: var(--s-9); border-bottom: 1px solid var(--line); }
+  .featured > header { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 360px); gap: var(--s-7); align-items: end; margin-bottom: var(--s-6); }
+  .lenses > header { margin-bottom: var(--s-6); }
+
+  .featured ul, .lenses ul, .record-grid { margin: 0; padding: 0; list-style: none; }
+
+  .featured ul { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .featured li { min-width: 0; background: var(--surface); }
+  .featured a { min-height: 232px; display: flex; flex-direction: column; padding: var(--s-5); color: inherit; text-decoration: none; transition: background 0.2s var(--ease); }
+  .featured a:hover { background: var(--accent-soft); }
+  .featured h3 { margin: 0; font-family: var(--font-display); font-size: var(--t-xl); font-weight: 400; line-height: 1.08; letter-spacing: -0.02em; }
+
+  .source-line { margin: 0 0 var(--s-3); color: var(--text-faint); font-size: var(--t-xs); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+  .alternate { margin: var(--s-2) 0 0; color: var(--text-faint); font-size: var(--t-xs); }
+
+  .marks { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-top: var(--s-4); }
+  .marks span { display: inline-flex; align-items: center; gap: 5px; padding: 4px var(--s-2); border: 1px solid var(--line-strong); color: var(--text-dim); font-size: var(--t-xs); }
+  .marks span :global(svg) { color: var(--text-dim); }
+
+  .go { margin-top: auto; padding-top: var(--s-5); color: var(--accent); font-size: var(--t-xs); font-weight: 600; }
+  .featured a:hover .go i { display: inline-block; transform: translate(2px, -2px); }
+  .go i { font-style: normal; transition: transform 0.16s var(--ease); }
+
+  .lenses ul { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .lenses li { min-width: 0; background: var(--surface); }
+  .lenses a { min-height: 200px; display: flex; flex-direction: column; padding: var(--s-4); color: inherit; text-decoration: none; }
+  .lenses a:hover, .lenses a.active { background: var(--accent-soft); }
+  .lenses a.active { box-shadow: inset 0 3px 0 var(--accent); }
+  .lenses .mark { color: var(--accent); font-size: var(--t-lg); line-height: 1; }
+  .lenses strong { margin-top: var(--s-5); font-family: var(--font-display); font-size: var(--t-lg); font-weight: 400; }
+  .lenses p { margin: var(--s-2) 0 0; color: var(--text-faint); font-size: var(--t-xs); line-height: 1.5; }
+  .lenses small { margin-top: auto; padding-top: var(--s-4); color: var(--text-dim); font-size: var(--t-xs); font-weight: 500; }
+  .lenses small i { font-style: normal; }
+
+  .results { padding-block: var(--s-9) var(--s-7); }
+  .results > header { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-5); margin-bottom: var(--s-5); }
+
+  .record-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .record-grid li { min-width: 0; background: var(--surface); }
+  .record-grid a { min-height: 180px; display: flex; flex-direction: column; padding: var(--s-4); color: inherit; text-decoration: none; transition: background 0.2s var(--ease); }
+  .record-grid a:hover { background: var(--accent-soft); }
+  .record-grid h3 { margin: 0; font-family: var(--font-display); font-size: var(--t-lg); font-weight: 400; line-height: 1.1; letter-spacing: -0.014em; }
+  .record-grid footer { display: grid; gap: var(--s-1); margin-top: auto; padding-top: var(--s-4); color: var(--text-faint); font-size: var(--t-xs); }
+  .record-grid footer em { color: var(--text-dim); font-style: normal; }
+
+  .show-more {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--s-4);
+    padding: var(--s-4);
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    font-size: var(--t-sm);
+    font-weight: 500;
+  }
+  .show-more span { color: var(--text-faint); }
+  .show-more:hover { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+
+  .release-footer { padding-block: var(--s-4) var(--s-7); border-top: 1px solid var(--line); color: var(--text-faint); }
+
+  @media (max-width: 1080px) {
+    .cross-section { grid-template-columns: 1fr; gap: var(--s-6); }
+    .featured ul { grid-template-columns: repeat(2, 1fr); }
+    .lenses ul { grid-template-columns: repeat(3, 1fr); }
+    .record-grid { grid-template-columns: repeat(2, 1fr); }
+    .filters { grid-template-columns: 1fr 1fr; }
+  }
+
   @media (max-width: 720px) {
-    .browse-header { padding: 0 16px; }
-    main { width: min(100% - 28px, 1180px); }
-    .year-hero { margin-inline: -14px; padding: 32px 14px 38px; }
-    .hero-copy { grid-template-columns: 1fr; gap: 25px; padding: 48px 0 40px; }
-    .hero-copy > p:last-child { grid-column: auto; }
-    .year-nav { grid-template-columns: 1fr 1fr; }
-    .year-nav .map-cta { grid-column: 1 / -1; grid-row: 1; width: 100%; text-align: center; }
-    .filters { grid-template-columns: 1fr 1fr; gap: 12px; }
-    .filters button { grid-column: 1 / -1; }
-    .year-stats { grid-template-columns: 1fr; }
-    .year-stats div { min-height: 105px; }
-    .year-stats dd { margin-top: 20px; }
-    .featured > header { grid-template-columns: 1fr; gap: 20px; }
-    .featured ol, .results ol { grid-template-columns: 1fr; }
-    .featured a { min-height: 270px; }
-    .feature-body { margin-top: 45px; }
-  }
-  @media (max-width: 440px) {
-    .map-link { font-size: 0; }
-    .map-link span { font-size: 16px; }
-    .filters { grid-template-columns: 1fr; }
-    .filters button { grid-column: auto; }
-    .lens-grid { grid-template-columns: 1fr; }
+    .masthead { padding-inline: var(--s-4); }
+    .hero { padding-block: var(--s-6) var(--s-6); }
+    .year-nav { flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-6); }
+    .year-nav .map-cta { order: -1; width: 100%; margin-left: 0; text-align: center; }
+    .year-nav a:last-child { margin-left: auto; }
+    .featured > header { grid-template-columns: 1fr; gap: var(--s-4); }
+    .featured ul, .lenses ul, .record-grid { grid-template-columns: 1fr; }
+    .featured a { min-height: 0; }
+    .cross-section, .featured, .lenses, .results { padding-block: var(--s-7); }
+    .results > header { flex-direction: column; align-items: flex-start; gap: var(--s-2); }
   }
 </style>

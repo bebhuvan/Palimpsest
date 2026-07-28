@@ -1,6 +1,6 @@
 # Community contribution boundary
 
-History Joice now defines contracts and lifecycle invariants for future community proposals. It
+Palimpsest now defines contracts and lifecycle invariants for future community proposals. It
 does not provide a submission endpoint, accounts, discussion UI, social features, or a
 general-purpose CMS. `CommunityProposal` records are editorial inputs and are never members of the
 published canonical feature, entity, name, assertion, source, or historical-map collections.

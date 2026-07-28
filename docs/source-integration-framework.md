@@ -42,9 +42,13 @@ can qualify for open core after version/checksum review. WHG says to respect eac
 the WHG platform documentation is CC BY-NC 4.0. Platform-derived snapshots are therefore
 research-only unless a selected underlying dataset carries separately reviewed open terms.
 
-No WHG or Getty dataset/response snapshot is enabled yet. Selecting the first bounded input,
-recording its immutable checksum, and reviewing contributor/source attribution remain publication
-decisions.
+The research profile now enables a `direct_authority` pilot derived from WHG discovery: four Getty
+TGN records and one OpenStreetMap node are fetched from their official APIs, checksum-validated,
+and emitted as reviewed close matches under their own ODC-By/ODbL rights. The adapter records WHG
+only in transformation lineage, preventing WHG's platform licence from obscuring the rights and
+attribution of the actual authority record. The sanitized WHG candidate snapshot remains
+editorial evidence rather than visitor data. See the [WHG integration
+decision](whg-integration.md).
 
 ### Allmaps-compatible IIIF historical-map metadata
 

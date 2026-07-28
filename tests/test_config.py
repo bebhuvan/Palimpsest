@@ -14,12 +14,20 @@ def test_open_core_and_research_overlay_are_distinct_enforceable_profiles() -> N
 
     assert core.distribution_profile == "open_core"
     assert core.license_policy.mode == "commercial"
+    assert core.publication_requirements.require_year_pages is True
+    assert core.publication_requirements.minimum_feature_entity_coverage == 0.40
+    assert core.publication_requirements.minimum_feature_dossier_coverage == 0.45
     assert "CC-BY-NC-4.0" not in core.license_policy.allowed
     assert research.distribution_profile == "research"
     assert research.license_policy.mode == "noncommercial"
     assert "CC-BY-NC-4.0" in research.license_policy.allowed
-    assert [source.id for source in research.sources[:-1]] == [
+    assert [source.id for source in research.sources[: len(core.sources)]] == [
         source.id for source in core.sources
+    ]
+    assert [source.id for source in research.sources[len(core.sources) :]] == [
+        "getty_tgn_authority_pilot",
+        "osm_authority_pilot",
+        "whg_reconciliation",
     ]
     assert research.sources[-1].id == "whg_reconciliation"
     assert research.sources[-1].distribution_tier == "research_only"

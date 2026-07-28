@@ -24,7 +24,7 @@ def load_theme_rules(path: Path | None) -> tuple[ThemeRuleSet, str | None]:
     """Load the reviewed classifier and retain its bytes in the build identity."""
 
     if path is None:
-        return ThemeRuleSet(authored_by="History Joice", rules=[]), None
+        return ThemeRuleSet(authored_by="Palimpsest", rules=[]), None
     if not path.is_file():
         raise FileNotFoundError(f"Configured theme rule file is missing: {path}")
     payload = path.read_bytes()

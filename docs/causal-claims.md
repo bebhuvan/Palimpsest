@@ -1,6 +1,6 @@
 # Causal claims contract
 
-History Joice publishes causal explanations as attributed historiographical arguments, not facts
+Palimpsest publishes causal explanations as attributed historiographical arguments, not facts
 derived from Wikidata, Wikipedia links, temporal sequence or spatial proximity.
 
 ## Public graph

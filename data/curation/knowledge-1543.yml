@@ -1,9 +1,9 @@
 schema_version: 1.0.0
-authored_by: History Joice editorial team
+authored_by: Palimpsest editorial team
 reviewed_by: []
 
 features:
-  - feature_id: historyjoice:publication-de-revolutionibus:1543
+  - feature_id: palimpsest:publication-de-revolutionibus:1543
     kind: event
     spatial_meaning: location
     names:
@@ -37,11 +37,11 @@ features:
         checksum_sha256: b469f51efe363b4b149a61cb1c1f1ce2eadeb2636b2d4ed9df22d884ac50a0dd
         citation: "Library of Congress, item 92516339, title page from the 1543 Nuremberg edition."
     entity_ids:
-      - historyjoice:event:de-revolutionibus-publication
-      - historyjoice:work:de-revolutionibus
-      - historyjoice:person:nicolaus-copernicus
-      - historyjoice:institution:petreius-workshop
-      - historyjoice:place:nuremberg
+      - palimpsest:event:de-revolutionibus-publication
+      - palimpsest:work:de-revolutionibus
+      - palimpsest:person:nicolaus-copernicus
+      - palimpsest:institution:petreius-workshop
+      - palimpsest:place:nuremberg
     wikidata_ids:
       - Q20951088
       - Q845981
@@ -62,8 +62,9 @@ features:
     properties:
       event_types: [publication]
       knowledge_domains: [astronomy, heliocentrism]
+      year_dossier_years: [1543]
 
-  - feature_id: historyjoice:royal-cedula-vasco-de-quiroga:1543
+  - feature_id: palimpsest:royal-cedula-vasco-de-quiroga:1543
     kind: event
     spatial_meaning: location
     names:
@@ -97,12 +98,12 @@ features:
         checksum_sha256: 6a97893bb98a13ba2a0f5943aa3e5e4604a06120b5f130208c5dda14db3de2f2
         citation: "Library of Congress, Hans Peter Kraus Collection, item mss31013-03800, royal cedula dated 23 August 1543."
     entity_ids:
-      - historyjoice:event:royal-cedula-vasco-de-quiroga
-      - historyjoice:person:philip-prince-later-philip-ii
-      - historyjoice:person:vasco-de-quiroga
-      - historyjoice:place:valladolid
-      - historyjoice:place:michoacan
-      - historyjoice:concept:ordinances-for-treatment-in-the-indies
+      - palimpsest:event:royal-cedula-vasco-de-quiroga
+      - palimpsest:person:philip-prince-later-philip-ii
+      - palimpsest:person:vasco-de-quiroga
+      - palimpsest:place:valladolid
+      - palimpsest:place:michoacan
+      - palimpsest:concept:ordinances-for-treatment-in-the-indies
     wikidata_ids:
       - Q2990920
     wikipedia_titles:
@@ -124,7 +125,7 @@ features:
       exact_date: "1543-08-23"
       named_destination: Michoacán
 
-  - feature_id: historyjoice:tanegashima-firearms-tradition:1543
+  - feature_id: palimpsest:tanegashima-firearms-tradition:1543
     kind: event
     spatial_meaning: location
     names:
@@ -159,13 +160,13 @@ features:
         checksum_sha256: ef40320221503715e22e6f2acf7ad0c536469533c8ae8ddb6d18cf1f391139e5
         citation: "Ministry of Land, Infrastructure, Transport and Tourism, Japan, Early Modern Firearms in Japan, page R4-00195."
     entity_ids:
-      - historyjoice:event:tanegashima-firearms-encounter
-      - historyjoice:place:tanegashima
-      - historyjoice:person:tanegashima-tokitaka
-      - historyjoice:person:yaita-kinbei
-      - historyjoice:artifact:matchlock-muskets
-      - historyjoice:work:teppoki
-      - historyjoice:group:portuguese-traders-tanegashima
+      - palimpsest:event:tanegashima-firearms-encounter
+      - palimpsest:place:tanegashima
+      - palimpsest:person:tanegashima-tokitaka
+      - palimpsest:person:yaita-kinbei
+      - palimpsest:artifact:matchlock-muskets
+      - palimpsest:work:teppoki
+      - palimpsest:group:portuguese-traders-tanegashima
     wikidata_ids:
       - Q358057
     wikipedia_titles:
@@ -188,7 +189,7 @@ features:
       source_tradition_completed: early_seventeenth_century
 
 entities:
-  - entity_id: historyjoice:person:nicolaus-copernicus
+  - entity_id: palimpsest:person:nicolaus-copernicus
     entity_type: human
     entity_kind: person
     names:
@@ -203,7 +204,7 @@ entities:
     review_status: provisional
     source_refs: [*loc]
 
-  - entity_id: historyjoice:event:de-revolutionibus-publication
+  - entity_id: palimpsest:event:de-revolutionibus-publication
     entity_type: publication_event
     entity_kind: event
     names:
@@ -217,7 +218,7 @@ entities:
     review_status: provisional
     source_refs: [*loc]
 
-  - entity_id: historyjoice:institution:petreius-workshop
+  - entity_id: palimpsest:institution:petreius-workshop
     entity_type: printing_workshop
     entity_kind: institution
     names:
@@ -226,7 +227,7 @@ entities:
     review_status: provisional
     source_refs: [*loc]
 
-  - entity_id: historyjoice:work:de-revolutionibus
+  - entity_id: palimpsest:work:de-revolutionibus
     entity_type: written_work
     entity_kind: work
     names:
@@ -241,7 +242,7 @@ entities:
     review_status: provisional
     source_refs: [*loc]
 
-  - entity_id: historyjoice:place:nuremberg
+  - entity_id: palimpsest:place:nuremberg
     entity_type: human_settlement
     entity_kind: place
     names:
@@ -250,7 +251,7 @@ entities:
     review_status: provisional
     source_refs: [*loc]
 
-  - entity_id: historyjoice:event:royal-cedula-vasco-de-quiroga
+  - entity_id: palimpsest:event:royal-cedula-vasco-de-quiroga
     entity_type: royal_order_event
     entity_kind: event
     names:
@@ -264,7 +265,7 @@ entities:
     review_status: provisional
     source_refs: [*loc_new_laws]
 
-  - entity_id: historyjoice:person:philip-prince-later-philip-ii
+  - entity_id: palimpsest:person:philip-prince-later-philip-ii
     entity_type: human
     entity_kind: person
     names:
@@ -272,7 +273,7 @@ entities:
     review_status: provisional
     source_refs: [*loc_new_laws]
 
-  - entity_id: historyjoice:person:vasco-de-quiroga
+  - entity_id: palimpsest:person:vasco-de-quiroga
     entity_type: human
     entity_kind: person
     names:
@@ -280,7 +281,7 @@ entities:
     review_status: provisional
     source_refs: [*loc_new_laws]
 
-  - entity_id: historyjoice:place:valladolid
+  - entity_id: palimpsest:place:valladolid
     entity_type: human_settlement
     entity_kind: place
     names:
@@ -288,7 +289,7 @@ entities:
     review_status: provisional
     source_refs: [*loc_new_laws]
 
-  - entity_id: historyjoice:place:michoacan
+  - entity_id: palimpsest:place:michoacan
     entity_type: administrative_destination
     entity_kind: place
     names:
@@ -296,7 +297,7 @@ entities:
     review_status: provisional
     source_refs: [*loc_new_laws]
 
-  - entity_id: historyjoice:concept:ordinances-for-treatment-in-the-indies
+  - entity_id: palimpsest:concept:ordinances-for-treatment-in-the-indies
     entity_type: legal_ordinances
     entity_kind: concept
     names:
@@ -304,7 +305,7 @@ entities:
     review_status: provisional
     source_refs: [*loc_new_laws]
 
-  - entity_id: historyjoice:event:tanegashima-firearms-encounter
+  - entity_id: palimpsest:event:tanegashima-firearms-encounter
     entity_type: maritime_encounter
     entity_kind: event
     names:
@@ -319,7 +320,7 @@ entities:
     review_status: provisional
     source_refs: [*mlit_tanegashima]
 
-  - entity_id: historyjoice:place:tanegashima
+  - entity_id: palimpsest:place:tanegashima
     entity_type: island
     entity_kind: place
     names:
@@ -328,7 +329,7 @@ entities:
     review_status: provisional
     source_refs: [*mlit_tanegashima]
 
-  - entity_id: historyjoice:person:tanegashima-tokitaka
+  - entity_id: palimpsest:person:tanegashima-tokitaka
     entity_type: human
     entity_kind: person
     names:
@@ -343,7 +344,7 @@ entities:
     review_status: provisional
     source_refs: [*mlit_tanegashima]
 
-  - entity_id: historyjoice:person:yaita-kinbei
+  - entity_id: palimpsest:person:yaita-kinbei
     entity_type: human
     entity_kind: person
     names:
@@ -358,7 +359,7 @@ entities:
     review_status: provisional
     source_refs: [*mlit_tanegashima]
 
-  - entity_id: historyjoice:artifact:matchlock-muskets
+  - entity_id: palimpsest:artifact:matchlock-muskets
     entity_type: weapon_type
     entity_kind: artifact
     names:
@@ -367,7 +368,7 @@ entities:
     review_status: provisional
     source_refs: [*mlit_tanegashima]
 
-  - entity_id: historyjoice:work:teppoki
+  - entity_id: palimpsest:work:teppoki
     entity_type: historical_chronicle
     entity_kind: work
     names:
@@ -376,7 +377,7 @@ entities:
     review_status: provisional
     source_refs: [*mlit_tanegashima]
 
-  - entity_id: historyjoice:group:portuguese-traders-tanegashima
+  - entity_id: palimpsest:group:portuguese-traders-tanegashima
     entity_type: merchant_group
     entity_kind: other
     names:
@@ -386,12 +387,12 @@ entities:
 
 assertions:
   - assertion_id: assertion:copernicus-authored-de-revolutionibus
-    subject_entity_ids: [historyjoice:work:de-revolutionibus]
-    feature_ids: [historyjoice:publication-de-revolutionibus:1543]
+    subject_entity_ids: [palimpsest:work:de-revolutionibus]
+    feature_ids: [palimpsest:publication-de-revolutionibus:1543]
     predicate: authored_by
     object:
       kind: entity
-      entity_id: historyjoice:person:nicolaus-copernicus
+      entity_id: palimpsest:person:nicolaus-copernicus
     valid_from: 1543
     valid_to: 1543
     date_precision: year
@@ -403,12 +404,12 @@ assertions:
     source_refs: [*loc]
 
   - assertion_id: assertion:publication-event-published-work
-    subject_entity_ids: [historyjoice:event:de-revolutionibus-publication]
-    feature_ids: [historyjoice:publication-de-revolutionibus:1543]
+    subject_entity_ids: [palimpsest:event:de-revolutionibus-publication]
+    feature_ids: [palimpsest:publication-de-revolutionibus:1543]
     predicate: published_work
     object:
       kind: entity
-      entity_id: historyjoice:work:de-revolutionibus
+      entity_id: palimpsest:work:de-revolutionibus
     valid_from: 1543
     valid_to: 1543
     date_precision: year
@@ -420,12 +421,12 @@ assertions:
     source_refs: [*loc]
 
   - assertion_id: assertion:publication-event-printed-by-petreius
-    subject_entity_ids: [historyjoice:event:de-revolutionibus-publication]
-    feature_ids: [historyjoice:publication-de-revolutionibus:1543]
+    subject_entity_ids: [palimpsest:event:de-revolutionibus-publication]
+    feature_ids: [palimpsest:publication-de-revolutionibus:1543]
     predicate: printed_by
     object:
       kind: entity
-      entity_id: historyjoice:institution:petreius-workshop
+      entity_id: palimpsest:institution:petreius-workshop
     valid_from: 1543
     valid_to: 1543
     date_precision: year
@@ -437,12 +438,12 @@ assertions:
     source_refs: [*loc]
 
   - assertion_id: assertion:publication-event-occurred-in-nuremberg
-    subject_entity_ids: [historyjoice:event:de-revolutionibus-publication]
-    feature_ids: [historyjoice:publication-de-revolutionibus:1543]
+    subject_entity_ids: [palimpsest:event:de-revolutionibus-publication]
+    feature_ids: [palimpsest:publication-de-revolutionibus:1543]
     predicate: publication_place
     object:
       kind: entity
-      entity_id: historyjoice:place:nuremberg
+      entity_id: palimpsest:place:nuremberg
     valid_from: 1543
     valid_to: 1543
     date_precision: year
@@ -454,8 +455,8 @@ assertions:
     source_refs: [*loc]
 
   - assertion_id: assertion:de-revolutionibus-subject-heliocentric-astronomy
-    subject_entity_ids: [historyjoice:work:de-revolutionibus]
-    feature_ids: [historyjoice:publication-de-revolutionibus:1543]
+    subject_entity_ids: [palimpsest:work:de-revolutionibus]
+    feature_ids: [palimpsest:publication-de-revolutionibus:1543]
     predicate: main_subject
     object:
       kind: text
@@ -471,12 +472,12 @@ assertions:
     source_refs: [*loc]
 
   - assertion_id: assertion:royal-cedula-issued-by-prince-philip
-    subject_entity_ids: [historyjoice:event:royal-cedula-vasco-de-quiroga]
-    feature_ids: [historyjoice:royal-cedula-vasco-de-quiroga:1543]
+    subject_entity_ids: [palimpsest:event:royal-cedula-vasco-de-quiroga]
+    feature_ids: [palimpsest:royal-cedula-vasco-de-quiroga:1543]
     predicate: issued_by
     object:
       kind: entity
-      entity_id: historyjoice:person:philip-prince-later-philip-ii
+      entity_id: palimpsest:person:philip-prince-later-philip-ii
     valid_from: 1543
     valid_to: 1543
     date_precision: exact
@@ -488,12 +489,12 @@ assertions:
     source_refs: [*loc_new_laws]
 
   - assertion_id: assertion:royal-cedula-addressed-to-vasco-de-quiroga
-    subject_entity_ids: [historyjoice:event:royal-cedula-vasco-de-quiroga]
-    feature_ids: [historyjoice:royal-cedula-vasco-de-quiroga:1543]
+    subject_entity_ids: [palimpsest:event:royal-cedula-vasco-de-quiroga]
+    feature_ids: [palimpsest:royal-cedula-vasco-de-quiroga:1543]
     predicate: addressed_to
     object:
       kind: entity
-      entity_id: historyjoice:person:vasco-de-quiroga
+      entity_id: palimpsest:person:vasco-de-quiroga
     valid_from: 1543
     valid_to: 1543
     date_precision: exact
@@ -505,12 +506,12 @@ assertions:
     source_refs: [*loc_new_laws]
 
   - assertion_id: assertion:royal-cedula-issued-at-valladolid
-    subject_entity_ids: [historyjoice:event:royal-cedula-vasco-de-quiroga]
-    feature_ids: [historyjoice:royal-cedula-vasco-de-quiroga:1543]
+    subject_entity_ids: [palimpsest:event:royal-cedula-vasco-de-quiroga]
+    feature_ids: [palimpsest:royal-cedula-vasco-de-quiroga:1543]
     predicate: place_of_issue
     object:
       kind: entity
-      entity_id: historyjoice:place:valladolid
+      entity_id: palimpsest:place:valladolid
     valid_from: 1543
     valid_to: 1543
     date_precision: exact
@@ -522,12 +523,12 @@ assertions:
     source_refs: [*loc_new_laws]
 
   - assertion_id: assertion:royal-cedula-directed-to-michoacan
-    subject_entity_ids: [historyjoice:event:royal-cedula-vasco-de-quiroga]
-    feature_ids: [historyjoice:royal-cedula-vasco-de-quiroga:1543]
+    subject_entity_ids: [palimpsest:event:royal-cedula-vasco-de-quiroga]
+    feature_ids: [palimpsest:royal-cedula-vasco-de-quiroga:1543]
     predicate: named_destination
     object:
       kind: entity
-      entity_id: historyjoice:place:michoacan
+      entity_id: palimpsest:place:michoacan
     valid_from: 1543
     valid_to: 1543
     date_precision: exact
@@ -539,12 +540,12 @@ assertions:
     source_refs: [*loc_new_laws]
 
   - assertion_id: assertion:royal-cedula-concerned-treatment-ordinances
-    subject_entity_ids: [historyjoice:event:royal-cedula-vasco-de-quiroga]
-    feature_ids: [historyjoice:royal-cedula-vasco-de-quiroga:1543]
+    subject_entity_ids: [palimpsest:event:royal-cedula-vasco-de-quiroga]
+    feature_ids: [palimpsest:royal-cedula-vasco-de-quiroga:1543]
     predicate: concerned
     object:
       kind: entity
-      entity_id: historyjoice:concept:ordinances-for-treatment-in-the-indies
+      entity_id: palimpsest:concept:ordinances-for-treatment-in-the-indies
     valid_from: 1543
     valid_to: 1543
     date_precision: exact
@@ -557,9 +558,9 @@ assertions:
 
   - assertion_id: assertion:royal-cedula-assigned-ecclesiastical-oversight
     subject_entity_ids:
-      - historyjoice:event:royal-cedula-vasco-de-quiroga
-      - historyjoice:person:vasco-de-quiroga
-    feature_ids: [historyjoice:royal-cedula-vasco-de-quiroga:1543]
+      - palimpsest:event:royal-cedula-vasco-de-quiroga
+      - palimpsest:person:vasco-de-quiroga
+    feature_ids: [palimpsest:royal-cedula-vasco-de-quiroga:1543]
     predicate: assigned_monitoring_role
     object:
       kind: text
@@ -575,8 +576,8 @@ assertions:
     source_refs: [*loc_new_laws]
 
   - assertion_id: assertion:royal-cedula-catalog-date-correction
-    subject_entity_ids: [historyjoice:event:royal-cedula-vasco-de-quiroga]
-    feature_ids: [historyjoice:royal-cedula-vasco-de-quiroga:1543]
+    subject_entity_ids: [palimpsest:event:royal-cedula-vasco-de-quiroga]
+    feature_ids: [palimpsest:royal-cedula-vasco-de-quiroga:1543]
     predicate: catalog_date_note
     object:
       kind: text
@@ -592,12 +593,12 @@ assertions:
     source_refs: [*loc_new_laws]
 
   - assertion_id: assertion:tanegashima-encounter-described-in-teppoki
-    subject_entity_ids: [historyjoice:event:tanegashima-firearms-encounter]
-    feature_ids: [historyjoice:tanegashima-firearms-tradition:1543]
+    subject_entity_ids: [palimpsest:event:tanegashima-firearms-encounter]
+    feature_ids: [palimpsest:tanegashima-firearms-tradition:1543]
     predicate: described_in
     object:
       kind: entity
-      entity_id: historyjoice:work:teppoki
+      entity_id: palimpsest:work:teppoki
     valid_from: 1543
     valid_to: 1543
     date_precision: year
@@ -609,8 +610,8 @@ assertions:
     source_refs: [*mlit_tanegashima]
 
   - assertion_id: assertion:teppoki-completed-early-seventeenth-century
-    subject_entity_ids: [historyjoice:work:teppoki]
-    feature_ids: [historyjoice:tanegashima-firearms-tradition:1543]
+    subject_entity_ids: [palimpsest:work:teppoki]
+    feature_ids: [palimpsest:tanegashima-firearms-tradition:1543]
     predicate: source_distance
     object:
       kind: text
@@ -626,12 +627,12 @@ assertions:
     source_refs: [*mlit_tanegashima]
 
   - assertion_id: assertion:tanegashima-encounter-occurred-on-island
-    subject_entity_ids: [historyjoice:event:tanegashima-firearms-encounter]
-    feature_ids: [historyjoice:tanegashima-firearms-tradition:1543]
+    subject_entity_ids: [palimpsest:event:tanegashima-firearms-encounter]
+    feature_ids: [palimpsest:tanegashima-firearms-tradition:1543]
     predicate: occurred_at
     object:
       kind: entity
-      entity_id: historyjoice:place:tanegashima
+      entity_id: palimpsest:place:tanegashima
     valid_from: 1543
     valid_to: 1543
     date_precision: year
@@ -643,12 +644,12 @@ assertions:
     source_refs: [*mlit_tanegashima]
 
   - assertion_id: assertion:tanegashima-ship-carried-portuguese-traders
-    subject_entity_ids: [historyjoice:event:tanegashima-firearms-encounter]
-    feature_ids: [historyjoice:tanegashima-firearms-tradition:1543]
+    subject_entity_ids: [palimpsest:event:tanegashima-firearms-encounter]
+    feature_ids: [palimpsest:tanegashima-firearms-tradition:1543]
     predicate: included_participants
     object:
       kind: entity
-      entity_id: historyjoice:group:portuguese-traders-tanegashima
+      entity_id: palimpsest:group:portuguese-traders-tanegashima
     valid_from: 1543
     valid_to: 1543
     date_precision: year
@@ -661,13 +662,13 @@ assertions:
 
   - assertion_id: assertion:tanegashima-tokitaka-purchased-matchlocks
     subject_entity_ids:
-      - historyjoice:event:tanegashima-firearms-encounter
-      - historyjoice:person:tanegashima-tokitaka
-    feature_ids: [historyjoice:tanegashima-firearms-tradition:1543]
+      - palimpsest:event:tanegashima-firearms-encounter
+      - palimpsest:person:tanegashima-tokitaka
+    feature_ids: [palimpsest:tanegashima-firearms-tradition:1543]
     predicate: acquired
     object:
       kind: entity
-      entity_id: historyjoice:artifact:matchlock-muskets
+      entity_id: palimpsest:artifact:matchlock-muskets
     valid_from: 1543
     valid_to: 1543
     date_precision: year
@@ -680,14 +681,14 @@ assertions:
 
   - assertion_id: assertion:tanegashima-tokitaka-commissioned-yaita
     subject_entity_ids:
-      - historyjoice:event:tanegashima-firearms-encounter
-      - historyjoice:person:tanegashima-tokitaka
-      - historyjoice:artifact:matchlock-muskets
-    feature_ids: [historyjoice:tanegashima-firearms-tradition:1543]
+      - palimpsest:event:tanegashima-firearms-encounter
+      - palimpsest:person:tanegashima-tokitaka
+      - palimpsest:artifact:matchlock-muskets
+    feature_ids: [palimpsest:tanegashima-firearms-tradition:1543]
     predicate: commissioned_replication_by
     object:
       kind: entity
-      entity_id: historyjoice:person:yaita-kinbei
+      entity_id: palimpsest:person:yaita-kinbei
     valid_from: 1543
     valid_to: 1543
     date_precision: year
@@ -700,9 +701,9 @@ assertions:
 
   - assertion_id: assertion:tanegashima-became-matchlock-term
     subject_entity_ids:
-      - historyjoice:place:tanegashima
-      - historyjoice:artifact:matchlock-muskets
-    feature_ids: [historyjoice:tanegashima-firearms-tradition:1543]
+      - palimpsest:place:tanegashima
+      - palimpsest:artifact:matchlock-muskets
+    feature_ids: [palimpsest:tanegashima-firearms-tradition:1543]
     predicate: later_name_association
     object:
       kind: text

@@ -1,0 +1,917 @@
+{
+  "@context": "https://raw.githubusercontent.com/LinkedPasts/linked-places/master/linkedplaces-context-v1.1.jsonld",
+  "_palimpsest_acquisition": {
+    "dataset_id": 693,
+    "endpoint": "https://whgazetteer.org/entity/dataset:693/api",
+    "provider_checksum_sha256": "2c8fc283f1d4afff5ebed4684c08b14eb1df79f63a961e163f8d66e21cc0b2ad",
+    "provider_feature_count": 55,
+    "retrieved_at": "2026-07-26T10:38:47.455104Z",
+    "schema_version": "1.0.0",
+    "selected_feature_count": 10,
+    "selection": "first 10 records sorted by title and source ID"
+  },
+  "citation": {
+    "DOI": "10.60681/whg-dataset-693",
+    "URL": "https://doi.org/10.5281/zenodo.998080",
+    "author": [
+      {
+        "family": "Rees",
+        "given": "Gethin"
+      }
+    ],
+    "description": "Locations of early Buddhist rock-cut monasteries in the Western Ghats and Konkan coast regions of India. Only the caves cut between second century BCE and the early fifth century CE are included.",
+    "id": "west_ghats_monast",
+    "issued": {
+      "date-parts": [
+        [
+          2020,
+          10,
+          5
+        ]
+      ]
+    },
+    "publisher": "World Historical Gazetteer",
+    "publisher-place": "Pittsburgh, PA, USA",
+    "record_count": 55,
+    "source": "GPS, in person visits to the sites by the author",
+    "source_citation": "https://doi.org/10.1016/j.ara.2021.100307; https://ethos.bl.uk/OrderDetails.do?uin=uk.bl.ethos.609215",
+    "title": "Buddhist monasteries of the Western Ghats",
+    "type": "dataset"
+  },
+  "features": [
+    {
+      "geometry": {
+        "citation": {
+          "id": "wd:Q60785397",
+          "label": "Wikidata"
+        },
+        "coordinates": [
+          [
+            73.497052,
+            19.018668
+          ]
+        ],
+        "type": "MultiPoint"
+      },
+      "id": 6524424,
+      "properties": {
+        "ccodes": [
+          "IN"
+        ],
+        "dataset": "Buddhist monasteries of the Western Ghats",
+        "dataset_id": 693,
+        "depictions": [],
+        "descriptions": [
+          {
+            "lang": "",
+            "value": "Early Historic rock-cut Buddhist monastery in vicinity of  Bor foot"
+          }
+        ],
+        "fclasses": null,
+        "links": [
+          {
+            "aug": true,
+            "identifier": "wd:Q60785397",
+            "type": "closeMatch"
+          }
+        ],
+        "names": [
+          {
+            "citations": [
+              {
+                "id": "https://doi.org/10.5281/zenodo.998080",
+                "label": "10.5281/zenodo.998080"
+              }
+            ],
+            "toponym": "Ambivale"
+          }
+        ],
+        "related": [],
+        "src_id": "wgm1",
+        "title": "Ambivale",
+        "types": [
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Buddhist monastery"
+          },
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Satavahana"
+          },
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Early Historic"
+          }
+        ],
+        "url": "https://whgazetteer.org/api/place/6524424/",
+        "whens": [
+          {
+            "timespans": [
+              {
+                "end": {
+                  "latest": "0449"
+                },
+                "start": {
+                  "earliest": "-0100"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "citation": {
+          "id": "wd:Q4879428",
+          "label": "Wikidata"
+        },
+        "coordinates": [
+          [
+            73.53505887,
+            18.72131833
+          ]
+        ],
+        "type": "MultiPoint"
+      },
+      "id": 6524431,
+      "properties": {
+        "ccodes": [
+          "IN"
+        ],
+        "dataset": "Buddhist monasteries of the Western Ghats",
+        "dataset_id": 693,
+        "depictions": [],
+        "descriptions": [
+          {
+            "lang": "",
+            "value": "Early Historic rock-cut Buddhist monastery in vicinity of  Indrayani valley"
+          }
+        ],
+        "fclasses": null,
+        "links": [
+          {
+            "aug": true,
+            "identifier": "wd:Q4879428",
+            "type": "closeMatch"
+          }
+        ],
+        "names": [
+          {
+            "citations": [
+              {
+                "id": "https://doi.org/10.5281/zenodo.998080",
+                "label": "10.5281/zenodo.998080"
+              }
+            ],
+            "toponym": "Bedsa"
+          }
+        ],
+        "related": [],
+        "src_id": "wgm8",
+        "title": "Bedsa",
+        "types": [
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Buddhist monastery"
+          },
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Satavahana"
+          },
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Early Historic"
+          }
+        ],
+        "url": "https://whgazetteer.org/api/place/6524431/",
+        "whens": [
+          {
+            "timespans": [
+              {
+                "end": {
+                  "latest": "0449"
+                },
+                "start": {
+                  "earliest": "-0100"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "citation": {
+          "id": "wd:Q854709",
+          "label": "Wikidata"
+        },
+        "coordinates": [
+          [
+            73.48194487,
+            18.72777778
+          ]
+        ],
+        "type": "MultiPoint"
+      },
+      "id": 6524432,
+      "properties": {
+        "ccodes": [
+          "IN"
+        ],
+        "dataset": "Buddhist monasteries of the Western Ghats",
+        "dataset_id": 693,
+        "depictions": [],
+        "descriptions": [
+          {
+            "lang": "",
+            "value": "Early Historic rock-cut Buddhist monastery in vicinity of  Indrayani valley"
+          }
+        ],
+        "fclasses": null,
+        "links": [
+          {
+            "aug": true,
+            "identifier": "wd:Q854709",
+            "type": "closeMatch"
+          }
+        ],
+        "names": [
+          {
+            "citations": [
+              {
+                "id": "https://doi.org/10.5281/zenodo.998080",
+                "label": "10.5281/zenodo.998080"
+              }
+            ],
+            "toponym": "Bhaja"
+          }
+        ],
+        "related": [],
+        "src_id": "wgm9",
+        "title": "Bhaja",
+        "types": [
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Buddhist monastery"
+          },
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Satavahana"
+          },
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Early Historic"
+          }
+        ],
+        "url": "https://whgazetteer.org/api/place/6524432/",
+        "whens": [
+          {
+            "timespans": [
+              {
+                "end": {
+                  "latest": "0449"
+                },
+                "start": {
+                  "earliest": "-0100"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "citation": {
+          "id": "wd:Q1068374",
+          "label": "Wikidata"
+        },
+        "coordinates": [
+          [
+            72.9272,
+            18.5461
+          ]
+        ],
+        "type": "MultiPoint"
+      },
+      "id": 6524428,
+      "properties": {
+        "ccodes": [
+          "IN"
+        ],
+        "dataset": "Buddhist monasteries of the Western Ghats",
+        "dataset_id": 693,
+        "depictions": [],
+        "descriptions": [
+          {
+            "lang": "",
+            "value": "Early Historic rock-cut Buddhist monastery in vicinity of  Chaul"
+          }
+        ],
+        "fclasses": null,
+        "links": [
+          {
+            "aug": true,
+            "identifier": "wd:Q1068374",
+            "type": "closeMatch"
+          },
+          {
+            "aug": true,
+            "identifier": "gn:1274503",
+            "type": "closeMatch"
+          },
+          {
+            "aug": true,
+            "identifier": "viaf:245125742",
+            "type": "closeMatch"
+          }
+        ],
+        "names": [
+          {
+            "citations": [
+              {
+                "id": "https://doi.org/10.5281/zenodo.998080",
+                "label": "10.5281/zenodo.998080"
+              }
+            ],
+            "toponym": "Chaul"
+          }
+        ],
+        "related": [],
+        "src_id": "wgm5",
+        "title": "Chaul",
+        "types": [
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Buddhist monastery"
+          },
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Satavahana"
+          },
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Early Historic"
+          }
+        ],
+        "url": "https://whgazetteer.org/api/place/6524428/",
+        "whens": [
+          {
+            "timespans": [
+              {
+                "end": {
+                  "latest": "0449"
+                },
+                "start": {
+                  "earliest": "0100"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          72.958,
+          18.572
+        ],
+        "type": "Point"
+      },
+      "id": 6524429,
+      "properties": {
+        "ccodes": [
+          "IN"
+        ],
+        "dataset": "Buddhist monasteries of the Western Ghats",
+        "dataset_id": 693,
+        "depictions": [],
+        "descriptions": [
+          {
+            "lang": "",
+            "value": "Early Historic rock-cut Buddhist monastery in vicinity of  Chaul"
+          }
+        ],
+        "fclasses": null,
+        "links": [],
+        "names": [
+          {
+            "citations": [
+              {
+                "id": "https://doi.org/10.5281/zenodo.998080",
+                "label": "10.5281/zenodo.998080"
+              }
+            ],
+            "toponym": "Chaul Wagjai"
+          }
+        ],
+        "related": [],
+        "src_id": "wgm6",
+        "title": "Chaul Wagjai",
+        "types": [
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Buddhist monastery"
+          },
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Satavahana"
+          },
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Early Historic"
+          }
+        ],
+        "url": "https://whgazetteer.org/api/place/6524429/",
+        "whens": [
+          {
+            "timespans": [
+              {
+                "end": {
+                  "latest": "0449"
+                },
+                "start": {
+                  "earliest": "-0100"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "citation": {
+          "id": "wd:Q1117869",
+          "label": "Wikidata"
+        },
+        "coordinates": [
+          [
+            73.52,
+            17.53
+          ]
+        ],
+        "type": "MultiPoint"
+      },
+      "id": 6524467,
+      "properties": {
+        "ccodes": [
+          "IN"
+        ],
+        "dataset": "Buddhist monasteries of the Western Ghats",
+        "dataset_id": 693,
+        "depictions": [],
+        "descriptions": [
+          {
+            "lang": "",
+            "value": "Early Historic rock-cut Buddhist monastery in vicinity of  Kumbharli foot"
+          }
+        ],
+        "fclasses": null,
+        "links": [
+          {
+            "aug": true,
+            "identifier": "wd:Q1117869",
+            "type": "closeMatch"
+          },
+          {
+            "aug": true,
+            "identifier": "gn:1274119",
+            "type": "closeMatch"
+          },
+          {
+            "aug": true,
+            "identifier": "loc:no2004101791",
+            "type": "closeMatch"
+          },
+          {
+            "aug": true,
+            "identifier": "viaf:138727958",
+            "type": "closeMatch"
+          }
+        ],
+        "names": [
+          {
+            "citations": [
+              {
+                "id": "https://doi.org/10.5281/zenodo.998080",
+                "label": "10.5281/zenodo.998080"
+              }
+            ],
+            "toponym": "Chiplun"
+          }
+        ],
+        "related": [],
+        "src_id": "wgm44",
+        "title": "Chiplun",
+        "types": [
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Buddhist monastery"
+          },
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Satavahana"
+          },
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Early Historic"
+          }
+        ],
+        "url": "https://whgazetteer.org/api/place/6524467/",
+        "whens": [
+          {
+            "timespans": [
+              {
+                "end": {
+                  "latest": "0449"
+                },
+                "start": {
+                  "earliest": "-0100"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "citation": {
+          "id": "wd:Q1117869",
+          "label": "Wikidata"
+        },
+        "coordinates": [
+          [
+            73.52,
+            17.53
+          ]
+        ],
+        "type": "MultiPoint"
+      },
+      "id": 6524468,
+      "properties": {
+        "ccodes": [
+          "IN"
+        ],
+        "dataset": "Buddhist monasteries of the Western Ghats",
+        "dataset_id": 693,
+        "depictions": [],
+        "descriptions": [
+          {
+            "lang": "",
+            "value": "Early Historic rock-cut Buddhist monastery in vicinity of  Kumbharli foot"
+          }
+        ],
+        "fclasses": null,
+        "links": [
+          {
+            "aug": true,
+            "identifier": "wd:Q1117869",
+            "type": "closeMatch"
+          },
+          {
+            "aug": true,
+            "identifier": "gn:1274119",
+            "type": "closeMatch"
+          },
+          {
+            "aug": true,
+            "identifier": "loc:no2004101791",
+            "type": "closeMatch"
+          },
+          {
+            "aug": true,
+            "identifier": "viaf:138727958",
+            "type": "closeMatch"
+          }
+        ],
+        "names": [
+          {
+            "citations": [
+              {
+                "id": "https://doi.org/10.5281/zenodo.998080",
+                "label": "10.5281/zenodo.998080"
+              }
+            ],
+            "toponym": "Chiplun Kalambaste"
+          }
+        ],
+        "related": [],
+        "src_id": "wgm45",
+        "title": "Chiplun Kalambaste",
+        "types": [
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Buddhist monastery"
+          },
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Satavahana"
+          },
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Early Historic"
+          }
+        ],
+        "url": "https://whgazetteer.org/api/place/6524468/",
+        "whens": [
+          {
+            "timespans": [
+              {
+                "end": {
+                  "latest": "0449"
+                },
+                "start": {
+                  "earliest": "-0100"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          73.452,
+          18.768
+        ],
+        "type": "Point"
+      },
+      "id": 6524433,
+      "properties": {
+        "ccodes": [
+          "IN"
+        ],
+        "dataset": "Buddhist monasteries of the Western Ghats",
+        "dataset_id": 693,
+        "depictions": [],
+        "descriptions": [
+          {
+            "lang": "",
+            "value": "Early Historic rock-cut Buddhist monastery in vicinity of  Indrayani valley"
+          }
+        ],
+        "fclasses": null,
+        "links": [],
+        "names": [
+          {
+            "citations": [
+              {
+                "id": "https://doi.org/10.5281/zenodo.998080",
+                "label": "10.5281/zenodo.998080"
+              }
+            ],
+            "toponym": "Devgad"
+          }
+        ],
+        "related": [],
+        "src_id": "wgm10",
+        "title": "Devgad",
+        "types": [
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Buddhist monastery"
+          },
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Satavahana"
+          },
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Early Historic"
+          }
+        ],
+        "url": "https://whgazetteer.org/api/place/6524433/",
+        "whens": [
+          {
+            "timespans": [
+              {
+                "end": {
+                  "latest": "0449"
+                },
+                "start": {
+                  "earliest": "-0100"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          73.961,
+          17.365
+        ],
+        "type": "Point"
+      },
+      "id": 6524462,
+      "properties": {
+        "ccodes": [
+          "IN"
+        ],
+        "dataset": "Buddhist monasteries of the Western Ghats",
+        "dataset_id": 693,
+        "depictions": [],
+        "descriptions": [
+          {
+            "lang": "",
+            "value": "Early Historic rock-cut Buddhist monastery in vicinity of  Koyna valley"
+          }
+        ],
+        "fclasses": null,
+        "links": [],
+        "names": [
+          {
+            "citations": [
+              {
+                "id": "https://doi.org/10.5281/zenodo.998080",
+                "label": "10.5281/zenodo.998080"
+              }
+            ],
+            "toponym": "Digevadi"
+          }
+        ],
+        "related": [],
+        "src_id": "wgm39",
+        "title": "Digevadi",
+        "types": [
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Buddhist monastery"
+          },
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Satavahana"
+          },
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Early Historic"
+          }
+        ],
+        "url": "https://whgazetteer.org/api/place/6524462/",
+        "whens": [
+          {
+            "timespans": [
+              {
+                "end": {
+                  "latest": "0449"
+                },
+                "start": {
+                  "earliest": "-0100"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          73.314,
+          18.818
+        ],
+        "type": "Point"
+      },
+      "id": 6524434,
+      "properties": {
+        "ccodes": [
+          "IN"
+        ],
+        "dataset": "Buddhist monasteries of the Western Ghats",
+        "dataset_id": 693,
+        "depictions": [],
+        "descriptions": [
+          {
+            "lang": "",
+            "value": "Early Historic rock-cut Buddhist monastery in vicinity of  Indrayani valley"
+          }
+        ],
+        "fclasses": null,
+        "links": [],
+        "names": [
+          {
+            "citations": [
+              {
+                "id": "https://doi.org/10.5281/zenodo.998080",
+                "label": "10.5281/zenodo.998080"
+              }
+            ],
+            "toponym": "Halkhurd"
+          }
+        ],
+        "related": [],
+        "src_id": "wgm11",
+        "title": "Halkhurd",
+        "types": [
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Buddhist monastery"
+          },
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Satavahana"
+          },
+          {
+            "gn_class": "",
+            "identifier": "",
+            "label": "",
+            "sourceLabel": "Early Historic"
+          }
+        ],
+        "url": "https://whgazetteer.org/api/place/6524434/",
+        "whens": [
+          {
+            "timespans": [
+              {
+                "end": {
+                  "latest": "0449"
+                },
+                "start": {
+                  "earliest": "-0100"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "type": "Feature"
+    }
+  ],
+  "license": "Unless specified otherwise, all content created for or uploaded to the World Historical Gazetteer — including editorial content, documentation, images, and contributed datasets and collections — is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License. Externally hosted datasets and content that are linked to by WHG remain under the copyrights and licenses specified by their original contributors.",
+  "type": "FeatureCollection"
+}

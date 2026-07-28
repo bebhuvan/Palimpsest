@@ -1,0 +1,100 @@
+{
+  "assertion:de-revolutionibus-subject-heliocentric-astronomy": {
+    "assertion_id": "assertion:de-revolutionibus-subject-heliocentric-astronomy",
+    "confidence": {
+      "grade": "B",
+      "rationale": "The Library of Congress describes the title page as stating a sun-centred model."
+    },
+    "date_precision": "year",
+    "evidence_basis": "primary_source_metadata",
+    "feature_ids": [
+      "palimpsest:publication-de-revolutionibus:1543"
+    ],
+    "object": {
+      "entity_id": null,
+      "kind": "text",
+      "unit": null,
+      "value": "heliocentric astronomy",
+      "value_from": null,
+      "value_to": null,
+      "year": null
+    },
+    "predicate": "main_subject",
+    "representation": "structured_sourced_assertion",
+    "restatement": null,
+    "review_status": "provisional",
+    "source_citations": [],
+    "source_excerpt": null,
+    "source_excerpt_checksum_sha256": null,
+    "source_refs": [
+      {
+        "checksum_sha256": "295aea5847ce5d9afa801bbd2f46ab4c45a437e5dacfc37b7157a284011a6aab",
+        "citation": "Library of Congress, item 92516339, title page from the 1543 Nuremberg edition.",
+        "license_id": "PDM-1.0",
+        "modified": false,
+        "publisher": "Library of Congress",
+        "record_id": "92516339",
+        "retrieved_at": "2026-07-23T06:00:00Z",
+        "source_id": "loc_copernicus",
+        "title": "Title page of De revolutionibus orbium coelestium",
+        "url": "https://www.loc.gov/pictures/item/92516339/",
+        "version": "browser-pilot-curated-snapshot-v1"
+      }
+    ],
+    "subject_entity_ids": [
+      "palimpsest:work:de-revolutionibus"
+    ],
+    "temporal_uncertainty": null,
+    "valid_from": 1543,
+    "valid_to": 1543
+  },
+  "assertion:royal-cedula-concerned-treatment-ordinances": {
+    "assertion_id": "assertion:royal-cedula-concerned-treatment-ordinances",
+    "confidence": {
+      "grade": "B",
+      "rationale": "The catalog summary states that the ordinances concerned good treatment and described Indigenous people as free people and royal vassals."
+    },
+    "date_precision": "exact",
+    "evidence_basis": "primary_source_metadata",
+    "feature_ids": [
+      "palimpsest:royal-cedula-vasco-de-quiroga:1543"
+    ],
+    "object": {
+      "entity_id": "palimpsest:concept:ordinances-for-treatment-in-the-indies",
+      "kind": "entity",
+      "unit": null,
+      "value": null,
+      "value_from": null,
+      "value_to": null,
+      "year": null
+    },
+    "predicate": "concerned",
+    "representation": "structured_sourced_assertion",
+    "restatement": null,
+    "review_status": "provisional",
+    "source_citations": [],
+    "source_excerpt": null,
+    "source_excerpt_checksum_sha256": null,
+    "source_refs": [
+      {
+        "checksum_sha256": "295aea5847ce5d9afa801bbd2f46ab4c45a437e5dacfc37b7157a284011a6aab",
+        "citation": "Library of Congress, Hans Peter Kraus Collection, item mss31013-03800, royal cedula dated 23 August 1543.",
+        "license_id": "PDM-1.0",
+        "modified": false,
+        "publisher": "Library of Congress",
+        "record_id": "mss31013-03800",
+        "retrieved_at": "2026-07-23T06:00:00Z",
+        "source_id": "loc_new_laws",
+        "title": "Hans Peter Kraus Collection: Notarized copy of a royal cedula to Vasco de Quiroga, bishop of Michoacán",
+        "url": "https://www.loc.gov/item/mss31013-03800/",
+        "version": "browser-pilot-curated-snapshot-v1"
+      }
+    ],
+    "subject_entity_ids": [
+      "palimpsest:event:royal-cedula-vasco-de-quiroga"
+    ],
+    "temporal_uncertainty": null,
+    "valid_from": 1543,
+    "valid_to": 1543
+  }
+}

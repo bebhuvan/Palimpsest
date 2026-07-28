@@ -1,0 +1,9 @@
+{
+  "palimpsest:work:teppoki": {
+    "assertion_ids": [
+      "assertion:tanegashima-encounter-described-in-teppoki",
+      "assertion:teppoki-completed-early-seventeenth-century"
+    ],
+    "subject_id": "palimpsest:work:teppoki"
+  }
+}

@@ -905,6 +905,7 @@ class AssertionObjectKind(StrEnum):
     ENTITY = "entity"
     TEXT = "text"
     YEAR = "year"
+    NUMBER_RANGE = "number_range"
 
 
 class AssertionObject(BaseModel):
@@ -914,11 +915,17 @@ class AssertionObject(BaseModel):
     entity_id: str | None = None
     value: str | None = None
     year: int | None = None
+    value_from: float | int | None = None
+    value_to: float | int | None = None
+    unit: str | None = None
 
     @model_validator(mode="after")
     def validate_typed_value(self) -> AssertionObject:
-        supplied = sum(item is not None for item in (self.entity_id, self.value, self.year))
-        if supplied != 1:
+        scalar_supplied = sum(
+            item is not None for item in (self.entity_id, self.value, self.year)
+        )
+        range_supplied = self.value_from is not None or self.value_to is not None
+        if scalar_supplied + int(range_supplied) != 1:
             raise ValueError("An assertion object must contain exactly one typed value")
         if self.kind == AssertionObjectKind.ENTITY and self.entity_id is None:
             raise ValueError("An entity assertion object requires entity_id")
@@ -926,6 +933,19 @@ class AssertionObject(BaseModel):
             raise ValueError("A text assertion object requires value")
         if self.kind == AssertionObjectKind.YEAR and self.year is None:
             raise ValueError("A year assertion object requires year")
+        if self.kind == AssertionObjectKind.NUMBER_RANGE:
+            if self.value_from is None and self.value_to is None:
+                raise ValueError("A number-range assertion requires at least one bound")
+            if not self.unit:
+                raise ValueError("A number-range assertion requires a unit")
+            if (
+                self.value_from is not None
+                and self.value_to is not None
+                and self.value_from > self.value_to
+            ):
+                raise ValueError("A number-range lower bound cannot exceed its upper bound")
+        elif range_supplied or self.unit is not None:
+            raise ValueError("Range bounds and unit belong only to number-range assertions")
         if self.year == 0:
             raise ValueError("Historical assertion years cannot contain year zero")
         return self
@@ -937,6 +957,22 @@ class AssertionEvidenceBasis(StrEnum):
     TERTIARY_SUMMARY = "tertiary_summary"
     SCHOLARLY_ASSERTION = "scholarly_assertion"
     REVIEWED_EDITORIAL_LINK = "reviewed_editorial_link"
+
+
+class AssertionRestatement(BaseModel):
+    """Optional generated wording tied to one exact assertion explanation."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    assertion_id: str = Field(pattern=r"^assertion:[a-z0-9][a-z0-9:_-]+$")
+    text: str = Field(min_length=1)
+    source_excerpt_checksum_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    prompt_version: str = Field(min_length=1)
+    prompt_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    provider: str = Field(min_length=1)
+    model_identifier: str = Field(min_length=1)
+    generated_at: AwareDatetime
+    provider_response_id: str | None = None
 
 
 class EvidenceAssertion(BaseModel):
@@ -958,6 +994,12 @@ class EvidenceAssertion(BaseModel):
     evidence_basis: AssertionEvidenceBasis
     review_status: ReviewStatus = ReviewStatus.PROVISIONAL
     source_refs: list[SourceReference] = Field(min_length=1)
+    source_excerpt: str | None = None
+    source_excerpt_checksum_sha256: str | None = Field(
+        default=None, pattern=r"^[a-f0-9]{64}$"
+    )
+    source_citations: list[str] = Field(default_factory=list)
+    restatement: AssertionRestatement | None = None
 
     @model_validator(mode="after")
     def validate_assertion(self) -> EvidenceAssertion:
@@ -970,17 +1012,35 @@ class EvidenceAssertion(BaseModel):
                 raise ValueError("Evidence assertion identifier lists must be unique")
         if self.review_status == ReviewStatus.REJECTED:
             raise ValueError("Rejected evidence assertions cannot be published")
+        if (self.source_excerpt is None) != (
+            self.source_excerpt_checksum_sha256 is None
+        ):
+            raise ValueError("An assertion source excerpt and checksum must appear together")
+        if self.source_excerpt is not None:
+            checksum = hashlib.sha256(self.source_excerpt.encode("utf-8")).hexdigest()
+            if checksum != self.source_excerpt_checksum_sha256:
+                raise ValueError("Assertion source excerpt checksum does not match its text")
+        if self.restatement is not None:
+            if self.source_excerpt_checksum_sha256 is None:
+                raise ValueError("An assertion restatement requires a source excerpt")
+            if (
+                self.restatement.source_excerpt_checksum_sha256
+                != self.source_excerpt_checksum_sha256
+            ):
+                raise ValueError("Assertion restatement is bound to a different source excerpt")
         return self
 
 
 class ContentRole(StrEnum):
     PRIMARY_SOURCE = "primary_source"
     TERTIARY_SUMMARY = "tertiary_summary"
+    SOURCE_RESTATEMENT = "source_restatement"
     PROJECT_INTERPRETATION = "project_interpretation"
 
 
 class DossierKind(StrEnum):
     SOURCE_EXTRACT = "source_extract"
+    RESTATEMENT = "restatement"
     GENERATED_EDITORIAL = "generated_editorial"
 
 
@@ -1295,7 +1355,7 @@ class PublishedEditorialDossier(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     schema_version: Literal["1.0.0"] = "1.0.0"
-    dossier_id: str = Field(pattern=r"^historyjoice:editorial:[a-f0-9]{16}$")
+    dossier_id: str = Field(pattern=r"^palimpsest:editorial:[a-f0-9]{16}$")
     source_draft_id: str = Field(pattern=r"^dossier-draft:[a-f0-9]{16}$")
     dossier_kind: Literal[DossierKind.GENERATED_EDITORIAL] = (
         DossierKind.GENERATED_EDITORIAL
@@ -1318,6 +1378,833 @@ class PublishedEditorialDossier(BaseModel):
     generation: DossierGenerationProvenance
     review: HumanDossierReview
     published_at: AwareDatetime
+
+
+class ChronicleEntryKind(StrEnum):
+    EVENT = "event"
+    BIRTH = "birth"
+    DEATH = "death"
+    # Not something that happened on a date, but something that held true all year: who reigned,
+    # who held an office. A year is as much a state as a sequence, and only this kind carries that.
+    INCUMBENT = "incumbent"
+
+
+class ChronicleEntry(BaseModel):
+    """One dated line from a Wikipedia year article.
+
+    A year article is a list, not prose, so its value is in the sections rather than the lead its
+    extract would return. `text` is the source's own wording, retained verbatim: this record is an
+    ingestion of a list, never a restatement, and nothing here is generated.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    entry_id: str = Field(
+        pattern=r"^chronicle:-?\d+:(?:event|birth|death|incumbent):[a-f0-9]{16}$"
+    )
+    kind: ChronicleEntryKind
+    year: int
+    month: int | None = Field(default=None, ge=1, le=12)
+    day: int | None = Field(default=None, ge=1, le=31)
+    date_precision: DatePrecision
+    text: str = Field(min_length=1)
+    qualifier: str | None = None
+    subject_title: str | None = None
+    subject_wikidata_id: str | None = Field(default=None, pattern=r"^Q[1-9]\d*$")
+    linked_titles: list[str] = Field(default_factory=list)
+    related_year: int | None = None
+    # How many language editions carry an article on the subject. This is a measure of how much
+    # has been written, not a claim that the subject mattered, and the reader must say so.
+    sitelink_count: int | None = Field(default=None, ge=0)
+    # Which page and which of its sections this came from. The section heading is itself a subject
+    # signal — "Astronomy" and "Paintings" say what an entry is about without anyone classifying it.
+    source_page: str | None = None
+    topic: str | None = None
+    lens: str | None = None
+
+    @model_validator(mode="after")
+    def validate_entry(self) -> ChronicleEntry:
+        if self.year == 0:
+            raise ValueError("Chronicle years are BCE-negative and CE-positive with no year zero")
+        if self.day is not None and self.month is None:
+            raise ValueError("A chronicle entry with a day must also carry its month")
+        expected = (
+            DatePrecision.EXACT
+            if self.day is not None
+            else DatePrecision.YEAR
+        )
+        if self.date_precision not in (expected, DatePrecision.RANGE, DatePrecision.UNKNOWN):
+            raise ValueError(
+                f"Chronicle date precision {self.date_precision} does not match its date parts"
+            )
+        if len(self.linked_titles) != len(set(self.linked_titles)):
+            raise ValueError("Chronicle linked titles must be unique")
+        if self.subject_title and self.subject_title not in self.linked_titles:
+            raise ValueError("A chronicle subject must be one of the entry's linked titles")
+        return self
+
+
+class SubjectExtract(BaseModel):
+    """The lead section of an article a chronicle entry links to, pinned to its own revision.
+
+    A year article gives one line per happening, which is enough to list a year and not enough to
+    write about it. The linked article says what the thing actually was. Carrying these makes the
+    evidence set larger without making it looser: the containment rules are unchanged, so the
+    writer simply has more it is allowed to say.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    title: str = Field(min_length=1)
+    canonical_title: str = Field(min_length=1)
+    page_id: int
+    revision_id: int
+    url: HttpUrl
+    extract: str = Field(min_length=1)
+    wikidata_id: str | None = Field(default=None, pattern=r"^Q[1-9]\d*$")
+    content_checksum_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+
+    @model_validator(mode="after")
+    def validate_extract(self) -> SubjectExtract:
+        expected = hashlib.sha256(self.extract.encode("utf-8")).hexdigest()
+        if expected != self.content_checksum_sha256:
+            raise ValueError(f"Subject extract checksum does not match its text: {self.title}")
+        return self
+
+
+class YearChronicle(BaseModel):
+    """Every dated happening one Wikipedia year article records, pinned to one revision."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    chronicle_id: str = Field(pattern=r"^chronicle:-?\d+:[a-z]{2,3}$")
+    year: int
+    language: str = Field(min_length=2, max_length=3)
+    page_id: int
+    revision_id: int
+    revision_timestamp: AwareDatetime
+    content_checksum_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    source_ref: SourceReference
+    entries: list[ChronicleEntry] = Field(default_factory=list)
+    subject_extracts: list[SubjectExtract] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_chronicle(self) -> YearChronicle:
+        if self.year == 0:
+            raise ValueError("Chronicle years are BCE-negative and CE-positive with no year zero")
+        if self.chronicle_id != f"chronicle:{self.year}:{self.language}":
+            raise ValueError("Chronicle ID does not match its year and language")
+        entry_ids = [entry.entry_id for entry in self.entries]
+        if len(entry_ids) != len(set(entry_ids)):
+            raise ValueError("Chronicle entry IDs must be unique")
+        for entry in self.entries:
+            if entry.year != self.year:
+                raise ValueError(f"Chronicle entry is dated outside its year: {entry.entry_id}")
+        return self
+
+
+class ProseLink(BaseModel):
+    """One hyperlink over a span of generated prose.
+
+    The model never writes a URL; it writes plain text and the pipeline links names it already
+    resolved. A model asked for links invents plausible ones, and a wrong link is worse than none
+    because it looks like a citation. `text` must match the prose at those offsets exactly.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    start: int = Field(ge=0)
+    end: int = Field(gt=0)
+    text: str = Field(min_length=1)
+    url: HttpUrl
+    title: str = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def validate_span(self) -> ProseLink:
+        if self.start >= self.end:
+            raise ValueError("A prose link must start before it ends")
+        if len(self.text) != self.end - self.start:
+            raise ValueError("A prose link span does not match its text")
+        return self
+
+
+class YearConflict(BaseModel):
+    """A war Wikidata records as running across the selected year.
+
+    A year article records battles; it does not record that a war was under way. The two are not
+    the same reading, and the second is the one that explains the first. Nothing here is written:
+    the label, the interval and the identifier are Wikidata's own, and the only derived fields are
+    the two booleans, which restate the interval against the year rather than interpret it.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    wikidata_id: str = Field(pattern=r"^Q[1-9]\d*$")
+    title: str = Field(min_length=1)
+    url: HttpUrl
+    start_year: int
+    end_year: int
+    began_this_year: bool = False
+    ended_this_year: bool = False
+    sitelink_count: int | None = Field(default=None, ge=0)
+
+    @model_validator(mode="after")
+    def validate_conflict(self) -> YearConflict:
+        if self.end_year < self.start_year:
+            raise ValueError(f"Conflict {self.title} ends before it begins")
+        return self
+
+
+class YearImage(BaseModel):
+    """One Wikimedia Commons file cleared for release, file by file.
+
+    A Commons file is not free because Commons hosts it. Some are non-commercial, some are fair
+    use, some carry an explicit restriction, and the licence lives on the file rather than on the
+    subject. Every field here comes from that file's own `extmetadata`, and a file whose licence
+    the release policy does not allow is dropped rather than shown with a caveat.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    commons_file: str = Field(min_length=1)
+    descriptor_url: HttpUrl
+    image_url: HttpUrl
+    width: int = Field(gt=0)
+    height: int = Field(gt=0)
+    mime_type: str = Field(pattern=r"^image/[a-z0-9.+-]+$")
+    license_id: str = Field(min_length=1)
+    license_short_name: str = Field(min_length=1)
+    rights_uri: HttpUrl | None = None
+    attribution: str = Field(min_length=1)
+    subject_wikidata_id: str = Field(pattern=r"^Q[1-9]\d*$")
+    subject_title: str = Field(min_length=1)
+    caption: str | None = None
+
+
+class YearQuote(BaseModel):
+    """Verbatim sentences from one revision-pinned article lead, shown as themselves.
+
+    Quoting costs nothing a paraphrase would risk. The words are the source's, the attribution is
+    exact, and no relationship between facts is being asserted by the pipeline or by a model.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    text: str = Field(min_length=1)
+    source_title: str = Field(min_length=1)
+    source_url: HttpUrl
+    revision_id: int
+    content_checksum_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+
+
+class YearHeadline(BaseModel):
+    """One line of the assembled lede: a record shown in the source's own words.
+
+    The lede is the most prominent sentence on the page and therefore the worst place to fuse two
+    facts into a third. It is assembled from the year's most-written-about records instead of
+    written, so the sentence a reader meets first carries no generated claim at all.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    entry_id: str = Field(min_length=1)
+    date_text: str | None = None
+    text: str = Field(min_length=1)
+    subject_title: str | None = None
+    subject_url: HttpUrl | None = None
+    sitelink_count: int | None = Field(default=None, ge=0)
+
+
+class YearIncumbent(BaseModel):
+    """Who held an office through the year, as a row rather than a sentence."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    entry_id: str = Field(min_length=1)
+    place: str = Field(min_length=1)
+    office: str = Field(min_length=1)
+    holder: str = Field(min_length=1)
+
+
+class YearConnection(BaseModel):
+    """One record whose other end falls in a different year."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    entry_id: str = Field(min_length=1)
+    kind: ChronicleEntryKind
+    text: str = Field(min_length=1)
+    subject_title: str | None = None
+    subject_url: HttpUrl | None = None
+
+
+class YearRelatedYear(BaseModel):
+    """Another year this one names, and the lives that reach it.
+
+    A birth in 1543 records a death in 1616. That second year is already parsed out of the source
+    and is the cheapest route out of a page: it turns a dossier from a document into a place a
+    reader can leave by a door they did not expect.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    year: int
+    direction: Literal["earlier", "later"]
+    connections: list[YearConnection] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def validate_related(self) -> YearRelatedYear:
+        if self.year == 0:
+            raise ValueError("Related years are BCE-negative and CE-positive with no year zero")
+        return self
+
+
+class YearRegisterEntry(BaseModel):
+    """One line of the year's complete register, in the source's own words.
+
+    The register is the floor of the dossier: every record reaches the reader here whether or not
+    any paragraph found room for it. Nothing in it is generated, so breadth costs nothing.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    entry_id: str = Field(min_length=1)
+    kind: ChronicleEntryKind
+    month: int | None = Field(default=None, ge=1, le=12)
+    day: int | None = Field(default=None, ge=1, le=31)
+    date_text: str | None = None
+    text: str = Field(min_length=1)
+    # The same happening recorded in different words on another page. Kept rather than discarded:
+    # a second wording often carries a detail the first left out.
+    also_recorded_as: list[str] = Field(default_factory=list)
+    qualifier: str | None = None
+    subject_title: str | None = None
+    subject_url: HttpUrl | None = None
+    subject_wikidata_id: str | None = Field(default=None, pattern=r"^Q[1-9]\d*$")
+    sitelink_count: int | None = Field(default=None, ge=0)
+    related_year: int | None = None
+    source_pages: list[str] = Field(default_factory=list)
+    topic: str | None = None
+    lens: str | None = None
+    prominent: bool = False
+    image: YearImage | None = None
+    # One sentence saying who this was, restated from that person's own article lead and checked
+    # against it alone. Not why they mattered: significance is the claim this tier cannot earn,
+    # and the deny list refuses it. What they did, and when.
+    gloss: str | None = None
+    gloss_links: list[ProseLink] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_register_entry(self) -> YearRegisterEntry:
+        for link in self.gloss_links:
+            if not self.gloss or self.gloss[link.start : link.end] != link.text:
+                raise ValueError(f"A gloss link does not sit over its own text: {link.text}")
+        return self
+
+
+class YearWork(BaseModel):
+    """A book, a painting, a poem or a building the year records as made.
+
+    A year article files these as an author, a dash and a title. That form reads badly in a
+    paragraph — it is the one shape ranked last everywhere else in this dossier — and reads
+    exactly right as a row, which is the same argument as for the offices and the register: the
+    source already wrote it as a table.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    entry_id: str = Field(min_length=1)
+    kind: Literal["book", "poem", "artwork", "music", "building", "work"]
+    creator: str | None = None
+    title: str = Field(min_length=1)
+    subject_title: str | None = None
+    subject_url: HttpUrl | None = None
+    sitelink_count: int | None = Field(default=None, ge=0)
+    source_page: str | None = None
+    image: YearImage | None = None
+    gloss: str | None = None
+    gloss_links: list[ProseLink] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_work(self) -> YearWork:
+        for link in self.gloss_links:
+            if not self.gloss or self.gloss[link.start : link.end] != link.text:
+                raise ValueError(f"A gloss link does not sit over its own text: {link.text}")
+        return self
+
+
+class YearTheme(BaseModel):
+    """How much of the year fell under one lens, and what it was about.
+
+    Counted, not judged. A lens with more records is not a more important lens; it is a lens the
+    sources wrote more about, which is a fact about the sources and is labelled as one.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    lens: str = Field(min_length=1)
+    heading: str = Field(min_length=1)
+    record_count: int = Field(ge=0)
+    subjects: list[str] = Field(default_factory=list)
+
+
+class YearContext(BaseModel):
+    """What a year looked like from outside its own article.
+
+    A year article answers "what happened". It does not answer "what was already under way", and
+    it carries no pictures. Both come from elsewhere — Wikidata intervals and Commons files — so
+    they are fetched into their own artifact rather than smuggled into the chronicle, whose
+    checksum stands for one Wikipedia revision and must go on meaning exactly that.
+
+    A dossier built without this artifact is complete, not degraded.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    year: int
+    retrieved_at: AwareDatetime
+    conflicts: list[YearConflict] = Field(default_factory=list)
+    images: list[YearImage] = Field(default_factory=list)
+    # Files that exist but did not clear the release licence policy, with the reason. Kept so a
+    # thin picture set reads as a licensing outcome rather than as missing coverage.
+    rejected_images: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_context(self) -> YearContext:
+        if self.year == 0:
+            raise ValueError("Year context is BCE-negative and CE-positive with no year zero")
+        subjects = [image.subject_wikidata_id for image in self.images]
+        if len(subjects) != len(set(subjects)):
+            raise ValueError("Year context carries at most one image per subject")
+        return self
+
+
+class YearOverview(BaseModel):
+    """The top layer: what shape the year has, before any of it is narrated."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    prose: str | None = None
+    links: list[ProseLink] = Field(default_factory=list)
+    entry_ids: list[str] = Field(default_factory=list)
+    themes: list[YearTheme] = Field(default_factory=list)
+    # Records per month, January to December. A year's coverage is not evenly spread and the
+    # shape of that unevenness is a fact about the sources worth showing rather than describing:
+    # a month with nothing in it is a gap in what was written down, not a quiet month.
+    months: list[int] = Field(default_factory=list)
+    undated_count: int = Field(default=0, ge=0)
+    event_count: int = Field(ge=0)
+    birth_count: int = Field(ge=0)
+    death_count: int = Field(ge=0)
+    dated_count: int = Field(ge=0)
+    source_pages: list[str] = Field(default_factory=list)
+
+
+class YearAnchor(BaseModel):
+    """One happening given room, written from its own records and nothing else.
+
+    This is where a dossier gets its depth, and it is deliberately not where it gets its length.
+    An anchor's evidence is one clustered record and the lead of the article it is about — a
+    window of two or three facts rather than the whole year — so the paragraph is close to a
+    restatement of a single source. Two facts can only be fused into a third if both are in front
+    of the writer, and here almost nothing is.
+
+    Everything around the paragraph is assembled: the heading is the subject's own title, the
+    bullets are the source's own wording, the quote is verbatim, and the image carries its own
+    licence.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    anchor_id: str = Field(pattern=r"^anchor:[a-f0-9]{16}$")
+    heading: str = Field(min_length=1, max_length=140)
+    date_text: str | None = None
+    lens: str | None = None
+    prose: str = Field(min_length=1)
+    links: list[ProseLink] = Field(default_factory=list)
+    entry_ids: list[str] = Field(min_length=1)
+    records: list[str] = Field(min_length=1)
+    subject_title: str | None = None
+    subject_url: HttpUrl | None = None
+    subject_wikidata_id: str | None = Field(default=None, pattern=r"^Q[1-9]\d*$")
+    sitelink_count: int | None = Field(default=None, ge=0)
+    quote: YearQuote | None = None
+    image: YearImage | None = None
+    related_years: list[int] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_anchor(self) -> YearAnchor:
+        if len(self.entry_ids) != len(set(self.entry_ids)):
+            raise ValueError("Year anchor entry IDs must be unique")
+        for link in self.links:
+            if self.prose[link.start : link.end] != link.text:
+                raise ValueError(f"A prose link does not sit over its own text: {link.text}")
+        spans = sorted((link.start, link.end) for link in self.links)
+        if any(left[1] > right[0] for left, right in pairwise(spans)):
+            raise ValueError("Prose links must not overlap")
+        return self
+
+
+class YearPersonDraft(BaseModel):
+    """What a model may return for one person: one sentence saying who they were."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    person_id: str = Field(min_length=1, max_length=60)
+    gloss: str = Field(min_length=1)
+
+
+class YearAnchorDraft(BaseModel):
+    """What a model may return for one anchor: prose and citations, nothing else."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    anchor_id: str = Field(min_length=1, max_length=60)
+    prose: str = Field(min_length=1)
+    entry_ids: list[str] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def validate_draft(self) -> YearAnchorDraft:
+        if len(self.entry_ids) != len(set(self.entry_ids)):
+            raise ValueError("Year anchor entry IDs must be unique")
+        return self
+
+
+class YearDossierSection(BaseModel):
+    """One segment of a year dossier, written from a named set of chronicle entries.
+
+    The heading and lens are chosen from the year's own data rather than invented, so every year
+    is segmented the same way and a reader can compare one with another.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    section_id: str = Field(pattern=r"^section:[a-z0-9][a-z0-9-]{0,40}$")
+    heading: str = Field(min_length=1, max_length=90)
+    lens: str = Field(min_length=1, max_length=30)
+    prose: str = Field(min_length=1)
+    entry_ids: list[str] = Field(min_length=1)
+    links: list[ProseLink] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_section(self) -> YearDossierSection:
+        if len(self.entry_ids) != len(set(self.entry_ids)):
+            raise ValueError("Year dossier section entry IDs must be unique")
+        for link in self.links:
+            if self.prose[link.start : link.end] != link.text:
+                raise ValueError(f"A prose link does not sit over its own text: {link.text}")
+        spans = sorted((link.start, link.end) for link in self.links)
+        if any(left[1] > right[0] for left, right in pairwise(spans)):
+            raise ValueError("Prose links must not overlap")
+        return self
+
+
+class YearDossierSectionDraft(BaseModel):
+    """What a model may return for one section: prose and citations, nothing else.
+
+    Heading and lens are the pipeline's own, taken from the year's data and filled in afterwards.
+    Offering them as output fields invites the model to answer them, and it does — with sentences.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    section_id: str = Field(min_length=1, max_length=60)
+    prose: str = Field(min_length=1)
+    entry_ids: list[str] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def validate_draft(self) -> YearDossierSectionDraft:
+        if len(self.entry_ids) != len(set(self.entry_ids)):
+            raise ValueError("Year dossier section entry IDs must be unique")
+        return self
+
+
+class YearDossierContent(BaseModel):
+    """The strict payload a model may return for one year.
+
+    `lede` is absent because the lede is no longer written. It is assembled from the year's
+    most-written-about records, in their own words, by the pipeline.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    overview: str = Field(min_length=1)
+    anchors: list[YearAnchorDraft] = Field(default_factory=list)
+    people: list[YearPersonDraft] = Field(default_factory=list)
+    sections: list[YearDossierSectionDraft] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def validate_content(self) -> YearDossierContent:
+        section_ids = [section.section_id for section in self.sections]
+        if len(section_ids) != len(set(section_ids)):
+            raise ValueError("Year dossier section IDs must be unique")
+        anchor_ids = [anchor.anchor_id for anchor in self.anchors]
+        if len(anchor_ids) != len(set(anchor_ids)):
+            raise ValueError("Year dossier anchor IDs must be unique")
+        person_ids = [person.person_id for person in self.people]
+        if len(person_ids) != len(set(person_ids)):
+            raise ValueError("Year dossier person IDs must be unique")
+        return self
+
+
+def year_dossier_body(
+    overview: str | None,
+    anchors: list[str],
+    sections: list[str],
+) -> str:
+    """Every generated word of one dossier, in one fixed order.
+
+    The checksum covers generated prose and only generated prose. The lede, the register, the
+    headlines and the incumbent rows are the source's own wording, already covered by the
+    chronicle's own checksum, and hashing them here would make the dossier look more generated
+    than it is — and would count copied characters against the rule that a restatement may not be
+    longer than what it restates.
+    """
+
+    return "\n\n".join([*([overview] if overview else []), *anchors, *sections])
+
+
+class YearDossier(BaseModel):
+    """A generated, unreviewed year dossier bound to one chronicle revision.
+
+    There is no human-review state here, and that is a deliberate and disclosed position rather
+    than an oversight: what a reviewer would have done is replaced by a closed evidence set, a
+    containment check over every name and number, and citations that must resolve. None of that
+    can confirm the prose draws a sound conclusion, so the reader is told plainly that the
+    connections are machine-made and unreviewed.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: Literal["1.1.0"] = "1.1.0"
+    dossier_id: str = Field(pattern=r"^year-dossier:-?\d+:[a-z]{2,3}:[a-f0-9]{16}$")
+    year: int
+    language: str = Field(min_length=2, max_length=3)
+    # The lede is assembled from records rather than written. Recording how it was made keeps the
+    # reader's disclosure accurate rather than uniform: a sentence nobody generated should not
+    # carry the same warning as one somebody did.
+    lede_kind: Literal["assembled"] = "assembled"
+    lede: str = Field(min_length=1)
+    lede_links: list[ProseLink] = Field(default_factory=list)
+    headlines: list[YearHeadline] = Field(default_factory=list)
+    overview: YearOverview | None = None
+    anchors: list[YearAnchor] = Field(default_factory=list)
+    sections: list[YearDossierSection] = Field(min_length=1)
+    # Named `register_entries` rather than `register`: pydantic's metaclass already
+    # carries a `register`, and shadowing it warns on every import.
+    register_entries: list[YearRegisterEntry] = Field(default_factory=list)
+    works: list[YearWork] = Field(default_factory=list)
+    related_years: list[YearRelatedYear] = Field(default_factory=list)
+    incumbents: list[YearIncumbent] = Field(default_factory=list)
+    conflicts: list[YearConflict] = Field(default_factory=list)
+    chronicle_id: str = Field(min_length=1)
+    chronicle_revision_id: int
+    evidence_checksum_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    content_checksum_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    source_refs: list[SourceReference] = Field(min_length=1)
+    generation: RestatementProvenance
+    validation: RestatementValidation
+    # Sentences the containment check could not support, deleted rather than letting one clause
+    # cost a reader the whole year. Recorded because a deletion is an editorial act even when it
+    # only ever removes, and a reader who wants to know what was cut should be able to find out.
+    removed_sentences: list[str] = Field(default_factory=list)
+    editorial_state: Literal["machine_generated"] = "machine_generated"
+
+    @model_validator(mode="after")
+    def validate_dossier(self) -> YearDossier:
+        if self.year == 0:
+            raise ValueError("Year dossiers are BCE-negative and CE-positive with no year zero")
+        body = year_dossier_body(
+            self.overview.prose if self.overview else None,
+            [anchor.prose for anchor in self.anchors]
+            + [item.gloss for item in self.register_entries if item.gloss]
+            + [work.gloss for work in self.works if work.gloss],
+            [section.prose for section in self.sections],
+        )
+        if hashlib.sha256(body.encode("utf-8")).hexdigest() != self.content_checksum_sha256:
+            raise ValueError("Year dossier checksum does not match its prose")
+        register_ids = [item.entry_id for item in self.register_entries]
+        if len(register_ids) != len(set(register_ids)):
+            raise ValueError("Year dossier register entry IDs must be unique")
+        related = [(item.year, item.direction) for item in self.related_years]
+        if len(related) != len(set(related)):
+            raise ValueError("Year dossier related years must be unique")
+        for item in self.related_years:
+            if (item.year < self.year) != (item.direction == "earlier"):
+                raise ValueError(
+                    f"Related year {item.year} is marked {item.direction} of {self.year}"
+                )
+        return self
+
+
+class RestatementResult(StrEnum):
+    RESTATED = "restated"
+    UNSUITABLE = "unsuitable"
+
+
+class RestatementTimelineEntry(BaseModel):
+    """One dated moment already present in the source extract.
+
+    The date is retained exactly as the source wrote it. Deriving a century or a decade from a
+    source year is a new claim, so `year_text` may only reuse digits the source already contains.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    year_text: str = Field(min_length=1, max_length=60)
+    # Wider than the release's own 3400 BCE floor on purpose: a source may date something to the
+    # Neolithic even where the map's reviewed geometry does not reach. The bound exists to catch
+    # nonsense, not to restate coverage, so it stops short of geological scales the prompt excludes.
+    sort_year: int = Field(ge=-50_000, le=2100)
+    text: str = Field(min_length=1, max_length=200)
+
+    @model_validator(mode="after")
+    def validate_entry(self) -> RestatementTimelineEntry:
+        if self.sort_year == 0:
+            raise ValueError("Timeline years are BCE-negative and CE-positive with no year zero")
+        # A BCE year written with a positive sort key would place the record in the wrong
+        # millennium on the reader's timeline, so check the era marker against the sign directly
+        # rather than hoping the ordering rule exposes it.
+        era = self.year_text.upper()
+        before_common_era = bool(re.search(r"\b(?:BCE?|B\.C\.(?:E\.)?)\b", era))
+        common_era = bool(re.search(r"\b(?:CE|AD|A\.D\.|C\.E\.)\b", era))
+        if before_common_era and self.sort_year > 0:
+            raise ValueError(f"Timeline year {self.year_text!r} is BCE but its sort year is not")
+        if common_era and not before_common_era and self.sort_year < 0:
+            raise ValueError(f"Timeline year {self.year_text!r} is CE but its sort year is not")
+        return self
+
+
+class DossierRestatementContent(BaseModel):
+    """The strict payload a model may return when restating one source extract.
+
+    A restatement is a lossy, faithful transformation of exactly one revision-pinned source. It
+    reorders, compresses and plainly rewords that source. It may not add a historical claim, so it
+    carries no citations: its single citation is the source dossier it was derived from.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    result: RestatementResult
+    headline: str | None
+    text: str | None
+    timeline: list[RestatementTimelineEntry]
+    unsuitable_reason: str | None
+
+    @model_validator(mode="after")
+    def validate_result(self) -> DossierRestatementContent:
+        if self.result == RestatementResult.RESTATED:
+            if not self.headline or not self.text:
+                raise ValueError("A restatement requires a headline and body text")
+            if self.unsuitable_reason:
+                raise ValueError("A restatement cannot also record an unsuitable reason")
+        else:
+            if not self.unsuitable_reason:
+                raise ValueError("An unsuitable result requires a reason")
+            if self.headline or self.text or self.timeline:
+                raise ValueError("An unsuitable result cannot contain restated content")
+        # Models tend to list events in the order the source narrates them. Chronological order is
+        # a display invariant, not a claim about evidence, so normalise it rather than discarding
+        # an otherwise faithful restatement. The truth of each `sort_year` is guarded separately by
+        # the era-sign rule above and by the closed-world number check.
+        self.timeline.sort(key=lambda entry: entry.sort_year)
+        return self
+
+
+class RestatementValidation(BaseModel):
+    """The mechanical closed-world report for one restatement.
+
+    A restatement introduces no new claim, so it needs no human claim review. What it does need is
+    proof that it stayed inside its source. These fields record that check rather than asserting it.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    policy_version: str = Field(min_length=1)
+    source_chars: int = Field(gt=0)
+    restatement_chars: int = Field(gt=0)
+    unsupported_numbers: list[str] = Field(default_factory=list)
+    unsupported_names: list[str] = Field(default_factory=list)
+    denied_phrases: list[str] = Field(default_factory=list)
+    # Editorial, not evidentiary: present-day furniture the restatement should have deleted. It is
+    # recorded rather than fatal, because keeping it makes a restatement worse, not untrue.
+    retained_furniture: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_report(self) -> RestatementValidation:
+        if self.unsupported_numbers or self.unsupported_names or self.denied_phrases:
+            raise ValueError("A retained restatement must have an empty closed-world report")
+        if self.restatement_chars > self.source_chars:
+            raise ValueError("A restatement cannot be longer than the source it restates")
+        return self
+
+
+class RestatementProvenance(BaseModel):
+    """Generation provenance for a restatement.
+
+    `source_sha256` deliberately covers the exact source extract text rather than an evidence
+    bundle. When the upstream revision changes, the recorded hash stops matching and the build
+    treats the restatement as stale instead of silently attributing new text to an old revision.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    prompt_version: str = Field(min_length=1)
+    prompt_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    model_identifier: str = Field(min_length=1)
+    source_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    output_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    generated_at: AwareDatetime
+    provider_response_id: str | None = None
+
+
+class DossierRestatement(BaseModel):
+    """A plain-English restatement bound to exactly one source dossier revision."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    restatement_id: str = Field(pattern=r"^restatement:[a-f0-9]{16}$")
+    dossier_id: str = Field(min_length=1)
+    dossier_kind: Literal[DossierKind.RESTATEMENT] = DossierKind.RESTATEMENT
+    content_role: Literal[ContentRole.SOURCE_RESTATEMENT] = ContentRole.SOURCE_RESTATEMENT
+    language: str = Field(min_length=1)
+    headline: str = Field(min_length=1)
+    text: str = Field(min_length=1)
+    timeline: list[RestatementTimelineEntry] = Field(default_factory=list)
+    entity_ids: list[str] = Field(default_factory=list)
+    source_revision_id: int | None = None
+    source_content_checksum_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    content_checksum_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    generation: RestatementProvenance
+    validation: RestatementValidation
+
+    @model_validator(mode="after")
+    def validate_restatement(self) -> DossierRestatement:
+        expected = hashlib.sha256(self.text.encode("utf-8")).hexdigest()
+        if expected != self.content_checksum_sha256:
+            raise ValueError("Restatement content checksum does not match its text")
+        if self.source_content_checksum_sha256 != self.generation.source_sha256:
+            raise ValueError("Restatement source checksum does not match its generation record")
+        return self
+
+
+class RestatementShardContract(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    path_template: str = Field(pattern=r"^content/restatements/\{shard\}\.json$")
+    count: int = Field(ge=0)
+    shards: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_shards(self) -> RestatementShardContract:
+        if len(self.shards) != len(set(self.shards)):
+            raise ValueError("Restatement shards must be unique")
+        if any(not re.fullmatch(r"[a-f0-9]{2}", shard) for shard in self.shards):
+            raise ValueError("Restatement shards must be two lowercase hexadecimal characters")
+        return self
 
 
 class PeriodSpatialCoverage(BaseModel):
@@ -1434,6 +2321,20 @@ class FeatureContentLink(BaseModel):
     missing_entity_ids: list[str] = Field(default_factory=list)
     dossier_ids: list[str] = Field(default_factory=list)
     related_entity_ids: list[str] = Field(default_factory=list)
+    reading_eligibility: list[EntityReadingEligibility] = Field(default_factory=list)
+
+
+class EntityReadingEligibility(BaseModel):
+    """Auditable decision about using an entity's prose for one mapped feature."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    entity_id: str
+    identity_basis: Literal["source_asserted"] = "source_asserted"
+    identity_relation: Literal["exact_match", "place_continuity", "broader_topic"]
+    temporal_overlap: Literal["overlaps", "none", "unknown"]
+    reading_eligible: bool
+    reason_codes: list[str] = Field(min_length=1)
 
 
 class ContentShardContract(BaseModel):
@@ -1458,6 +2359,7 @@ class ContentCollections(BaseModel):
     feature_links: ContentShardContract
     entities: ContentShardContract
     dossiers: ContentShardContract
+    restatements: RestatementShardContract | None = None
 
 
 class ContentLanguagePolicy(BaseModel):
@@ -2140,6 +3042,54 @@ class BuildManifest(BaseModel):
     search_index_path: str = "search/index.json"
     assertion_index_path: str = "assertions/index.json"
     layer_catalog_path: str = "layers/index.json"
+    year_index_path: str = "years/index.json"
+
+
+class YearIndexEntry(BaseModel):
+    """One year a release carries, small enough that the whole index is one cheap fetch."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    year: int
+    dossier_id: str = Field(min_length=1)
+    path: str = Field(pattern=r"^years/-?\d+\.json$")
+    language: str = Field(min_length=2, max_length=3)
+    chronicle_revision_id: int
+    record_count: int = Field(ge=0)
+    anchor_count: int = Field(ge=0)
+    image_count: int = Field(ge=0)
+    headline: str = Field(min_length=1)
+    # Which other years this one reaches. The reader needs it alongside `years` below to tell a
+    # door that opens from one that does not, and it is far cheaper to answer here than by
+    # fetching forty-four dossiers to find out.
+    related_years: list[int] = Field(default_factory=list)
+
+
+class YearIndex(BaseModel):
+    """Which years a release carries, and what each one reaches.
+
+    A year dossier is addressed by its year rather than by a content hash. The key is a small
+    integer the reader already has — it came from the time slider — so sharding it by checksum
+    would add a lookup to answer a question the client could answer itself.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    path_template: str = "years/{year}.json"
+    years: list[YearIndexEntry] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_index(self) -> YearIndex:
+        listed = [entry.year for entry in self.years]
+        if len(listed) != len(set(listed)):
+            raise ValueError("A year index may not carry the same year twice")
+        if listed != sorted(listed):
+            raise ValueError("Year index entries must be in chronological order")
+        for entry in self.years:
+            if entry.path != f"years/{entry.year}.json":
+                raise ValueError(f"Year index path does not match its year: {entry.path}")
+        return self
 
 
 class LatestPointer(BaseModel):

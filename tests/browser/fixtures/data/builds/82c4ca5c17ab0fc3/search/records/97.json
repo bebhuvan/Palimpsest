@@ -1,0 +1,45 @@
+{
+  "palimpsest:event:royal-cedula-vasco-de-quiroga": {
+    "content_shard": "97",
+    "dossier_ids": [],
+    "entity_id": "palimpsest:event:royal-cedula-vasco-de-quiroga",
+    "feature_ids": [
+      "palimpsest:royal-cedula-vasco-de-quiroga:1543"
+    ],
+    "kind": "event",
+    "latitude": 41.6523,
+    "longitude": -4.7245,
+    "name_attestations": [
+      {
+        "date_precision": "exact",
+        "feature_id": "palimpsest:royal-cedula-vasco-de-quiroga:1543",
+        "language": "en",
+        "name_id": "name:613fc791929dcc36",
+        "name_kind": "unknown",
+        "perspective": null,
+        "primary": true,
+        "script": null,
+        "source_ids": [
+          "loc_new_laws"
+        ],
+        "temporal_basis": "feature_interval",
+        "temporal_confidence": "B",
+        "text": "Royal cedula to Vasco de Quiroga",
+        "valid_from": 1543,
+        "valid_to": 1543
+      }
+    ],
+    "names": {
+      "en": "Royal cedula to Vasco de Quiroga"
+    },
+    "source_ids": [
+      "loc_new_laws"
+    ],
+    "themes": [
+      "power"
+    ],
+    "valid_from": 1543,
+    "valid_to": 1543,
+    "year_dossier_years": []
+  }
+}

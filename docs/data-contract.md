@@ -165,7 +165,7 @@ geometry.
 
 Reading records declare a content role. Wikipedia and other encyclopedias are
 `tertiary_summary`; Wikisource or transcribed archival documents are `primary_source`; authored
-History Joice analysis is `project_interpretation`. The pipeline and interface must not present one
+Palimpsest analysis is `project_interpretation`. The pipeline and interface must not present one
 role as another. Commons file names are media references on an entity and are not publishable images
 until the individual file licence, attribution and revision metadata have been ingested.
 
@@ -191,4 +191,4 @@ separate through `counterclaim_ids`; the build never averages them into consensu
 
 Wikidata statement IDs, qualifiers and references are retained on selected date and relationship
 claims. Their presence strengthens provenance but does not make a community-authored claim a
-reviewed History Joice interpretation.
+reviewed Palimpsest interpretation.

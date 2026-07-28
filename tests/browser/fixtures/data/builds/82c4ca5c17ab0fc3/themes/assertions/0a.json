@@ -1,0 +1,52 @@
+{
+  "theme:631a9a249881762d": {
+    "assertion_id": "theme:631a9a249881762d",
+    "classification_basis": "explicit_source_relation",
+    "confidence": {
+      "grade": "C",
+      "rationale": "The MLIT page describes Tanegashima as a trading transit point and the arriving people as traders, while retaining the late-source limitation."
+    },
+    "entity_ids": [
+      "palimpsest:artifact:matchlock-muskets",
+      "palimpsest:event:tanegashima-firearms-encounter",
+      "palimpsest:group:portuguese-traders-tanegashima",
+      "palimpsest:person:tanegashima-tokitaka",
+      "palimpsest:person:yaita-kinbei",
+      "palimpsest:place:tanegashima",
+      "palimpsest:work:teppoki"
+    ],
+    "feature_ids": [
+      "palimpsest:tanegashima-firearms-tradition:1543"
+    ],
+    "matched_values": [
+      "source:mlit_tanegashima",
+      "kind:event",
+      "properties.event_types:maritime_trade_contact"
+    ],
+    "rationale": "The record foregrounds a maritime encounter and movement of objects and knowledge, not a one-way civilizational transfer.",
+    "review_status": "provisional",
+    "role": "primary",
+    "rule_id": "theme-rule:tanegashima-maritime-exchange",
+    "source_refs": [
+      {
+        "checksum_sha256": "295aea5847ce5d9afa801bbd2f46ab4c45a437e5dacfc37b7157a284011a6aab",
+        "citation": "Ministry of Land, Infrastructure, Transport and Tourism, Japan, Early Modern Firearms in Japan, page R4-00195.",
+        "license_id": "PDL-1.0",
+        "modified": false,
+        "publisher": "Ministry of Land, Infrastructure, Transport and Tourism, Japan",
+        "record_id": "R4-00195",
+        "retrieved_at": "2026-07-23T06:00:00Z",
+        "source_id": "mlit_tanegashima",
+        "title": "Early modern firearms in Japan",
+        "url": "https://www.mlit.go.jp/tagengo-db/R4-00195.html",
+        "version": "browser-pilot-curated-snapshot-v1"
+      }
+    ],
+    "subject_id": "palimpsest:tanegashima-firearms-tradition:1543",
+    "subject_kind": "event",
+    "subtheme": "maritime_exchange",
+    "theme": "trade",
+    "valid_from": 1543,
+    "valid_to": 1543
+  }
+}

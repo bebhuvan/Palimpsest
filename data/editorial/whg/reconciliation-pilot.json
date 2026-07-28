@@ -1,0 +1,2883 @@
+{
+  "attribution": {
+    "sources": {
+      "gn": {
+        "citation": "GeoNames geographical database, Unxos GmbH.",
+        "name": "GeoNames",
+        "record_count": 13378039
+      },
+      "ohm": {
+        "citation": "OpenHistoricalMap, by OpenHistoricalMap contributors.",
+        "name": "OpenHistoricalMap",
+        "record_count": 905205
+      },
+      "osm": {
+        "citation": "OpenStreetMap, © OpenStreetMap contributors.",
+        "name": "OpenStreetMap",
+        "record_count": 20289895
+      },
+      "tgn": {
+        "citation": "Getty Thesaurus of Geographic Names (TGN), J. Paul Getty Trust.",
+        "name": "Getty TGN",
+        "record_count": 2991044
+      },
+      "wd": {
+        "citation": "Wikidata, Wikimedia Foundation.",
+        "name": "Wikidata",
+        "record_count": 11459393
+      },
+      "whg": {
+        "citation": "WHG-curated specialist gazetteers — datasets and collections contributed by researchers, indexed under the WHG namespace.",
+        "name": "Specialist Gazetteers",
+        "record_count": 0
+      }
+    },
+    "whg": {
+      "label": "Creative Commons Attribution-NonCommercial 4.0 International",
+      "spdx_id": "CC-BY-NC-4.0",
+      "url": "https://creativecommons.org/licenses/by-nc/4.0/"
+    }
+  },
+  "endpoint": "https://whgazetteer.org/reconcile",
+  "namespaces": [
+    "whg",
+    "gn",
+    "tgn",
+    "wd",
+    "osm",
+    "ohm"
+  ],
+  "provider_format": "whg-reconciliation-v0.2",
+  "queries": [
+    {
+      "discarded_candidates": [],
+      "provider_variants_used": [],
+      "query_id": "query:0008ead3789286ea",
+      "request": {
+        "end": 640,
+        "lat": 43.416928,
+        "lng": 20.757647,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Metalli Dardanici",
+        "radius": 50.0,
+        "size": 5,
+        "start": -30,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [],
+      "subject": {
+        "kind": "archaeological_site",
+        "latitude": 43.416928,
+        "longitude": 20.757647,
+        "name": "Metalli Dardanici",
+        "query_id": "query:0008ead3789286ea",
+        "subject_id": "pleiades:963101094:-30:640:45ff0a05f693",
+        "valid_from": -30,
+        "valid_to": 640
+      },
+      "subject_id": "pleiades:963101094:-30:640:45ff0a05f693"
+    },
+    {
+      "discarded_candidates": [
+        {
+          "distance_km": 394.765,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "DE"
+            ],
+            "description": "Country: DE",
+            "has_geom": false,
+            "id": "place:5091915",
+            "match": false,
+            "name": "Nortrup",
+            "repr_point": [
+              7.883333,
+              52.6
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 7747.576,
+          "provider_candidate": {
+            "alt_names": [
+              "Nordrum Cabins"
+            ],
+            "ccodes": [
+              "US"
+            ],
+            "description": "Country: US",
+            "has_geom": false,
+            "id": "place:5759521",
+            "match": false,
+            "name": "Nordrum",
+            "repr_point": [
+              -121.5333,
+              47.55
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 8341.243,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "US"
+            ],
+            "description": "Country: US",
+            "has_geom": false,
+            "id": "place:4799212",
+            "match": false,
+            "name": "Northrup",
+            "repr_point": [
+              -96.9667,
+              30.1
+            ],
+            "score": 84,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 6137.621,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "US"
+            ],
+            "description": "Country: US",
+            "has_geom": false,
+            "id": "place:4870200",
+            "match": false,
+            "name": "Northrup",
+            "repr_point": [
+              -74.7167,
+              41.1333
+            ],
+            "score": 84,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 6764.197,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "US"
+            ],
+            "description": "Country: US",
+            "has_geom": false,
+            "id": "place:6224173",
+            "match": false,
+            "name": "Northup",
+            "repr_point": [
+              -82.2833,
+              38.7667
+            ],
+            "score": 84,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        }
+      ],
+      "provider_variants_used": [],
+      "query_id": "query:0008f14bc1e5bbc2",
+      "request": {
+        "end": 300,
+        "lat": 55.480869,
+        "lng": 11.419377,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Nordrup",
+        "radius": 50.0,
+        "size": 5,
+        "start": -30,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [],
+      "subject": {
+        "kind": "archaeological_site",
+        "latitude": 55.480869,
+        "longitude": 11.419377,
+        "name": "Nordrup",
+        "query_id": "query:0008f14bc1e5bbc2",
+        "subject_id": "pleiades:99015:-30:300:050ffad6272d",
+        "valid_from": -30,
+        "valid_to": 300
+      },
+      "subject_id": "pleiades:99015:-30:300:050ffad6272d"
+    },
+    {
+      "discarded_candidates": [
+        {
+          "distance_km": 7922.07,
+          "provider_candidate": {
+            "alt_names": [
+              "Vellaere"
+            ],
+            "ccodes": [
+              "BE"
+            ],
+            "description": "Country: BE",
+            "has_geom": false,
+            "id": "place:4695849",
+            "match": false,
+            "name": "Vellare",
+            "repr_point": [
+              3.596137,
+              51.09901
+            ],
+            "score": 72,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 327.184,
+          "provider_candidate": {
+            "alt_names": [
+              "Velluru"
+            ],
+            "ccodes": [
+              "IN"
+            ],
+            "description": "Country: IN",
+            "has_geom": false,
+            "id": "place:5828355",
+            "match": false,
+            "name": "Vellore",
+            "repr_point": [
+              79.133333,
+              12.933333
+            ],
+            "score": 72,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 13495.629,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "CA"
+            ],
+            "description": "Country: CA",
+            "has_geom": false,
+            "id": "place:5321646",
+            "match": false,
+            "name": "Vellore",
+            "repr_point": [
+              -79.5667,
+              43.8333
+            ],
+            "score": 72,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        }
+      ],
+      "provider_variants_used": [],
+      "query_id": "query:000d2e2f8bd30cbe",
+      "request": {
+        "end": 300,
+        "lat": 10.806522,
+        "lng": 77.055401,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Vellalore",
+        "radius": 50.0,
+        "size": 5,
+        "start": -30,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [
+        {
+          "authority_namespace": "whg",
+          "distance_km": 18.122,
+          "id": "place:6462703",
+          "name": "Vellalore",
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "IN"
+            ],
+            "description": "Country: IN",
+            "has_geom": false,
+            "id": "place:6462703",
+            "match": true,
+            "name": "Vellalore",
+            "repr_point": [
+              77.027777777,
+              10.967222222
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "provider_match": true,
+          "relation": "candidate",
+          "review_status": "proposed",
+          "score": 100.0,
+          "uri": "https://whgazetteer.org/entity/place:6462703/"
+        }
+      ],
+      "subject": {
+        "kind": "settlement",
+        "latitude": 10.806522,
+        "longitude": 77.055401,
+        "name": "Vellalore",
+        "query_id": "query:000d2e2f8bd30cbe",
+        "subject_id": "pleiades:50326:-30:300:ef1c6663b232",
+        "valid_from": -30,
+        "valid_to": 300
+      },
+      "subject_id": "pleiades:50326:-30:300:ef1c6663b232"
+    },
+    {
+      "discarded_candidates": [],
+      "provider_variants_used": [],
+      "query_id": "query:001bee8a857b3e0d",
+      "request": {
+        "end": 2100,
+        "lat": 41.4943754,
+        "lng": 14.7592688,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Montagna di Gildone",
+        "radius": 50.0,
+        "size": 5,
+        "start": 1700,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [
+        {
+          "authority_namespace": "osm",
+          "distance_km": 0.0,
+          "id": "place:osm:n2552149251",
+          "name": "Montagna di Gildone",
+          "provider_candidate": {
+            "alt_names": [
+              "montagna di gildone"
+            ],
+            "ccodes": [
+              "IT"
+            ],
+            "description": "Country: IT",
+            "has_geom": false,
+            "id": "place:osm:n2552149251",
+            "match": true,
+            "name": "Montagna di Gildone",
+            "repr_point": [
+              14.759269,
+              41.494375
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "provider_match": true,
+          "relation": "candidate",
+          "review_status": "proposed",
+          "score": 100.0,
+          "uri": "https://whgazetteer.org/entity/place:osm:n2552149251/"
+        },
+        {
+          "authority_namespace": "whg",
+          "distance_km": 0.0,
+          "id": "place:6452457",
+          "name": "Montagna di Gildone",
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "IT"
+            ],
+            "description": "Country: IT",
+            "has_geom": false,
+            "id": "place:6452457",
+            "match": true,
+            "name": "Montagna di Gildone",
+            "repr_point": [
+              14.7592688,
+              41.4943754
+            ],
+            "score": 45,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "provider_match": true,
+          "relation": "candidate",
+          "review_status": "proposed",
+          "score": 45.0,
+          "uri": "https://whgazetteer.org/entity/place:6452457/"
+        }
+      ],
+      "subject": {
+        "kind": "settlement",
+        "latitude": 41.4943754,
+        "longitude": 14.7592688,
+        "name": "Montagna di Gildone",
+        "query_id": "query:001bee8a857b3e0d",
+        "subject_id": "pleiades:305770200:1700:2100:ad3809efd092",
+        "valid_from": 1700,
+        "valid_to": 2100
+      },
+      "subject_id": "pleiades:305770200:1700:2100:ad3809efd092"
+    },
+    {
+      "discarded_candidates": [
+        {
+          "distance_km": 3978.487,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "SD"
+            ],
+            "description": "Country: SD",
+            "has_geom": false,
+            "id": "place:8070963",
+            "match": false,
+            "name": "Yabus",
+            "repr_point": [
+              34.1865,
+              9.8693
+            ],
+            "score": 81,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 8762.828,
+          "provider_candidate": {
+            "alt_names": [
+              "垭口寺"
+            ],
+            "ccodes": [
+              "CN"
+            ],
+            "description": "Country: CN",
+            "has_geom": false,
+            "id": "place:5034290",
+            "match": false,
+            "name": "Yakousi",
+            "repr_point": [
+              104.656,
+              30.292
+            ],
+            "score": 68,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 6039.794,
+          "provider_candidate": {
+            "alt_names": [
+              "亚博依"
+            ],
+            "ccodes": [
+              "CN"
+            ],
+            "description": "Country: CN",
+            "has_geom": false,
+            "id": "place:4879396",
+            "match": false,
+            "name": "Yaboyi",
+            "repr_point": [
+              76.518477,
+              39.158198
+            ],
+            "score": 68,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 9136.457,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "NI"
+            ],
+            "description": "Country: NI",
+            "has_geom": false,
+            "id": "place:5117230",
+            "match": false,
+            "name": "Yablis",
+            "repr_point": [
+              -83.7333,
+              14.1333
+            ],
+            "score": 68,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        }
+      ],
+      "provider_variants_used": [],
+      "query_id": "query:001f2fae287d7c84",
+      "request": {
+        "end": 640,
+        "lat": 35.40816,
+        "lng": 6.641723,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Yabous",
+        "radius": 50.0,
+        "size": 5,
+        "start": 300,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [
+        {
+          "authority_namespace": "whg",
+          "distance_km": 0.011,
+          "id": "place:6459563",
+          "name": "Yabous",
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "DZ"
+            ],
+            "description": "Country: DZ",
+            "has_geom": false,
+            "id": "place:6459563",
+            "match": true,
+            "name": "Yabous",
+            "repr_point": [
+              6.64184,
+              35.40815
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "provider_match": true,
+          "relation": "candidate",
+          "review_status": "proposed",
+          "score": 100.0,
+          "uri": "https://whgazetteer.org/entity/place:6459563/"
+        }
+      ],
+      "subject": {
+        "kind": "settlement",
+        "latitude": 35.40816,
+        "longitude": 6.641723,
+        "name": "Yabous",
+        "query_id": "query:001f2fae287d7c84",
+        "subject_id": "pleiades:334666:300:640:8046b4b02d6f",
+        "valid_from": 300,
+        "valid_to": 640
+      },
+      "subject_id": "pleiades:334666:300:640:8046b4b02d6f"
+    },
+    {
+      "discarded_candidates": [],
+      "provider_variants_used": [],
+      "query_id": "query:002094660d20673a",
+      "request": {
+        "end": -330,
+        "lat": 39.449388,
+        "lng": 16.611427,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Longobucco",
+        "radius": 50.0,
+        "size": 5,
+        "start": -750,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [
+        {
+          "authority_namespace": "whg",
+          "distance_km": 0.455,
+          "id": "place:6167017",
+          "name": "Longobucco",
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "IT"
+            ],
+            "description": "Country: IT",
+            "has_geom": false,
+            "id": "place:6167017",
+            "match": true,
+            "name": "Longobucco",
+            "repr_point": [
+              16.616667,
+              39.45
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "provider_match": true,
+          "relation": "candidate",
+          "review_status": "proposed",
+          "score": 100.0,
+          "uri": "https://whgazetteer.org/entity/place:6167017/"
+        },
+        {
+          "authority_namespace": "whg",
+          "distance_km": 0.455,
+          "id": "place:6457745",
+          "name": "Longobucco",
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "IT"
+            ],
+            "description": "Country: IT",
+            "has_geom": false,
+            "id": "place:6457745",
+            "match": true,
+            "name": "Longobucco",
+            "repr_point": [
+              16.616666666,
+              39.45
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "provider_match": true,
+          "relation": "candidate",
+          "review_status": "proposed",
+          "score": 100.0,
+          "uri": "https://whgazetteer.org/entity/place:6457745/"
+        }
+      ],
+      "subject": {
+        "kind": "settlement",
+        "latitude": 39.449388,
+        "longitude": 16.611427,
+        "name": "Longobucco",
+        "query_id": "query:002094660d20673a",
+        "subject_id": "pleiades:452370:-750:-330:8016ccdcb0ff",
+        "valid_from": -750,
+        "valid_to": -330
+      },
+      "subject_id": "pleiades:452370:-750:-330:8016ccdcb0ff"
+    },
+    {
+      "discarded_candidates": [],
+      "provider_variants_used": [],
+      "query_id": "query:002538ba527855ee",
+      "request": {
+        "end": -540,
+        "lat": 37.7451585,
+        "lng": 34.452923,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Hubušnu (kingdom)",
+        "radius": 50.0,
+        "size": 5,
+        "start": -1000,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [],
+      "subject": {
+        "kind": "archaeological_site",
+        "latitude": 37.7451585,
+        "longitude": 34.452923,
+        "name": "Hubušnu (kingdom)",
+        "query_id": "query:002538ba527855ee",
+        "subject_id": "pleiades:57893804:-1000:-540:bb0323248990",
+        "valid_from": -1000,
+        "valid_to": -540
+      },
+      "subject_id": "pleiades:57893804:-1000:-540:bb0323248990"
+    },
+    {
+      "discarded_candidates": [],
+      "provider_variants_used": [],
+      "query_id": "query:0025ac8fbd502120",
+      "request": {
+        "end": -540,
+        "lat": 36.509077,
+        "lng": 43.228229,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Ea temple",
+        "radius": 50.0,
+        "size": 5,
+        "start": -720,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [],
+      "subject": {
+        "kind": "archaeological_site",
+        "latitude": 36.509077,
+        "longitude": 43.228229,
+        "name": "Ea temple",
+        "query_id": "query:0025ac8fbd502120",
+        "subject_id": "pleiades:736377180:-720:-540:751597ed55a2",
+        "valid_from": -720,
+        "valid_to": -540
+      },
+      "subject_id": "pleiades:736377180:-720:-540:751597ed55a2"
+    },
+    {
+      "discarded_candidates": [
+        {
+          "distance_km": 1456.382,
+          "provider_candidate": {
+            "alt_names": [
+              "Emirlergiresunu",
+              "Geresin",
+              "Geresun"
+            ],
+            "ccodes": [
+              "TR"
+            ],
+            "description": "Country: TR",
+            "has_geom": false,
+            "id": "place:4819651",
+            "match": false,
+            "name": "Güneykent",
+            "repr_point": [
+              30.395278,
+              37.971381
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 2139.086,
+          "provider_candidate": {
+            "alt_names": [
+              "Gereşin",
+              "Gereşen"
+            ],
+            "ccodes": [
+              "TR"
+            ],
+            "description": "Country: TR",
+            "has_geom": false,
+            "id": "place:4897222",
+            "match": false,
+            "name": "Bozyiğit",
+            "repr_point": [
+              43.225815,
+              40.964634
+            ],
+            "score": 96,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 1679.272,
+          "provider_candidate": {
+            "alt_names": [
+              "Gérmesi",
+              "Paralímni"
+            ],
+            "ccodes": [
+              "GR"
+            ],
+            "description": "Country: GR",
+            "has_geom": false,
+            "id": "place:5699902",
+            "match": false,
+            "name": "Profítis Ilías",
+            "repr_point": [
+              21.9,
+              38.066667
+            ],
+            "score": 96,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        }
+      ],
+      "provider_variants_used": [],
+      "query_id": "query:002a60c920a1c94f",
+      "request": {
+        "end": 640,
+        "lat": 24.874605,
+        "lng": 30.562172,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Germeshin",
+        "radius": 50.0,
+        "size": 5,
+        "start": 300,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [],
+      "subject": {
+        "kind": "archaeological_site",
+        "latitude": 24.874605,
+        "longitude": 30.562172,
+        "name": "Germeshin",
+        "query_id": "query:002a60c920a1c94f",
+        "subject_id": "pleiades:776177:300:640:7ceb6f8b44d3",
+        "valid_from": 300,
+        "valid_to": 640
+      },
+      "subject_id": "pleiades:776177:300:640:7ceb6f8b44d3"
+    },
+    {
+      "discarded_candidates": [
+        {
+          "distance_km": 1618.876,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "FR"
+            ],
+            "description": "Country: FR",
+            "has_geom": false,
+            "id": "place:5533596",
+            "match": false,
+            "name": "Erstein",
+            "repr_point": [
+              7.661476,
+              48.421981
+            ],
+            "score": 72,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        }
+      ],
+      "provider_variants_used": [],
+      "query_id": "query:002c58f2e6d770d9",
+      "request": {
+        "end": 640,
+        "lat": 38.362934,
+        "lng": 22.23337,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Erateini",
+        "radius": 50.0,
+        "size": 5,
+        "start": -550,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [
+        {
+          "authority_namespace": "whg",
+          "distance_km": 0.461,
+          "id": "place:6455870",
+          "name": "Erateini",
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "GR"
+            ],
+            "description": "Country: GR",
+            "has_geom": false,
+            "id": "place:6455870",
+            "match": true,
+            "name": "Erateini",
+            "repr_point": [
+              22.228333333,
+              38.361666666
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "provider_match": true,
+          "relation": "candidate",
+          "review_status": "proposed",
+          "score": 100.0,
+          "uri": "https://whgazetteer.org/entity/place:6455870/"
+        },
+        {
+          "authority_namespace": "whg",
+          "distance_km": 0.415,
+          "id": "place:5318144",
+          "name": "Eratiní",
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "GR"
+            ],
+            "description": "Country: GR",
+            "has_geom": false,
+            "id": "place:5318144",
+            "match": false,
+            "name": "Eratiní",
+            "repr_point": [
+              22.233333,
+              38.366667
+            ],
+            "score": 72,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "provider_match": false,
+          "relation": "candidate",
+          "review_status": "proposed",
+          "score": 72.0,
+          "uri": "https://whgazetteer.org/entity/place:5318144/"
+        }
+      ],
+      "subject": {
+        "kind": "settlement",
+        "latitude": 38.362934,
+        "longitude": 22.23337,
+        "name": "Erateini",
+        "query_id": "query:002c58f2e6d770d9",
+        "subject_id": "pleiades:540765:-550:640:3f42a5238620",
+        "valid_from": -550,
+        "valid_to": 640
+      },
+      "subject_id": "pleiades:540765:-550:640:3f42a5238620"
+    },
+    {
+      "discarded_candidates": [],
+      "provider_variants_used": [],
+      "query_id": "query:0030d2e3ccddfd4a",
+      "request": {
+        "end": 640,
+        "lat": 28.098333500000003,
+        "lng": -16.09,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Fortunatae Insulae (Canary Islands)",
+        "radius": 50.0,
+        "size": 5,
+        "start": -30,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [],
+      "subject": {
+        "kind": "archaeological_site",
+        "latitude": 28.098333500000003,
+        "longitude": -16.09,
+        "name": "Fortunatae Insulae (Canary Islands)",
+        "query_id": "query:0030d2e3ccddfd4a",
+        "subject_id": "pleiades:149334673:-30:640:67978f1e857f",
+        "valid_from": -30,
+        "valid_to": 640
+      },
+      "subject_id": "pleiades:149334673:-30:640:67978f1e857f"
+    },
+    {
+      "discarded_candidates": [
+        {
+          "distance_km": 203.605,
+          "provider_candidate": {
+            "alt_names": [
+              "Şahinli",
+              "Kasrishakhin"
+            ],
+            "ccodes": [
+              "TR"
+            ],
+            "description": "Country: TR",
+            "has_geom": false,
+            "id": "place:6202727",
+            "match": false,
+            "name": "Kasrişahin",
+            "repr_point": [
+              41.015833,
+              37.785833
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        }
+      ],
+      "provider_variants_used": [],
+      "query_id": "query:0031c67f1a4fb964",
+      "request": {
+        "end": 2100,
+        "lat": 36.7759,
+        "lng": 42.9355,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Kārībahīn",
+        "radius": 50.0,
+        "size": 5,
+        "start": 1700,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [],
+      "subject": {
+        "kind": "archaeological_site",
+        "latitude": 36.7759,
+        "longitude": 42.9355,
+        "name": "Kārībahīn",
+        "query_id": "query:0031c67f1a4fb964",
+        "subject_id": "pleiades:822133371:1700:2100:bd5bfc1c0cef",
+        "valid_from": 1700,
+        "valid_to": 2100
+      },
+      "subject_id": "pleiades:822133371:1700:2100:bd5bfc1c0cef"
+    },
+    {
+      "discarded_candidates": [
+        {
+          "distance_km": 16825.354,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "AU"
+            ],
+            "description": "Country: AU",
+            "has_geom": false,
+            "id": "place:4519930",
+            "match": true,
+            "name": "Wingham",
+            "repr_point": [
+              152.369888,
+              -31.86676
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 5911.461,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "CA"
+            ],
+            "description": "Country: CA",
+            "has_geom": false,
+            "id": "place:4905868",
+            "match": true,
+            "name": "Wingham",
+            "repr_point": [
+              -81.3167,
+              43.9
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 215.619,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "BE"
+            ],
+            "description": "Country: BE",
+            "has_geom": false,
+            "id": "place:5378609",
+            "match": false,
+            "name": "Wintham",
+            "repr_point": [
+              4.297842,
+              51.106546
+            ],
+            "score": 86,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        }
+      ],
+      "provider_variants_used": [],
+      "query_id": "query:003204ce96785048",
+      "request": {
+        "end": 640,
+        "lat": 51.273403,
+        "lng": 1.21513,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Wingham",
+        "radius": 50.0,
+        "size": 5,
+        "start": -30,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [
+        {
+          "authority_namespace": "whg",
+          "distance_km": 0.177,
+          "id": "place:6458657",
+          "name": "Wingham",
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "GB"
+            ],
+            "description": "Country: GB",
+            "has_geom": false,
+            "id": "place:6458657",
+            "match": true,
+            "name": "Wingham",
+            "repr_point": [
+              1.2171,
+              51.2724
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "provider_match": true,
+          "relation": "candidate",
+          "review_status": "proposed",
+          "score": 100.0,
+          "uri": "https://whgazetteer.org/entity/place:6458657/"
+        },
+        {
+          "authority_namespace": "whg",
+          "distance_km": 0.757,
+          "id": "place:5750202",
+          "name": "Wingham",
+          "provider_candidate": {
+            "alt_names": [
+              "Wingheham"
+            ],
+            "ccodes": [
+              "GB"
+            ],
+            "description": "Country: GB",
+            "has_geom": false,
+            "id": "place:5750202",
+            "match": true,
+            "name": "Wingham",
+            "repr_point": [
+              1.216667,
+              51.266667
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "provider_match": true,
+          "relation": "candidate",
+          "review_status": "proposed",
+          "score": 100.0,
+          "uri": "https://whgazetteer.org/entity/place:5750202/"
+        }
+      ],
+      "subject": {
+        "kind": "archaeological_site",
+        "latitude": 51.273403,
+        "longitude": 1.21513,
+        "name": "Wingham",
+        "query_id": "query:003204ce96785048",
+        "subject_id": "pleiades:79765:-30:640:494782887537",
+        "valid_from": -30,
+        "valid_to": 640
+      },
+      "subject_id": "pleiades:79765:-30:640:494782887537"
+    },
+    {
+      "discarded_candidates": [],
+      "provider_variants_used": [],
+      "query_id": "query:003471ee7ab99bfb",
+      "request": {
+        "end": 640,
+        "lat": 43.332594,
+        "lng": 23.133425,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Kalimanitsa",
+        "radius": 50.0,
+        "size": 5,
+        "start": -30,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [
+        {
+          "authority_namespace": "whg",
+          "distance_km": 0.0,
+          "id": "place:6466148",
+          "name": "Kalimanitsa",
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "BG"
+            ],
+            "description": "Country: BG",
+            "has_geom": false,
+            "id": "place:6466148",
+            "match": true,
+            "name": "Kalimanitsa",
+            "repr_point": [
+              23.133425,
+              43.332594
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "provider_match": true,
+          "relation": "candidate",
+          "review_status": "proposed",
+          "score": 100.0,
+          "uri": "https://whgazetteer.org/entity/place:6466148/"
+        }
+      ],
+      "subject": {
+        "kind": "settlement",
+        "latitude": 43.332594,
+        "longitude": 23.133425,
+        "name": "Kalimanitsa",
+        "query_id": "query:003471ee7ab99bfb",
+        "subject_id": "pleiades:207204:-30:640:5c67e93b2d34",
+        "valid_from": -30,
+        "valid_to": 640
+      },
+      "subject_id": "pleiades:207204:-30:640:5c67e93b2d34"
+    },
+    {
+      "discarded_candidates": [
+        {
+          "distance_km": 4334.543,
+          "provider_candidate": {
+            "alt_names": [
+              "Jertoma"
+            ],
+            "ccodes": [
+              "RU"
+            ],
+            "description": "Country: RU",
+            "has_geom": false,
+            "id": "place:5689403",
+            "match": false,
+            "name": "Yertom",
+            "repr_point": [
+              47.85,
+              63.5167
+            ],
+            "score": 68,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 3179.462,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "NG"
+            ],
+            "description": "Country: NG",
+            "has_geom": false,
+            "id": "place:125327",
+            "match": false,
+            "name": "Yergum",
+            "repr_point": [
+              10.0,
+              9.0
+            ],
+            "score": 68,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 3149.843,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "TG"
+            ],
+            "description": "Country: TG",
+            "has_geom": false,
+            "id": "place:8038977",
+            "match": false,
+            "name": "Yeloum",
+            "repr_point": [
+              0.983332446,
+              8.099997724
+            ],
+            "score": 68,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 3142.414,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "TG"
+            ],
+            "description": "Country: TG",
+            "has_geom": false,
+            "id": "place:8039007",
+            "match": false,
+            "name": "Yeoum",
+            "repr_point": [
+              1.033335564,
+              8.166670358
+            ],
+            "score": 61,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        }
+      ],
+      "provider_variants_used": [],
+      "query_id": "query:00384f8c75fd4f9e",
+      "request": {
+        "end": 300,
+        "lat": 36.426971,
+        "lng": 1.103086,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Yerroum",
+        "radius": 50.0,
+        "size": 5,
+        "start": -30,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [
+        {
+          "authority_namespace": "whg",
+          "distance_km": 0.0,
+          "id": "place:6449571",
+          "name": "Yerroum",
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "DZ"
+            ],
+            "description": "Country: DZ",
+            "has_geom": false,
+            "id": "place:6449571",
+            "match": true,
+            "name": "Yerroum",
+            "repr_point": [
+              1.103086,
+              36.426971
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "provider_match": true,
+          "relation": "candidate",
+          "review_status": "proposed",
+          "score": 100.0,
+          "uri": "https://whgazetteer.org/entity/place:6449571/"
+        }
+      ],
+      "subject": {
+        "kind": "settlement",
+        "latitude": 36.426971,
+        "longitude": 1.103086,
+        "name": "Yerroum",
+        "query_id": "query:00384f8c75fd4f9e",
+        "subject_id": "pleiades:295371:-30:300:6d777d7a5ad0",
+        "valid_from": -30,
+        "valid_to": 300
+      },
+      "subject_id": "pleiades:295371:-30:300:6d777d7a5ad0"
+    },
+    {
+      "discarded_candidates": [],
+      "provider_variants_used": [],
+      "query_id": "query:003a1323261df783",
+      "request": {
+        "end": 2100,
+        "lat": 36.3718555,
+        "lng": 43.1668081,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Šibaniba Gate",
+        "radius": 50.0,
+        "size": 5,
+        "start": 1700,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [],
+      "subject": {
+        "kind": "settlement",
+        "latitude": 36.3718555,
+        "longitude": 43.1668081,
+        "name": "Šibaniba Gate",
+        "query_id": "query:003a1323261df783",
+        "subject_id": "pleiades:719936356:1700:2100:9feec886b875",
+        "valid_from": 1700,
+        "valid_to": 2100
+      },
+      "subject_id": "pleiades:719936356:1700:2100:9feec886b875"
+    },
+    {
+      "discarded_candidates": [
+        {
+          "distance_km": 1237.29,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "IT"
+            ],
+            "description": "Country: IT",
+            "has_geom": false,
+            "id": "place:6455225",
+            "match": false,
+            "name": "Duronia",
+            "repr_point": [
+              14.466666666,
+              41.666666666
+            ],
+            "score": 72,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 1236.448,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "IT"
+            ],
+            "description": "Country: IT",
+            "has_geom": false,
+            "id": "place:5368719",
+            "match": false,
+            "name": "Duronia",
+            "repr_point": [
+              14.45,
+              41.666667
+            ],
+            "score": 72,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 730.497,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "FR"
+            ],
+            "description": "Country: FR",
+            "has_geom": false,
+            "id": "place:5831402",
+            "match": false,
+            "name": "Duranus",
+            "repr_point": [
+              7.25795,
+              43.892728
+            ],
+            "score": 72,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 16182.232,
+          "provider_candidate": {
+            "alt_names": [
+              "My-yon"
+            ],
+            "ccodes": [
+              "AU"
+            ],
+            "description": "Country: AU",
+            "has_geom": false,
+            "id": "place:4955168",
+            "match": false,
+            "name": "Durong",
+            "repr_point": [
+              151.25,
+              -26.333333
+            ],
+            "score": 68,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        }
+      ],
+      "provider_variants_used": [],
+      "query_id": "query:003cb6a71dc4471c",
+      "request": {
+        "end": 640,
+        "lat": 50.058266,
+        "lng": 3.926293,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Duronum",
+        "radius": 50.0,
+        "size": 5,
+        "start": -30,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [
+        {
+          "authority_namespace": "whg",
+          "distance_km": 0.0,
+          "id": "place:6468691",
+          "name": "Duronum",
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "FR"
+            ],
+            "description": "Country: FR",
+            "has_geom": false,
+            "id": "place:6468691",
+            "match": true,
+            "name": "Duronum",
+            "repr_point": [
+              3.926293,
+              50.058266
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "provider_match": true,
+          "relation": "candidate",
+          "review_status": "proposed",
+          "score": 100.0,
+          "uri": "https://whgazetteer.org/entity/place:6468691/"
+        }
+      ],
+      "subject": {
+        "kind": "settlement",
+        "latitude": 50.058266,
+        "longitude": 3.926293,
+        "name": "Duronum",
+        "query_id": "query:003cb6a71dc4471c",
+        "subject_id": "pleiades:108948:-30:640:f386e06d2572",
+        "valid_from": -30,
+        "valid_to": 640
+      },
+      "subject_id": "pleiades:108948:-30:640:f386e06d2572"
+    },
+    {
+      "discarded_candidates": [
+        {
+          "distance_km": 3714.499,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "FR"
+            ],
+            "description": "Country: FR",
+            "has_geom": false,
+            "id": "place:6149167",
+            "match": false,
+            "name": "Bardais",
+            "repr_point": [
+              2.769612,
+              46.703908
+            ],
+            "score": 84,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 2707.155,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "AF"
+            ],
+            "description": "Country: AF",
+            "has_geom": false,
+            "id": "place:7137681",
+            "match": false,
+            "name": "Badgis",
+            "repr_point": [
+              63.75,
+              35.0
+            ],
+            "score": 84,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 4484.682,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "GH"
+            ],
+            "description": "Country: GH",
+            "has_geom": false,
+            "id": "place:7839725",
+            "match": false,
+            "name": "Badasi",
+            "repr_point": [
+              0.3833,
+              6.3
+            ],
+            "score": 84,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 6271.393,
+          "provider_candidate": {
+            "alt_names": [
+              "巴代"
+            ],
+            "ccodes": [
+              "CN"
+            ],
+            "description": "Country: CN",
+            "has_geom": false,
+            "id": "place:6009510",
+            "match": false,
+            "name": "Badai",
+            "repr_point": [
+              99.5892,
+              23.0024
+            ],
+            "score": 81,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        }
+      ],
+      "provider_variants_used": [],
+      "query_id": "query:00412d33952d2547",
+      "request": {
+        "end": 300,
+        "lat": 26.808524,
+        "lng": 36.916405,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Badais",
+        "radius": 50.0,
+        "size": 5,
+        "start": -330,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [
+        {
+          "authority_namespace": "whg",
+          "distance_km": 0.0,
+          "id": "place:6458731",
+          "name": "Badais",
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "SA"
+            ],
+            "description": "Country: SA",
+            "has_geom": false,
+            "id": "place:6458731",
+            "match": true,
+            "name": "Badais",
+            "repr_point": [
+              36.916405,
+              26.808524
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "provider_match": true,
+          "relation": "candidate",
+          "review_status": "proposed",
+          "score": 100.0,
+          "uri": "https://whgazetteer.org/entity/place:6458731/"
+        }
+      ],
+      "subject": {
+        "kind": "settlement",
+        "latitude": 26.808524,
+        "longitude": 36.916405,
+        "name": "Badais",
+        "query_id": "query:00412d33952d2547",
+        "subject_id": "pleiades:814664:-330:300:8a98ce2ce80f",
+        "valid_from": -330,
+        "valid_to": 300
+      },
+      "subject_id": "pleiades:814664:-330:300:8a98ce2ce80f"
+    },
+    {
+      "discarded_candidates": [],
+      "provider_variants_used": [],
+      "query_id": "query:0043a44f28776b75",
+      "request": {
+        "end": 300,
+        "lat": 32.43518,
+        "lng": 35.773767,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Bethezoba",
+        "radius": 50.0,
+        "size": 5,
+        "start": -30,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [
+        {
+          "authority_namespace": "whg",
+          "distance_km": 0.0,
+          "id": "place:6465272",
+          "name": "Bethezoba",
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "JO"
+            ],
+            "description": "Country: JO",
+            "has_geom": false,
+            "id": "place:6465272",
+            "match": true,
+            "name": "Bethezoba",
+            "repr_point": [
+              35.773767,
+              32.43518
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "provider_match": true,
+          "relation": "candidate",
+          "review_status": "proposed",
+          "score": 100.0,
+          "uri": "https://whgazetteer.org/entity/place:6465272/"
+        }
+      ],
+      "subject": {
+        "kind": "settlement",
+        "latitude": 32.43518,
+        "longitude": 35.773767,
+        "name": "Bethezoba",
+        "query_id": "query:0043a44f28776b75",
+        "subject_id": "pleiades:678064:-30:300:d3335c600451",
+        "valid_from": -30,
+        "valid_to": 300
+      },
+      "subject_id": "pleiades:678064:-30:300:d3335c600451"
+    },
+    {
+      "discarded_candidates": [
+        {
+          "distance_km": 6603.079,
+          "provider_candidate": {
+            "alt_names": [
+              "Sarmusaklí",
+              "Pentápolis"
+            ],
+            "ccodes": [
+              "GR"
+            ],
+            "description": "Country: GR",
+            "has_geom": false,
+            "id": "place:5841666",
+            "match": false,
+            "name": "Pendápolis",
+            "repr_point": [
+              23.683333,
+              41.05
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 16091.166,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "BR"
+            ],
+            "description": "Country: BR",
+            "has_geom": false,
+            "id": "place:4593687",
+            "match": false,
+            "name": "Penápolis",
+            "repr_point": [
+              -50.0667,
+              -21.3833
+            ],
+            "score": 97,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 6849.177,
+          "provider_candidate": {
+            "alt_names": [
+              "Barqah",
+              "Barqah, Wilāyat",
+              "Cirenaica",
+              "Cyrenaika",
+              "Cyrénaïque",
+              "Pentapolis"
+            ],
+            "ccodes": [
+              "LY"
+            ],
+            "description": "Country: LY",
+            "has_geom": false,
+            "id": "place:6004621",
+            "match": false,
+            "name": "Cyrenaica",
+            "repr_point": [
+              22.5,
+              31.0
+            ],
+            "score": 50,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 6938.65,
+          "provider_candidate": {
+            "alt_names": [
+              "kyrenaia",
+              "cyrenaica",
+              "Cyrenaica (region)",
+              "Pentapolis (administrative area)",
+              "Barqah",
+              "Pentapolites",
+              "Regio Pentapolitana"
+            ],
+            "ccodes": [
+              "LY"
+            ],
+            "description": "Country: LY",
+            "has_geom": true,
+            "id": "place:6465011",
+            "match": false,
+            "name": "Libya Superior",
+            "repr_point": [
+              21.2146,
+              32.530316
+            ],
+            "score": 41,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 7562.465,
+          "provider_candidate": {
+            "alt_names": [
+              "Uburzis",
+              "castello Virteburch",
+              "Wirzaburg",
+              "Uuirziburg",
+              "Wirciburg",
+              "Wirzburch",
+              "Werzebvrc",
+              "Wrztburg",
+              "Marcoburgum",
+              "Peapolis",
+              "Mustoburgum",
+              "Marcopolim"
+            ],
+            "ccodes": [
+              "DE"
+            ],
+            "description": "Country: DE",
+            "has_geom": false,
+            "id": "place:7353226",
+            "match": false,
+            "name": "Würzburg",
+            "repr_point": [
+              9.9294444444444,
+              49.794444444444
+            ],
+            "score": 34,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        }
+      ],
+      "provider_variants_used": [],
+      "query_id": "query:0048124498b57c97",
+      "request": {
+        "end": 300,
+        "lat": 22.334611,
+        "lng": 91.822736,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Pentapolis",
+        "radius": 50.0,
+        "size": 5,
+        "start": -30,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [],
+      "subject": {
+        "kind": "settlement",
+        "latitude": 22.334611,
+        "longitude": 91.822736,
+        "name": "Pentapolis",
+        "query_id": "query:0048124498b57c97",
+        "subject_id": "pleiades:59990:-30:300:0462ca3b2432",
+        "valid_from": -30,
+        "valid_to": 300
+      },
+      "subject_id": "pleiades:59990:-30:300:0462ca3b2432"
+    },
+    {
+      "discarded_candidates": [
+        {
+          "distance_km": 9369.234,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "MX"
+            ],
+            "description": "Country: MX",
+            "has_geom": false,
+            "id": "place:5404271",
+            "match": false,
+            "name": "Cabellal",
+            "repr_point": [
+              -97.566667,
+              20.9
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 959.939,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "ES"
+            ],
+            "description": "Country: ES",
+            "has_geom": false,
+            "id": "place:4608090",
+            "match": false,
+            "name": "Carbellino",
+            "repr_point": [
+              -6.15,
+              41.233333
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 9367.853,
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "MX"
+            ],
+            "description": "Country: MX",
+            "has_geom": false,
+            "id": "place:5934582",
+            "match": false,
+            "name": "Cabellal",
+            "repr_point": [
+              -97.316667,
+              20.683333
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 9707.351,
+          "provider_candidate": {
+            "alt_names": [
+              "Rancho El Caballo"
+            ],
+            "ccodes": [
+              "MX"
+            ],
+            "description": "Country: MX",
+            "has_geom": false,
+            "id": "place:5114733",
+            "match": false,
+            "name": "Caballo",
+            "repr_point": [
+              -110.933333,
+              28.066667
+            ],
+            "score": 95,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        }
+      ],
+      "provider_variants_used": [],
+      "query_id": "query:004afa07409eb4fa",
+      "request": {
+        "end": 640,
+        "lat": 43.829885,
+        "lng": 5.034166,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Cabellio",
+        "radius": 50.0,
+        "size": 5,
+        "start": -330,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [
+        {
+          "authority_namespace": "whg",
+          "distance_km": 0.851,
+          "id": "place:6120716",
+          "name": "Cavaillon",
+          "provider_candidate": {
+            "alt_names": [
+              "Cabelio",
+              "Cabellio"
+            ],
+            "ccodes": [
+              "FR"
+            ],
+            "description": "Country: FR",
+            "has_geom": false,
+            "id": "place:6120716",
+            "match": false,
+            "name": "Cavaillon",
+            "repr_point": [
+              5.040492,
+              43.836033
+            ],
+            "score": 97,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "provider_match": false,
+          "relation": "candidate",
+          "review_status": "proposed",
+          "score": 97.0,
+          "uri": "https://whgazetteer.org/entity/place:6120716/"
+        }
+      ],
+      "subject": {
+        "kind": "settlement",
+        "latitude": 43.829885,
+        "longitude": 5.034166,
+        "name": "Cabellio",
+        "query_id": "query:004afa07409eb4fa",
+        "subject_id": "pleiades:148027:-330:640:37fd9a1029c0",
+        "valid_from": -330,
+        "valid_to": 640
+      },
+      "subject_id": "pleiades:148027:-330:640:37fd9a1029c0"
+    },
+    {
+      "discarded_candidates": [
+        {
+          "distance_km": 65.311,
+          "provider_candidate": {
+            "alt_names": [
+              "Teutheas"
+            ],
+            "ccodes": [
+              "GR"
+            ],
+            "description": "Country: GR",
+            "has_geom": true,
+            "id": "place:6459946",
+            "match": false,
+            "name": "Teutheas (river)",
+            "repr_point": [
+              21.5,
+              38.0
+            ],
+            "score": 31,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 1289.08,
+          "provider_candidate": {
+            "alt_names": [
+              "Terythis"
+            ],
+            "ccodes": [
+              "EG"
+            ],
+            "description": "Country: EG",
+            "has_geom": false,
+            "id": "place:6453952",
+            "match": false,
+            "name": "Terythis?",
+            "repr_point": [
+              30.800827,
+              28.606577
+            ],
+            "score": 31,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 11194.7,
+          "provider_candidate": {
+            "alt_names": [
+              "Cerro Teuhctli",
+              "Cerro Teuhtli",
+              "Cerro del Teutli",
+              "Teuhctli, Cerro",
+              "Teuhtli, Cerro",
+              "Teuhtli, Volcán",
+              "Teutli",
+              "Volcán Teuhtli"
+            ],
+            "ccodes": [
+              "MX"
+            ],
+            "description": "Country: MX",
+            "has_geom": false,
+            "id": "place:5277227",
+            "match": false,
+            "name": "Teutli, Cerro del",
+            "repr_point": [
+              -99.033056,
+              19.224444
+            ],
+            "score": 29,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        }
+      ],
+      "provider_variants_used": [],
+      "query_id": "query:004d9150987259f0",
+      "request": {
+        "end": 300,
+        "lat": 37.597441,
+        "lng": 22.041285,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Teuthis",
+        "radius": 50.0,
+        "size": 5,
+        "start": -750,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [
+        {
+          "authority_namespace": "whg",
+          "distance_km": 0.498,
+          "id": "place:6459947",
+          "name": "Teuthis",
+          "provider_candidate": {
+            "alt_names": [],
+            "ccodes": [
+              "GR"
+            ],
+            "description": "Country: GR",
+            "has_geom": false,
+            "id": "place:6459947",
+            "match": true,
+            "name": "Teuthis",
+            "repr_point": [
+              22.0442,
+              37.5936
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "provider_match": true,
+          "relation": "candidate",
+          "review_status": "proposed",
+          "score": 100.0,
+          "uri": "https://whgazetteer.org/entity/place:6459947/"
+        }
+      ],
+      "subject": {
+        "kind": "settlement",
+        "latitude": 37.597441,
+        "longitude": 22.041285,
+        "name": "Teuthis",
+        "query_id": "query:004d9150987259f0",
+        "subject_id": "pleiades:570713:-750:300:3e32532eb483",
+        "valid_from": -750,
+        "valid_to": 300
+      },
+      "subject_id": "pleiades:570713:-750:300:3e32532eb483"
+    },
+    {
+      "discarded_candidates": [
+        {
+          "distance_km": 1146.324,
+          "provider_candidate": {
+            "alt_names": [
+              "Brugetia"
+            ],
+            "ccodes": [
+              "FR"
+            ],
+            "description": "Country: FR",
+            "has_geom": false,
+            "id": "place:6449759",
+            "match": false,
+            "name": "Brugetia?",
+            "repr_point": [
+              4.292758,
+              44.074028
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 938.91,
+          "provider_candidate": {
+            "alt_names": [
+              "Brigantio"
+            ],
+            "ccodes": [
+              "FR"
+            ],
+            "description": "Country: FR",
+            "has_geom": false,
+            "id": "place:5188023",
+            "match": false,
+            "name": "Briançon",
+            "repr_point": [
+              6.638075,
+              44.900465
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 629.881,
+          "provider_candidate": {
+            "alt_names": [
+              "Brigantium",
+              "bregantio",
+              "bregenz",
+              "bregant",
+              "brigantio"
+            ],
+            "ccodes": [
+              "AT"
+            ],
+            "description": "Country: AT",
+            "has_geom": false,
+            "id": "place:6106744",
+            "match": false,
+            "name": "Bregenz",
+            "repr_point": [
+              9.7667,
+              47.5167
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        },
+        {
+          "distance_km": 1974.806,
+          "provider_candidate": {
+            "alt_names": [
+              "Brigeco",
+              "Brigaecium"
+            ],
+            "ccodes": [
+              "ES"
+            ],
+            "description": "Country: ES",
+            "has_geom": false,
+            "id": "place:6452391",
+            "match": false,
+            "name": "Brigaecium/Brigeco",
+            "repr_point": [
+              -5.674123,
+              42.002779
+            ],
+            "score": 95,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        }
+      ],
+      "provider_variants_used": [],
+      "query_id": "query:0054ebddbd3cf9d8",
+      "request": {
+        "end": 640,
+        "lat": 47.735239,
+        "lng": 18.169507,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Brigetio",
+        "radius": 50.0,
+        "size": 5,
+        "start": -30,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [],
+      "subject": {
+        "kind": "settlement",
+        "latitude": 47.735239,
+        "longitude": 18.169507,
+        "name": "Brigetio",
+        "query_id": "query:0054ebddbd3cf9d8",
+        "subject_id": "pleiades:197180:-30:640:efd5a343ed72",
+        "valid_from": -30,
+        "valid_to": 640
+      },
+      "subject_id": "pleiades:197180:-30:640:efd5a343ed72"
+    },
+    {
+      "discarded_candidates": [],
+      "provider_variants_used": [],
+      "query_id": "query:0055eef8a870c560",
+      "request": {
+        "end": 640,
+        "lat": 31.334516,
+        "lng": 34.399245,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Maon/Menoeis/Castrum Moenoenum",
+        "radius": 50.0,
+        "size": 5,
+        "start": -330,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [
+        {
+          "authority_namespace": "whg",
+          "distance_km": 0.321,
+          "id": "place:6453193",
+          "name": "Maon/Menoeis/Castrum Moenoenum",
+          "provider_candidate": {
+            "alt_names": [
+              "Menochia",
+              "Menoida",
+              "Castrum Moenoenum",
+              "Menoeis",
+              "Maon"
+            ],
+            "ccodes": [
+              "IL"
+            ],
+            "description": "Country: IL",
+            "has_geom": false,
+            "id": "place:6453193",
+            "match": true,
+            "name": "Maon/Menoeis/Castrum Moenoenum",
+            "repr_point": [
+              34.395897,
+              31.3349
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "provider_match": true,
+          "relation": "candidate",
+          "review_status": "proposed",
+          "score": 100.0,
+          "uri": "https://whgazetteer.org/entity/place:6453193/"
+        }
+      ],
+      "subject": {
+        "kind": "settlement",
+        "latitude": 31.334516,
+        "longitude": 34.399245,
+        "name": "Maon/Menoeis/Castrum Moenoenum",
+        "query_id": "query:0055eef8a870c560",
+        "subject_id": "pleiades:687964:-330:640:c617a88ca31f",
+        "valid_from": -330,
+        "valid_to": 640
+      },
+      "subject_id": "pleiades:687964:-330:640:c617a88ca31f"
+    },
+    {
+      "discarded_candidates": [
+        {
+          "distance_km": 593.126,
+          "provider_candidate": {
+            "alt_names": [
+              "Tell Biseh",
+              "Tall Bisah"
+            ],
+            "ccodes": [
+              "SY"
+            ],
+            "description": "Country: SY",
+            "has_geom": false,
+            "id": "place:5565903",
+            "match": false,
+            "name": "Tall Bīsah",
+            "repr_point": [
+              36.7333,
+              34.8333
+            ],
+            "score": 100,
+            "type": [
+              {
+                "id": "https://whgazetteer.org/static/whg_schema.jsonld#Place",
+                "name": "Place"
+              }
+            ],
+            "wikipedia": []
+          },
+          "reason": "outside_requested_radius"
+        }
+      ],
+      "provider_variants_used": [],
+      "query_id": "query:00581e9dc569fcd9",
+      "request": {
+        "end": 2100,
+        "lat": 36.7079,
+        "lng": 42.8899,
+        "mode": "fuzzy",
+        "namespaces": "whg,gn,tgn,wd,osm,ohm",
+        "query": "Tall Fisnah",
+        "radius": 50.0,
+        "size": 5,
+        "start": 1700,
+        "undated": true,
+        "unlocated": false
+      },
+      "result": [],
+      "subject": {
+        "kind": "archaeological_site",
+        "latitude": 36.7079,
+        "longitude": 42.8899,
+        "name": "Tall Fisnah",
+        "query_id": "query:00581e9dc569fcd9",
+        "subject_id": "pleiades:531323022:1700:2100:cef5c5653e39",
+        "valid_from": 1700,
+        "valid_to": 2100
+      },
+      "subject_id": "pleiades:531323022:1700:2100:cef5c5653e39"
+    }
+  ],
+  "retrieved_at": "2026-07-26T07:59:07.459517Z",
+  "rights": {
+    "attribution": "World Historical Gazetteer",
+    "license_id": "CC-BY-NC-4.0"
+  },
+  "schema": {
+    "checksum_sha256": "7657016123c83c079300edd6cfab94e2effe85f23af675b7e2b9f67b1c0690ad",
+    "url": "https://whgazetteer.org/api/schema/?format=json",
+    "version": "1.0.0"
+  },
+  "score_scale": "0-100",
+  "source_version": "whg-api-1.0.0-schema-7657016123c8"
+}

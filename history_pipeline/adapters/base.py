@@ -7,6 +7,7 @@ from typing import Protocol
 from history_pipeline.config import PipelineConfig, SourceConfig
 from history_pipeline.models import (
     AuthorityMatch,
+    EvidenceAssertion,
     HistoricalFeature,
     HistoricalMapMetadata,
     HistoricalPeriodDefinition,
@@ -27,6 +28,7 @@ class RejectedRecord:
 class AdapterResult:
     features: list[HistoricalFeature] = field(default_factory=list)
     indicators: list[IndicatorObservation] = field(default_factory=list)
+    evidence_assertions: list[EvidenceAssertion] = field(default_factory=list)
     periods: list[HistoricalPeriodDefinition] = field(default_factory=list)
     authority_matches: list[AuthorityMatch] = field(default_factory=list)
     historical_maps: list[HistoricalMapMetadata] = field(default_factory=list)

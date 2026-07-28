@@ -1,0 +1,13 @@
+{
+  "palimpsest:publication-de-revolutionibus:1543": {
+    "feature_id": "palimpsest:publication-de-revolutionibus:1543",
+    "items": [],
+    "seed_entity_ids": [
+      "palimpsest:event:de-revolutionibus-publication",
+      "palimpsest:institution:petreius-workshop",
+      "palimpsest:person:nicolaus-copernicus",
+      "palimpsest:place:nuremberg",
+      "palimpsest:work:de-revolutionibus"
+    ]
+  }
+}

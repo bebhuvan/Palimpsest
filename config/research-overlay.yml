@@ -21,6 +21,110 @@ license_policy:
     - LicenseRef-Proprietary
 
 sources:
+  - id: getty_tgn_authority_pilot
+    adapter: direct_authority
+    title: Reviewed Getty TGN authority links discovered via WHG
+    publisher: J. Paul Getty Trust, Getty Research Institute
+    url: https://www.getty.edu/research/tools/vocabularies/obtain/index.html
+    license_id: ODC-By-1.0
+    license_reviewed: true
+    license_notes: "Getty states that all Vocabulary data are available under ODC-By 1.0 and supplies required TGN attribution wording."
+    roles: [authority_metadata]
+    commercial_redistribution: allowed
+    distribution_tier: open_core
+    temporal_scope: "Four reviewed close links from Pleiades ancient places to Getty TGN inhabited-place authority records."
+    geographic_scope: "Longobucco, Eratini, Wingham, and Cavaillon only."
+    release_policy: "Each direct Linked.Art JSON response is checksum-pinned. A changed record requires renewed identity review."
+    limitations:
+      - "These are close authority links to modern inhabited places, not replacements for the Pleiades ancient-place records."
+      - "WHG was the discovery route only; Getty is the published authority source."
+    citation: "Contains information from the J. Paul Getty Trust, Getty Research Institute, the Getty Thesaurus of Geographic Names, made available under the ODC Attribution License."
+    version: "Linked.Art records retrieved 2026-07-26"
+    rights:
+      metadata:
+        license_id: ODC-By-1.0
+        attribution: "Contains information from the J. Paul Getty Trust, Getty Research Institute, the Getty Thesaurus of Geographic Names, made available under the ODC Attribution License."
+        rights_uri: https://opendatacommons.org/licenses/by/1-0/
+        review_notes: "Official Getty obtain-and-licensing page reviewed 2026-07-26."
+    options:
+      records:
+        - subject_id: "pleiades:452370:-750:-330:8016ccdcb0ff"
+          discovery_query_id: "query:002094660d20673a"
+          authority_id: "tgn:1045130"
+          authority_namespace: tgn
+          label: Longobucco
+          relation: close_match
+          url: https://vocab.getty.edu/tgn/1045130.json
+          checksum_sha256: 7bb769a9225585d75f8f7e7ea5f9ee8f62e217a5156b82bea187c95a2115e3cc
+          rationale: "Getty identifies a modern inhabited place with the same name 0.455 km from the Pleiades ancient place; continuity is plausible but temporal identity is not established."
+        - subject_id: "pleiades:540765:-550:640:3f42a5238620"
+          discovery_query_id: "query:002c58f2e6d770d9"
+          authority_id: "tgn:7236380"
+          authority_namespace: tgn
+          label: Eratiní
+          relation: close_match
+          url: https://vocab.getty.edu/tgn/7236380.json
+          checksum_sha256: 2e0b21cc736deaaa41ae3332ca04e47e91a414f61caec31d45ff01dfcffcf88d
+          rationale: "Getty identifies the nearby modern inhabited place Eratiní; name and location align but the Pleiades record does not establish continuous identity."
+        - subject_id: "pleiades:79765:-30:640:494782887537"
+          discovery_query_id: "query:003204ce96785048"
+          authority_id: "tgn:1031160"
+          authority_namespace: tgn
+          label: Wingham
+          relation: close_match
+          url: https://vocab.getty.edu/tgn/1031160.json
+          checksum_sha256: 06f9b70f1ef7c0f225b48dbd6aed81736fa9fb9f6df97d072c821984634af0d8
+          rationale: "Getty identifies modern Wingham and the variant Wingheham near the Pleiades ancient place; this is a historical-name bridge rather than exact identity."
+        - subject_id: "pleiades:148027:-330:640:37fd9a1029c0"
+          discovery_query_id: "query:004afa07409eb4fa"
+          authority_id: "tgn:1032455"
+          authority_namespace: tgn
+          label: Cavaillon
+          relation: close_match
+          url: https://vocab.getty.edu/tgn/1032455.json
+          checksum_sha256: 5906b128a2f3ecea2d17342fe64cad87666a07deacf1ec54682bc34c56350545
+          rationale: "Getty supplies Cabellio as an alternate name for Cavaillon; the ancient and modern authority records are strongly related but temporally distinct."
+
+  - id: osm_authority_pilot
+    adapter: direct_authority
+    title: Reviewed OpenStreetMap authority link discovered via WHG
+    publisher: OpenStreetMap contributors
+    url: https://www.openstreetmap.org/copyright
+    license_id: ODbL-1.0
+    license_reviewed: true
+    license_notes: "The OpenStreetMap Foundation states that OSM data is available under ODbL 1.0 with attribution."
+    roles: [authority_metadata]
+    commercial_redistribution: conditional
+    distribution_tier: open_core
+    redistribution_conditions:
+      - "Attribute OpenStreetMap and link the ODbL/copyright page."
+      - "Treat any substantial derivative database according to ODbL share-alike requirements."
+    temporal_scope: "One reviewed close link from a Pleiades archaeological place to the OSM mountain peak used as its representative location."
+    geographic_scope: "Montagna di Gildone only."
+    release_policy: "The direct OSM node response is checksum-pinned. A changed node requires renewed identity review."
+    limitations:
+      - "The OSM node identifies the mountain peak, while Pleiades describes fortifications and tombs on the mountain."
+      - "WHG was the discovery route only; OpenStreetMap is the published authority source."
+    citation: "OpenStreetMap contributors"
+    version: "OSM node version 2 retrieved 2026-07-26"
+    rights:
+      metadata:
+        license_id: ODbL-1.0
+        attribution: "OpenStreetMap contributors"
+        rights_uri: https://www.openstreetmap.org/copyright
+        review_notes: "OpenStreetMap Foundation licence and attribution guidance reviewed 2026-07-26."
+    options:
+      records:
+        - subject_id: "pleiades:305770200:1700:2100:ad3809efd092"
+          discovery_query_id: "query:001bee8a857b3e0d"
+          authority_id: "osm:node:2552149251"
+          authority_namespace: osm
+          label: Montagna di Gildone
+          relation: close_match
+          url: https://api.openstreetmap.org/api/0.6/node/2552149251/2.json
+          content_checksum_sha256: 4ea33138ed8d401482c44eefeff0f766431c9bbdb50c3ffaf57dce558a549d47
+          rationale: "OSM identifies the mountain peak used by Pleiades as its representative point; the peak and the archaeological remains on it are related but not identical entities."
+
   - id: whg_reconciliation
     adapter: authority_reconciliation
     title: Bounded World Historical Gazetteer reconciliation snapshot
@@ -32,7 +136,7 @@ sources:
     roles: [authority_metadata]
     commercial_redistribution: prohibited
     distribution_tier: research_only
-    temporal_scope: "Only configured History Joice subjects in a future bounded response snapshot."
+    temporal_scope: "Only configured Palimpsest subjects in a future bounded response snapshot."
     geographic_scope: "Depends on the selected query and namespaces; reconciliation is not boundary evidence."
     release_policy: "Disabled until a bounded response is wrapped with explicit platform/dataset rights, assigned a source version and checksum-pinned."
     limitations:

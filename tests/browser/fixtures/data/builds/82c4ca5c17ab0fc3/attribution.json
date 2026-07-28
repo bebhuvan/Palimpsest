@@ -1,0 +1,74 @@
+[
+  {
+    "citation": "Palimpsest test suite, Synthetic gazetteer authority fixture",
+    "license_id": "CC0-1.0",
+    "publisher": "Palimpsest test suite",
+    "source_id": "browser-authority",
+    "title": "Synthetic gazetteer authority fixture",
+    "url": "https://example.org/palimpsest/authority/pilot-place"
+  },
+  {
+    "citation": "Palimpsest test suite, Deterministic IIIF georeference fixture",
+    "license_id": "CC-BY-4.0",
+    "publisher": "Palimpsest test suite",
+    "source_id": "browser-map-georef",
+    "title": "Deterministic IIIF georeference fixture",
+    "url": "https://example.org/palimpsest/iiif/georeference"
+  },
+  {
+    "citation": "Palimpsest test suite, Deterministic IIIF historical-map fixture",
+    "license_id": "CC0-1.0",
+    "publisher": "Palimpsest test suite",
+    "source_id": "browser-map-metadata",
+    "title": "Deterministic IIIF historical-map fixture",
+    "url": "https://example.org/palimpsest/iiif/manifest"
+  },
+  {
+    "citation": "Palimpsest test suite, Browser pilot reviewed geometry",
+    "license_id": "CC0-1.0",
+    "publisher": "Palimpsest test suite",
+    "source_id": "browser-pilot",
+    "title": "Browser pilot reviewed geometry",
+    "url": "https://example.org/palimpsest/browser-pilot"
+  },
+  {
+    "citation": "Library of Congress, item 92516339, title page from the 1543 Nuremberg edition.",
+    "license_id": "PDM-1.0",
+    "publisher": "Library of Congress",
+    "source_id": "loc_copernicus",
+    "title": "Title page of De revolutionibus orbium coelestium",
+    "url": "https://www.loc.gov/pictures/item/92516339/"
+  },
+  {
+    "citation": "Library of Congress, Hans Peter Kraus Collection, item mss31013-03800, royal cedula dated 23 August 1543.",
+    "license_id": "PDM-1.0",
+    "publisher": "Library of Congress",
+    "source_id": "loc_new_laws",
+    "title": "Hans Peter Kraus Collection",
+    "url": "https://www.loc.gov/item/mss31013-03800/"
+  },
+  {
+    "citation": "Ministry of Land, Infrastructure, Transport and Tourism, Japan, Early Modern Firearms in Japan, page R4-00195.",
+    "license_id": "PDL-1.0",
+    "publisher": "Ministry of Land, Infrastructure, Transport and Tourism, Japan",
+    "source_id": "mlit_tanegashima",
+    "title": "Early modern firearms in Japan",
+    "url": "https://www.mlit.go.jp/tagengo-db/R4-00195.html"
+  },
+  {
+    "citation": "Wikimedia Foundation and Wikidata contributors, Wikidata browser-pilot entity projection",
+    "license_id": "CC0-1.0",
+    "publisher": "Wikimedia Foundation and Wikidata contributors",
+    "source_id": "wikidata",
+    "title": "Wikidata browser-pilot entity projection",
+    "url": "https://www.wikidata.org/wiki/Q100"
+  },
+  {
+    "citation": "Wikimedia Foundation and Wikipedia contributors, Wikipedia browser-pilot introduction",
+    "license_id": "CC-BY-SA-4.0",
+    "publisher": "Wikimedia Foundation and Wikipedia contributors",
+    "source_id": "wikipedia",
+    "title": "Wikipedia browser-pilot introduction",
+    "url": "https://en.wikipedia.org/wiki/History"
+  }
+]

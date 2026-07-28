@@ -36,4 +36,4 @@ excluded and remain in the reviewed causal dataset.
 
 Reviewed and live OpenHistoricalMap feature clicks can both query this static regional layer using
 their actual click coordinate. OHM records remain live contributor data and are never converted into
-reviewed History Joice geometry by this lookup.
+reviewed Palimpsest geometry by this lookup.

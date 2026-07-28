@@ -9,6 +9,14 @@ export interface HistoricalLensDefinition {
   accent: string;
 }
 
+/**
+ * Lenses are non-ordinal categories, so they are distinguished by mark rather than
+ * hue. Colour in this product is reserved for the confidence ramp, and only one
+ * lens is ever active at a time, so a single highlight ink is sufficient on the map
+ * and keeps the theme layer legible for colour-blind readers.
+ */
+export const LENS_HIGHLIGHT = '#13232b';
+
 export const HISTORICAL_LENSES: HistoricalLensDefinition[] = [
   {
     id: 'all',
@@ -16,7 +24,7 @@ export const HISTORICAL_LENSES: HistoricalLensDefinition[] = [
     label: 'All history',
     description: 'All published records, without forcing them into a single theme.',
     marker: '○',
-    accent: '#754259'
+    accent: LENS_HIGHLIGHT
   },
   {
     id: 'power',
@@ -24,7 +32,7 @@ export const HISTORICAL_LENSES: HistoricalLensDefinition[] = [
     label: 'Power & governance',
     description: 'Polities, administration, territorial control, conflict and claims.',
     marker: '◆',
-    accent: '#74453d'
+    accent: LENS_HIGHLIGHT
   },
   {
     id: 'belief',
@@ -32,7 +40,7 @@ export const HISTORICAL_LENSES: HistoricalLensDefinition[] = [
     label: 'Belief & ritual',
     description: 'Sourced places and networks of worship, ritual, burial and pilgrimage.',
     marker: '✦',
-    accent: '#82456b'
+    accent: LENS_HIGHLIGHT
   },
   {
     id: 'knowledge',
@@ -40,7 +48,7 @@ export const HISTORICAL_LENSES: HistoricalLensDefinition[] = [
     label: 'Knowledge & technology',
     description: 'Schools, libraries, observatories and the movement of practical knowledge.',
     marker: '●',
-    accent: '#17677c'
+    accent: LENS_HIGHLIGHT
   },
   {
     id: 'culture',
@@ -48,7 +56,7 @@ export const HISTORICAL_LENSES: HistoricalLensDefinition[] = [
     label: 'Culture & society',
     description: 'Sourced cultural regions, arts, monuments, performance and social life.',
     marker: '■',
-    accent: '#956020'
+    accent: LENS_HIGHLIGHT
   },
   {
     id: 'trade',
@@ -56,7 +64,7 @@ export const HISTORICAL_LENSES: HistoricalLensDefinition[] = [
     label: 'Trade & movement',
     description: 'Explicit trade routes, ports, markets, transport and networks of exchange.',
     marker: '↔',
-    accent: '#237052'
+    accent: LENS_HIGHLIGHT
   }
 ];
 

@@ -226,7 +226,7 @@ class IiifMapAdapter:
                 grade=ConfidenceGrade.C,
                 rationale=(
                     f"Published georeference with {control_points} control points; "
-                    "alignment has not been independently verified by History Joice"
+                    "alignment has not been independently verified by Palimpsest"
                 ),
             ),
             known_limitations=list(source.limitations),

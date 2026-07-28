@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 const [baseArgument, pagesOrigin] = process.argv.slice(2);
 if (!baseArgument) {
   throw new Error(
-    'Usage: npm run data:verify-origin -- https://data.example.org [https://history-joice.pages.dev]'
+    'Usage: npm run data:verify-origin -- https://data.example.org [https://palimpsest.pages.dev]'
   );
 }
 const dataBase = baseArgument.replace(/\/+$/, '');

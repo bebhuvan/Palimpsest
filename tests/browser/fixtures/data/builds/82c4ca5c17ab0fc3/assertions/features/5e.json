@@ -1,0 +1,14 @@
+{
+  "palimpsest:tanegashima-firearms-tradition:1543": {
+    "assertion_ids": [
+      "assertion:tanegashima-became-matchlock-term",
+      "assertion:tanegashima-encounter-described-in-teppoki",
+      "assertion:tanegashima-encounter-occurred-on-island",
+      "assertion:tanegashima-ship-carried-portuguese-traders",
+      "assertion:tanegashima-tokitaka-commissioned-yaita",
+      "assertion:tanegashima-tokitaka-purchased-matchlocks",
+      "assertion:teppoki-completed-early-seventeenth-century"
+    ],
+    "subject_id": "palimpsest:tanegashima-firearms-tradition:1543"
+  }
+}

@@ -161,12 +161,12 @@ uv run history-data dossier-publish \
   --bundle data/editorial/copernicus-1543/evidence-bundle.json \
   --reviewed-draft /tmp/copernicus-reviewed.json \
   --editorial-license-id CC-BY-4.0 \
-  --editorial-attribution "History Joice editorial team" \
+  --editorial-attribution "Palimpsest editorial team" \
   --published-at 2026-07-23T08:00:00Z \
   --output-dir /tmp/published-dossiers
 ```
 
-Published editorial dossiers are not yet automatically added to the global History Joice release
+Published editorial dossiers are not yet automatically added to the global Palimpsest release
 artifacts. A future release-integration step must preserve the separate dossier kind, evidence and
 editorial licensing fields and pass the normal immutable-release verifier; until then, publication
 creates only the explicitly requested editorial dossier file.
@@ -178,7 +178,7 @@ including record and revision IDs, URL, retrieval time, checksum, licence and ci
 passages remain associated with that source.
 
 Generated editorial prose has a separate `editorial_license_id` and
-`editorial_attribution`. Before public publication, an editor must confirm that History Joice has
+`editorial_attribution`. Before public publication, an editor must confirm that Palimpsest has
 the right to apply that licence, that any quoted material is permitted, and that provider terms
 allow the intended use. The machine-only pilot applies no editorial licence and publishes nothing;
 the Library of Congress source remains `PDM-1.0`.

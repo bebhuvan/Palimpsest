@@ -7,7 +7,7 @@ import geopandas as gpd
 import orjson
 import pytest
 
-from history_pipeline.artifacts import build_artifacts, content_shard
+from history_pipeline.artifacts import _reading_eligibility, build_artifacts, content_shard
 from history_pipeline.models import (
     EntityCoordinate,
     EntityRelationship,
@@ -99,6 +99,16 @@ def test_artifact_build_writes_contract_files(
     link = links[historical_feature.feature_id]
     assert link["primary_entity_id"] == "wikidata:Q1"
     assert link["missing_entity_ids"] == [link["primary_entity_id"]]
+    assert link["reading_eligibility"] == [
+        {
+            "entity_id": "wikidata:Q1",
+            "identity_basis": "source_asserted",
+            "identity_relation": "exact_match",
+            "temporal_overlap": "unknown",
+            "reading_eligible": False,
+            "reason_codes": ["entity_not_enriched"],
+        }
+    ]
 
     frame = gpd.read_parquet(tmp_path / "build/features/ancient.parquet")
     assert frame.iloc[0]["feature_id"] == historical_feature.feature_id
@@ -112,6 +122,7 @@ def test_artifact_build_writes_contract_files(
     assert name["valid_from"] == -100
     assert name["valid_to"] == 100
     assert search["themes"] == ["power"]
+    assert search["year_dossier_years"] == []
 
     search_index = orjson.loads((tmp_path / "build/search/index.json").read_bytes())
     assert search_index["semantics"] == "lazy-static-search-over-release-records"
@@ -132,6 +143,78 @@ def test_artifact_build_writes_contract_files(
     theme_index = orjson.loads((tmp_path / "build/themes/index.json").read_bytes())
     assert theme_index["semantics"] == "sourced-multi-label-thematic-assertions"
     assert theme_index["collections"]["assertions"]["count"] == 1
+
+
+def test_primary_reading_requires_bounded_overlapping_identity(
+    historical_feature: HistoricalFeature,
+    source_reference: SourceReference,
+) -> None:
+    overlapping = HistoricalEntity(
+        entity_id="wikidata:Q1",
+        entity_type="historical_country",
+        names={"en": "Overlapping polity"},
+        valid_from=-50,
+        valid_to=50,
+        source_refs=[source_reference],
+    )
+    incompatible = overlapping.model_copy(update={"valid_from": 395, "valid_to": 1453})
+    undated = overlapping.model_copy(update={"valid_from": None, "valid_to": None})
+
+    assert _reading_eligibility(
+        historical_feature, overlapping.entity_id, overlapping
+    ).reading_eligible
+    rejected = _reading_eligibility(
+        historical_feature, incompatible.entity_id, incompatible
+    )
+    assert rejected.temporal_overlap == "none"
+    assert rejected.reason_codes == ["entity_interval_starts_after_feature"]
+    assert not _reading_eligibility(
+        historical_feature, undated.entity_id, undated
+    ).reading_eligible
+
+
+def test_pleiades_place_continuity_is_not_unqualified_primary_reading(
+    historical_feature: HistoricalFeature,
+    source_reference: SourceReference,
+) -> None:
+    pleiades_source = source_reference.model_copy(update={"source_id": "pleiades"})
+    feature = historical_feature.model_copy(update={"source_refs": [pleiades_source]})
+    entity = HistoricalEntity(
+        entity_id="wikidata:Q1",
+        entity_type="human_settlement",
+        names={"en": "Later settlement"},
+        valid_from=-100,
+        valid_to=100,
+        source_refs=[source_reference],
+    )
+
+    decision = _reading_eligibility(feature, entity.entity_id, entity)
+
+    assert decision.identity_relation == "place_continuity"
+    assert decision.temporal_overlap == "overlaps"
+    assert decision.reason_codes[-1] == "place_continuity_requires_review"
+    assert not decision.reading_eligible
+
+
+def test_polity_joined_to_broader_topic_is_not_primary_reading(
+    historical_feature: HistoricalFeature,
+    source_reference: SourceReference,
+) -> None:
+    topic = HistoricalEntity(
+        entity_id="wikidata:Q179848",
+        entity_type="wikidata:Q518554",
+        names={"en": "Scramble for Africa"},
+        valid_from=-50,
+        valid_to=50,
+        source_refs=[source_reference],
+    )
+
+    decision = _reading_eligibility(historical_feature, topic.entity_id, topic)
+
+    assert decision.identity_relation == "broader_topic"
+    assert decision.temporal_overlap == "overlaps"
+    assert decision.reason_codes[-1] == "entity_kind_incompatible_with_feature"
+    assert not decision.reading_eligible
 
 
 def test_wiki_context_artifacts_have_verified_stable_joins(

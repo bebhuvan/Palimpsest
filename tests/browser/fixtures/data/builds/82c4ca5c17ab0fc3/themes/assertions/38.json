@@ -1,0 +1,51 @@
+{
+  "theme:0201807fc88b74b2": {
+    "assertion_id": "theme:0201807fc88b74b2",
+    "classification_basis": "explicit_source_type",
+    "confidence": {
+      "grade": "B",
+      "rationale": "The event has an explicit structured political or conflict type."
+    },
+    "entity_ids": [
+      "palimpsest:concept:ordinances-for-treatment-in-the-indies",
+      "palimpsest:event:royal-cedula-vasco-de-quiroga",
+      "palimpsest:person:philip-prince-later-philip-ii",
+      "palimpsest:person:vasco-de-quiroga",
+      "palimpsest:place:michoacan",
+      "palimpsest:place:valladolid"
+    ],
+    "feature_ids": [
+      "palimpsest:royal-cedula-vasco-de-quiroga:1543"
+    ],
+    "matched_values": [
+      "kind:event",
+      "properties.event_types:administrative_directive",
+      "properties.event_types:royal_order"
+    ],
+    "rationale": "The event directly concerns authority, government, organized conflict, or political settlement.",
+    "review_status": "provisional",
+    "role": "primary",
+    "rule_id": "theme-rule:event-power-types",
+    "source_refs": [
+      {
+        "checksum_sha256": "295aea5847ce5d9afa801bbd2f46ab4c45a437e5dacfc37b7157a284011a6aab",
+        "citation": "Library of Congress, Hans Peter Kraus Collection, item mss31013-03800, royal cedula dated 23 August 1543.",
+        "license_id": "PDM-1.0",
+        "modified": false,
+        "publisher": "Library of Congress",
+        "record_id": "mss31013-03800",
+        "retrieved_at": "2026-07-23T06:00:00Z",
+        "source_id": "loc_new_laws",
+        "title": "Hans Peter Kraus Collection: Notarized copy of a royal cedula to Vasco de Quiroga, bishop of Michoacán",
+        "url": "https://www.loc.gov/item/mss31013-03800/",
+        "version": "browser-pilot-curated-snapshot-v1"
+      }
+    ],
+    "subject_id": "palimpsest:royal-cedula-vasco-de-quiroga:1543",
+    "subject_kind": "event",
+    "subtheme": "political_events",
+    "theme": "power",
+    "valid_from": 1543,
+    "valid_to": 1543
+  }
+}

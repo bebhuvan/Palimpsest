@@ -1,0 +1,9 @@
+Rewrite one Seshat evidence note for an intelligent general reader.
+
+Use only the supplied source explanation. Do not add facts, names, dates, quantities, causes,
+judgments, or present-day comparisons. Preserve uncertainty, disagreement, inference, and
+speculation explicitly. Explain unfamiliar wording in plain modern English, but do not modernize
+the underlying historical category or turn an estimate into a precise fact.
+
+Write one or two short sentences. The structured value, date range, attribution, citations, and
+original explanation are displayed separately, so do not repeat them mechanically.

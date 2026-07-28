@@ -7,9 +7,9 @@
       "claim_id": "draft-claim:cedula-addressee-and-destination",
       "text": "The Library of Congress catalog identifies this notarized royal cedula as addressed to Vasco de Quiroga, bishop of Michoacán.",
       "entity_ids": [
-        "historyjoice:event:royal-cedula-vasco-de-quiroga",
-        "historyjoice:person:vasco-de-quiroga",
-        "historyjoice:place:michoacan"
+        "palimpsest:event:royal-cedula-vasco-de-quiroga",
+        "palimpsest:person:vasco-de-quiroga",
+        "palimpsest:place:michoacan"
       ],
       "valid_from": 1543,
       "valid_to": 1543,
@@ -32,8 +32,8 @@
       "claim_id": "draft-claim:cedula-issuer",
       "text": "The catalog names the contributor as the Prince who later became Philip II of Spain.",
       "entity_ids": [
-        "historyjoice:event:royal-cedula-vasco-de-quiroga",
-        "historyjoice:person:philip-prince-later-philip-ii"
+        "palimpsest:event:royal-cedula-vasco-de-quiroga",
+        "palimpsest:person:philip-prince-later-philip-ii"
       ],
       "valid_from": 1543,
       "valid_to": 1543,
@@ -55,8 +55,8 @@
       "claim_id": "draft-claim:cedula-place-of-issue",
       "text": "The catalog places the document in Valladolid on 23 August 1543.",
       "entity_ids": [
-        "historyjoice:event:royal-cedula-vasco-de-quiroga",
-        "historyjoice:place:valladolid"
+        "palimpsest:event:royal-cedula-vasco-de-quiroga",
+        "palimpsest:place:valladolid"
       ],
       "valid_from": 1543,
       "valid_to": 1543,
@@ -78,8 +78,8 @@
       "claim_id": "draft-claim:cedula-treatment-ordinances",
       "text": "According to the catalog summary, the ordinances concerned the treatment of Indigenous people and described them as free people and royal vassals.",
       "entity_ids": [
-        "historyjoice:concept:ordinances-for-treatment-in-the-indies",
-        "historyjoice:event:royal-cedula-vasco-de-quiroga"
+        "palimpsest:concept:ordinances-for-treatment-in-the-indies",
+        "palimpsest:event:royal-cedula-vasco-de-quiroga"
       ],
       "valid_from": 1543,
       "valid_to": 1543,
@@ -101,8 +101,8 @@
       "claim_id": "draft-claim:cedula-monitoring-role",
       "text": "The catalog summary says that religious officials were to publicize the ordinances and that the bishop was to monitor observance and report violations.",
       "entity_ids": [
-        "historyjoice:event:royal-cedula-vasco-de-quiroga",
-        "historyjoice:person:vasco-de-quiroga"
+        "palimpsest:event:royal-cedula-vasco-de-quiroga",
+        "palimpsest:person:vasco-de-quiroga"
       ],
       "valid_from": 1543,
       "valid_to": 1543,
@@ -129,9 +129,9 @@
     },
     {
       "claim_id": "draft-claim:cedula-date-correction",
-      "text": "The catalog records that the year written on this copy was changed from 1544 to 1543; History Joice therefore retains the correction rather than presenting the date without qualification.",
+      "text": "The catalog records that the year written on this copy was changed from 1544 to 1543; Palimpsest therefore retains the correction rather than presenting the date without qualification.",
       "entity_ids": [
-        "historyjoice:event:royal-cedula-vasco-de-quiroga"
+        "palimpsest:event:royal-cedula-vasco-de-quiroga"
       ],
       "valid_from": 1543,
       "valid_to": 1543,

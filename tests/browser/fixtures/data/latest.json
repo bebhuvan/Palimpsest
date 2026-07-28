@@ -1,7 +1,7 @@
 {
-  "build_id": "67c6a9154e3e4d03",
+  "build_id": "82c4ca5c17ab0fc3",
   "generated_at": "2026-07-23T06:00:00Z",
-  "manifest": "builds/67c6a9154e3e4d03/manifest.json",
-  "manifest_checksum_sha256": "9d114d2c5050c74c0a3bd9077499fe86caef9a14b7812040ad9fbc8637956b3c",
+  "manifest": "builds/82c4ca5c17ab0fc3/manifest.json",
+  "manifest_checksum_sha256": "863ae771146edbb0d2c890dec36b8a66741397bbc7a77c927278169b5e88acdc",
   "schema_version": "1.10.0"
 }

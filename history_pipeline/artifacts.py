@@ -15,8 +15,9 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 from shapely.geometry import shape
 
-from history_pipeline.config import SourceConfig
+from history_pipeline.config import LicensePolicy, SourceConfig
 from history_pipeline.coverage import DEFAULT_PERIODS, build_coverage
+from history_pipeline.licenses import enforce_license
 from history_pipeline.models import (
     ArtifactFile,
     AssertionAdjacency,
@@ -31,6 +32,9 @@ from history_pipeline.models import (
     CommercialRedistribution,
     ContentIndex,
     DistributionTier,
+    DossierRestatement,
+    EntityKind,
+    EntityReadingEligibility,
     EvidenceAssertion,
     FeatureContentLink,
     HistoricalDossier,
@@ -51,12 +55,17 @@ from history_pipeline.models import (
     ThemeFeatureIndex,
     ThemeIndex,
     WikiContextIndex,
+    YearDossier,
+    YearImage,
+    YearIndex,
+    YearIndexEntry,
 )
 from history_pipeline.region_time import (
     GRID_DEGREES,
     MAXIMUM_RESULTS_PER_SELECTION,
     build_region_time_buckets,
 )
+from history_pipeline.restatement import validate_restatement
 from history_pipeline.storage import NdjsonWriter, sha256_file
 from history_pipeline.wiki_context import DEFAULT_ROLE_QUOTAS, build_wiki_feature_contexts
 
@@ -101,8 +110,13 @@ def build_artifacts(
     language_fallbacks: tuple[str, ...] = (),
     authority_matches: list[AuthorityMatch] | None = None,
     historical_maps: list[HistoricalMapMetadata] | None = None,
+    restatements: list[DossierRestatement] | None = None,
+    year_dossiers: list[YearDossier] | None = None,
+    license_policy: LicensePolicy | None = None,
 ) -> list[ArtifactFile]:
     causal = causal or CausalDataset()
+    restatements = restatements or []
+    year_dossiers = year_dossiers or []
     thematic_assertions = thematic_assertions or []
     evidence_assertions = evidence_assertions or []
     periods = periods or []
@@ -152,6 +166,9 @@ def build_artifacts(
         artifacts.append(_artifact(path, output_dir, "application/x-ndjson"))
 
     artifacts.extend(
+        _build_year_artifacts(year_dossiers, output_dir, license_policy=license_policy)
+    )
+    artifacts.extend(
         _build_integration_artifacts(authority_matches, historical_maps, output_dir)
     )
     artifacts.extend(
@@ -161,6 +178,7 @@ def build_artifacts(
             dossiers,
             output_dir,
             language_fallbacks=language_fallbacks,
+            restatements=restatements,
         )
     )
     wikidata_options = next(
@@ -227,6 +245,7 @@ def build_artifacts(
             entities,
             dossiers,
             causal,
+            evidence_assertions,
             authority_matches,
             historical_maps,
         ),
@@ -353,6 +372,14 @@ def _search_records(
                 "kind": first.kind.value,
                 "themes": sorted(themes),
                 "source_ids": sorted(source_ids),
+                "year_dossier_years": sorted(
+                    {
+                        year
+                        for feature in group
+                        for year in feature.properties.get("year_dossier_years", [])
+                        if isinstance(year, int) and year != 0
+                    }
+                ),
                 "valid_from": min(feature.valid_from for feature in group),
                 "valid_to": max(feature.valid_to for feature in group),
                 "longitude": round(point.x, 5),
@@ -542,6 +569,90 @@ def canonical_entity_ids(feature: HistoricalFeature) -> list[str]:
     return [f"feature:{feature.feature_id}"]
 
 
+def _admissible_restatements(
+    restatements: Iterable[DossierRestatement],
+    dossiers: Iterable[HistoricalDossier],
+) -> list[DossierRestatement]:
+    """Keep only restatements that still match the source revision in this release.
+
+    A restatement is bound to one exact source text. When the upstream revision moves, the recorded
+    checksum stops matching and the restatement is silently dropped rather than published against
+    prose it was never derived from. The reader then falls back to the source extract, which is a
+    visible loss of polish and never a false attribution.
+    """
+
+    sources = {dossier.dossier_id: dossier for dossier in dossiers}
+    admitted: list[DossierRestatement] = []
+    for restatement in restatements:
+        dossier = sources.get(restatement.dossier_id)
+        if dossier is None:
+            continue
+        try:
+            validate_restatement(restatement, dossier)
+        except ValueError:
+            continue
+        admitted.append(restatement)
+    return admitted
+
+
+def _build_year_artifacts(
+    year_dossiers: Iterable[YearDossier],
+    output_dir: Path,
+    *,
+    license_policy: LicensePolicy | None = None,
+) -> list[ArtifactFile]:
+    """Publish one file per year, plus an index of which years the release carries.
+
+    A year is addressed by its year. The key is a small integer the reader already has, because it
+    came from the time slider, so sharding it by checksum would add a lookup to answer a question
+    the client can answer itself.
+
+    Every picture is cleared again here against the release's own licence policy. It was cleared
+    once when it was fetched, but a release is the thing that redistributes it, and a check that
+    only runs at fetch time cannot speak for an artifact assembled months later from a file on
+    disk.
+    """
+
+    materialized = sorted(year_dossiers, key=lambda dossier: dossier.year)
+    if not materialized:
+        return []
+    artifacts: list[ArtifactFile] = []
+    entries: list[YearIndexEntry] = []
+    for dossier in materialized:
+        if license_policy is not None:
+            for image in _year_images(dossier):
+                enforce_license(image.license_id, license_policy, image.commons_file)
+        path = output_dir / "years" / f"{dossier.year}.json"
+        _write_json(path, dossier.model_dump(mode="json"))
+        artifacts.append(_artifact(path, output_dir, "application/json"))
+        entries.append(
+            YearIndexEntry(
+                year=dossier.year,
+                dossier_id=dossier.dossier_id,
+                path=f"years/{dossier.year}.json",
+                language=dossier.language,
+                chronicle_revision_id=dossier.chronicle_revision_id,
+                record_count=len(dossier.register_entries),
+                anchor_count=len(dossier.anchors),
+                image_count=len(_year_images(dossier)),
+                headline=dossier.headlines[0].text if dossier.headlines else dossier.lede,
+                related_years=[item.year for item in dossier.related_years],
+            )
+        )
+    index_path = output_dir / "years" / "index.json"
+    _write_json(index_path, YearIndex(years=entries).model_dump(mode="json"))
+    artifacts.append(_artifact(index_path, output_dir, "application/json"))
+    return artifacts
+
+
+def _year_images(dossier: YearDossier) -> list[YearImage]:
+    """Every picture a year dossier would put in front of a reader."""
+
+    found = [anchor.image for anchor in dossier.anchors if anchor.image]
+    found.extend(entry.image for entry in dossier.register_entries if entry.image)
+    return found
+
+
 def _build_content_artifacts(
     features: Iterable[HistoricalFeature],
     entities: Iterable[HistoricalEntity],
@@ -549,10 +660,12 @@ def _build_content_artifacts(
     output_dir: Path,
     *,
     language_fallbacks: tuple[str, ...],
+    restatements: Iterable[DossierRestatement] = (),
 ) -> list[ArtifactFile]:
     materialized_features = list(features)
     materialized_entities = list(entities)
     materialized_dossiers = list(dossiers)
+    materialized_restatements = _admissible_restatements(restatements, materialized_dossiers)
     entity_by_id = {entity.entity_id: entity for entity in materialized_entities}
     dossiers_by_entity: dict[str, set[str]] = defaultdict(set)
     for dossier in materialized_dossiers:
@@ -590,6 +703,10 @@ def _build_content_artifacts(
                 ),
                 dossier_ids=dossier_ids,
                 related_entity_ids=related,
+                reading_eligibility=[
+                    _reading_eligibility(feature, entity_id, entity_by_id.get(entity_id))
+                    for entity_id in entity_ids
+                ],
             )
         )
 
@@ -612,7 +729,20 @@ def _build_content_artifacts(
         directory=output_dir / "content" / "dossiers",
         output_root=output_dir,
     )
-    for artifact, _shard in (*link_shards, *entity_shards, *dossier_shards):
+    # Restatements are sharded by the dossier they restate, so a reader that already resolved a
+    # dossier ID can fetch its plain-English version without a second index lookup.
+    restatement_shards = _write_shards(
+        materialized_restatements,
+        identifier=lambda restatement: restatement.dossier_id,
+        directory=output_dir / "content" / "restatements",
+        output_root=output_dir,
+    )
+    for artifact, _shard in (
+        *link_shards,
+        *entity_shards,
+        *dossier_shards,
+        *restatement_shards,
+    ):
         artifacts.append(artifact)
 
     index_path = output_dir / "content" / "index.json"
@@ -642,6 +772,11 @@ def _build_content_artifacts(
                         "count": len(materialized_dossiers),
                         "shards": [shard for _artifact_file, shard in dossier_shards],
                     },
+                    "restatements": {
+                        "path_template": "content/restatements/{shard}.json",
+                        "count": len(materialized_restatements),
+                        "shards": [shard for _artifact_file, shard in restatement_shards],
+                    },
                 },
                 "language_policy": {
                     "selection": "requested-language-then-configured-fallback",
@@ -654,6 +789,64 @@ def _build_content_artifacts(
     )
     artifacts.append(_artifact(index_path, output_dir, "application/json"))
     return artifacts
+
+
+def _reading_eligibility(
+    feature: HistoricalFeature,
+    entity_id: str,
+    entity: HistoricalEntity | None,
+) -> EntityReadingEligibility:
+    """Keep source joins visible while preventing unsuitable prose from becoming the reading."""
+
+    source_ids = {source.source_id.lower() for source in feature.source_refs}
+    identity_relation: Literal["exact_match", "place_continuity", "broader_topic"] = (
+        "place_continuity" if "pleiades" in source_ids else "exact_match"
+    )
+    if entity is not None and identity_relation == "exact_match":
+        expected_entity_kinds = {
+            "polity": {EntityKind.POLITY},
+            "settlement": {EntityKind.PLACE},
+            "archaeological_site": {EntityKind.PLACE},
+            "route": {EntityKind.ROUTE},
+            "event": {EntityKind.EVENT},
+            "archival_map": {EntityKind.ARTIFACT},
+        }.get(feature.kind.value)
+        if expected_entity_kinds is not None and entity.entity_kind not in expected_entity_kinds:
+            identity_relation = "broader_topic"
+    if entity is None:
+        return EntityReadingEligibility(
+            entity_id=entity_id,
+            identity_relation=identity_relation,
+            temporal_overlap="unknown",
+            reading_eligible=False,
+            reason_codes=["entity_not_enriched"],
+        )
+
+    if entity.valid_to is not None and entity.valid_to < feature.valid_from:
+        temporal_overlap: Literal["overlaps", "none", "unknown"] = "none"
+        reasons = ["entity_interval_ends_before_feature"]
+    elif entity.valid_from is not None and entity.valid_from > feature.valid_to:
+        temporal_overlap = "none"
+        reasons = ["entity_interval_starts_after_feature"]
+    elif entity.valid_from is None or entity.valid_to is None:
+        temporal_overlap = "unknown"
+        reasons = ["entity_interval_unbounded"]
+    else:
+        temporal_overlap = "overlaps"
+        reasons = ["feature_entity_intervals_overlap"]
+
+    if identity_relation == "place_continuity":
+        reasons.append("place_continuity_requires_review")
+    elif identity_relation == "broader_topic":
+        reasons.append("entity_kind_incompatible_with_feature")
+
+    return EntityReadingEligibility(
+        entity_id=entity_id,
+        identity_relation=identity_relation,
+        temporal_overlap=temporal_overlap,
+        reading_eligible=temporal_overlap == "overlaps" and identity_relation == "exact_match",
+        reason_codes=reasons,
+    )
 
 
 def _write_shards(
@@ -1279,6 +1472,7 @@ def _attributions(
     entities: Iterable[HistoricalEntity],
     dossiers: Iterable[HistoricalDossier],
     causal: CausalDataset,
+    evidence_assertions: Iterable[EvidenceAssertion] = (),
     authority_matches: Iterable[AuthorityMatch] = (),
     historical_maps: Iterable[HistoricalMapMetadata] = (),
 ) -> list[dict[str, Any]]:
@@ -1289,6 +1483,9 @@ def _attributions(
     sources.extend(reference for entity in entities for reference in entity.source_refs)
     sources.extend(dossier.source_ref for dossier in dossiers)
     sources.extend(source for claim in causal.claims for source in claim.source_refs)
+    sources.extend(
+        source for assertion in evidence_assertions for source in assertion.source_refs
+    )
     sources.extend(match.source_ref for match in authority_matches)
     sources.extend(
         reference

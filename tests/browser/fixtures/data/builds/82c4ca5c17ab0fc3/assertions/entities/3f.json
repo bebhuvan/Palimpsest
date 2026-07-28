@@ -1,0 +1,8 @@
+{
+  "palimpsest:group:portuguese-traders-tanegashima": {
+    "assertion_ids": [
+      "assertion:tanegashima-ship-carried-portuguese-traders"
+    ],
+    "subject_id": "palimpsest:group:portuguese-traders-tanegashima"
+  }
+}

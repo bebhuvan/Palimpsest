@@ -58,7 +58,7 @@ export function localDataPlugin(
   dataRoot = resolve(import.meta.dirname, '..', 'dist', 'data')
 ) {
   return {
-    name: 'history-joice-local-data',
+    name: 'palimpsest-local-data',
     apply: 'serve',
     configureServer(server) {
       server.middlewares.use((request, response, next) => {

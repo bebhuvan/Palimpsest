@@ -1,0 +1,9 @@
+{
+  "palimpsest:person:tanegashima-tokitaka": {
+    "assertion_ids": [
+      "assertion:tanegashima-tokitaka-commissioned-yaita",
+      "assertion:tanegashima-tokitaka-purchased-matchlocks"
+    ],
+    "subject_id": "palimpsest:person:tanegashima-tokitaka"
+  }
+}

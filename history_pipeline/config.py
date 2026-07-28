@@ -72,8 +72,10 @@ class SourceConfig(BaseModel):
         "wikidata",
         "wikipedia",
         "curated",
+        "direct_authority",
         "authority_reconciliation",
         "iiif_maps",
+        "seshat_api",
     ]
     title: str
     publisher: str
@@ -108,8 +110,10 @@ class SourceConfig(BaseModel):
             raise ValueError("license_reviewed sources must document the review basis")
         if self.rights and self.rights.metadata.license_id != self.license_id:
             raise ValueError("metadata rights must match the source license_id")
-        if self.adapter == "authority_reconciliation" and self.rights is None:
-            raise ValueError("authority reconciliation requires scoped metadata rights")
+        if self.adapter in {"authority_reconciliation", "direct_authority"} and (
+            self.rights is None
+        ):
+            raise ValueError("authority integrations require scoped metadata rights")
         if self.adapter == "iiif_maps":
             if (
                 self.rights is None
@@ -141,8 +145,10 @@ class SourceConfig(BaseModel):
                 "wikidata": [SourceRole.AUTHORITY_METADATA],
                 "wikipedia": [SourceRole.TERTIARY_SUMMARY],
                 "curated": [SourceRole.PRIMARY_SOURCE, SourceRole.SCHOLARLY_ASSERTION],
+                "direct_authority": [SourceRole.AUTHORITY_METADATA],
                 "authority_reconciliation": [SourceRole.AUTHORITY_METADATA],
                 "iiif_maps": [SourceRole.PRIMARY_SOURCE],
+                "seshat_api": [SourceRole.SCHOLARLY_ASSERTION],
             }
             self.roles = defaults[self.adapter]
         return self
@@ -171,6 +177,20 @@ class TileConfig(BaseModel):
         return self
 
 
+class PublicationRequirements(BaseModel):
+    """Minimum reader capabilities required before advancing the public pointer.
+
+    Diagnostic and smoke builds may deliberately omit enrichment or year pages, so these
+    requirements are enforced only when a build asks to advance ``latest.json``.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    require_year_pages: bool = False
+    minimum_feature_entity_coverage: float = Field(default=0, ge=0, le=1)
+    minimum_feature_dossier_coverage: float = Field(default=0, ge=0, le=1)
+
+
 class PipelineConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -183,8 +203,16 @@ class PipelineConfig(BaseModel):
     causal_claims_path: Path | None = None
     theme_rules_path: Path | None = None
     curated_records_path: Path | None = None
+    restatements_path: Path | None = None
+    assertion_restatements_path: Path | None = None
+    # Where generated year dossiers are kept. A build never generates one and never fails for
+    # lacking them; an absent directory simply means the release carries no year pages.
+    year_dossiers_path: Path | None = None
     user_agent_env: str = "WIKIMEDIA_USER_AGENT"
     distribution_profile: Literal["open_core", "research"] = "research"
+    publication_requirements: PublicationRequirements = Field(
+        default_factory=PublicationRequirements
+    )
     tiles: TileConfig = Field(default_factory=TileConfig)
     sources: list[SourceConfig]
     license_policy: LicensePolicy

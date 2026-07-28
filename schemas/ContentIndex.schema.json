@@ -11,6 +11,17 @@
         },
         "dossiers": {
           "$ref": "#/$defs/ContentShardContract"
+        },
+        "restatements": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RestatementShardContract"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "required": [
@@ -104,6 +115,34 @@
         }
       },
       "title": "ContentSharding",
+      "type": "object"
+    },
+    "RestatementShardContract": {
+      "additionalProperties": false,
+      "properties": {
+        "path_template": {
+          "pattern": "^content/restatements/\\{shard\\}\\.json$",
+          "title": "Path Template",
+          "type": "string"
+        },
+        "count": {
+          "minimum": 0,
+          "title": "Count",
+          "type": "integer"
+        },
+        "shards": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Shards",
+          "type": "array"
+        }
+      },
+      "required": [
+        "path_template",
+        "count"
+      ],
+      "title": "RestatementShardContract",
       "type": "object"
     }
   },

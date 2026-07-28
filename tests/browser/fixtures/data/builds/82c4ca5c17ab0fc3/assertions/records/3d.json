@@ -1,0 +1,51 @@
+{
+  "assertion:publication-event-occurred-in-nuremberg": {
+    "assertion_id": "assertion:publication-event-occurred-in-nuremberg",
+    "confidence": {
+      "grade": "A",
+      "rationale": "The catalog note identifies Norimbergae (Nuremberg) as the imprint place."
+    },
+    "date_precision": "year",
+    "evidence_basis": "primary_source_metadata",
+    "feature_ids": [
+      "palimpsest:publication-de-revolutionibus:1543"
+    ],
+    "object": {
+      "entity_id": "palimpsest:place:nuremberg",
+      "kind": "entity",
+      "unit": null,
+      "value": null,
+      "value_from": null,
+      "value_to": null,
+      "year": null
+    },
+    "predicate": "publication_place",
+    "representation": "structured_sourced_assertion",
+    "restatement": null,
+    "review_status": "provisional",
+    "source_citations": [],
+    "source_excerpt": null,
+    "source_excerpt_checksum_sha256": null,
+    "source_refs": [
+      {
+        "checksum_sha256": "295aea5847ce5d9afa801bbd2f46ab4c45a437e5dacfc37b7157a284011a6aab",
+        "citation": "Library of Congress, item 92516339, title page from the 1543 Nuremberg edition.",
+        "license_id": "PDM-1.0",
+        "modified": false,
+        "publisher": "Library of Congress",
+        "record_id": "92516339",
+        "retrieved_at": "2026-07-23T06:00:00Z",
+        "source_id": "loc_copernicus",
+        "title": "Title page of De revolutionibus orbium coelestium",
+        "url": "https://www.loc.gov/pictures/item/92516339/",
+        "version": "browser-pilot-curated-snapshot-v1"
+      }
+    ],
+    "subject_entity_ids": [
+      "palimpsest:event:de-revolutionibus-publication"
+    ],
+    "temporal_uncertainty": null,
+    "valid_from": 1543,
+    "valid_to": 1543
+  }
+}

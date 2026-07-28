@@ -7,7 +7,17 @@ import pytest
 from pytest_httpx import HTTPXMock
 
 from history_pipeline.config import PipelineConfig, SourceConfig
-from history_pipeline.models import HistoricalFeature, SourceReference
+from history_pipeline.models import (
+    AssertionEvidenceBasis,
+    AssertionObject,
+    Confidence,
+    DatePrecision,
+    EvidenceAssertion,
+    HistoricalDossier,
+    HistoricalEntity,
+    HistoricalFeature,
+    SourceReference,
+)
 from history_pipeline.pipeline import PipelineRun
 
 
@@ -63,7 +73,7 @@ def test_pipeline_filters_indicator_window_without_counting_scope_as_rejection(
         json={"columns": {"population_historical": {"unit": "people"}}},
     )
 
-    manifest = PipelineRun(config, config_path, user_agent="HistoryJoice/test").build(
+    manifest = PipelineRun(config, config_path, user_agent="Palimpsest/test").build(
         advance_latest=False
     )
 
@@ -113,6 +123,157 @@ def test_pipeline_merges_duplicate_relationship_rows_without_losing_provenance(
     ]
 
 
+def test_pipeline_links_seshat_assertions_by_exact_polity_id(
+    historical_feature: HistoricalFeature,
+) -> None:
+    feature = historical_feature.model_copy(
+        update={
+            "properties": {"SeshatID": "eg_example"},
+            "entity_ids": ["wikidata:Q1"],
+        }
+    )
+    assertion = EvidenceAssertion(
+        assertion_id="assertion:seshat:0123456789abcdef",
+        subject_entity_ids=["seshat-polity:eg_example"],
+        predicate="written_record",
+        object=AssertionObject(kind="text", value="present"),
+        valid_from=-100,
+        valid_to=100,
+        date_precision=DatePrecision.RANGE,
+        confidence=Confidence(grade="B", rationale="Fixture evidence"),
+        evidence_basis=AssertionEvidenceBasis.SCHOLARLY_ASSERTION,
+        source_refs=historical_feature.source_refs,
+    )
+
+    [linked] = PipelineRun._link_source_assertions([assertion], [feature])
+
+    assert linked.subject_entity_ids == ["wikidata:Q1"]
+    assert linked.feature_ids == [feature.feature_id]
+
+
+def test_pipeline_does_not_fan_parent_assertions_into_member_geometries(
+    historical_feature: HistoricalFeature,
+) -> None:
+    parent = historical_feature.model_copy(
+        update={
+            "feature_id": "test-source:empire:-100:100:parent",
+            "properties": {
+                "SeshatID": "gb_example_empire",
+                "Components": "Example colony",
+            },
+            "entity_ids": ["wikidata:Q1"],
+        }
+    )
+    member = historical_feature.model_copy(
+        update={
+            "feature_id": "test-source:colony:-100:100:member",
+            "properties": {
+                "SeshatID": "gb_example_empire",
+                "MemberOf": "(Example empire)",
+            },
+            "entity_ids": ["wikidata:Q2"],
+        }
+    )
+    assertion = EvidenceAssertion(
+        assertion_id="assertion:seshat:fedcba9876543210",
+        subject_entity_ids=["seshat-polity:gb_example_empire"],
+        predicate="polity_population",
+        object=AssertionObject(
+            kind="number_range", value_from=10, value_to=10, unit="people"
+        ),
+        valid_from=-100,
+        valid_to=100,
+        date_precision=DatePrecision.RANGE,
+        confidence=Confidence(grade="B", rationale="Aggregate fixture evidence"),
+        evidence_basis=AssertionEvidenceBasis.SCHOLARLY_ASSERTION,
+        source_refs=historical_feature.source_refs,
+    )
+
+    [linked] = PipelineRun._link_source_assertions([assertion], [parent, member])
+
+    assert linked.subject_entity_ids == ["wikidata:Q1"]
+    assert linked.feature_ids == [parent.feature_id]
+
+
+def test_publication_requirements_reject_capability_thin_latest(
+    tmp_path: Path,
+    historical_feature: HistoricalFeature,
+) -> None:
+    config = PipelineConfig(
+        raw_dir=tmp_path / "raw",
+        staged_dir=tmp_path / "staged",
+        cache_dir=tmp_path / "cache",
+        dist_dir=tmp_path / "dist",
+        sources=[],
+        license_policy={"allowed": []},
+        publication_requirements={
+            "require_year_pages": True,
+            "minimum_feature_entity_coverage": 0.5,
+            "minimum_feature_dossier_coverage": 0.5,
+        },
+    )
+    feature = historical_feature.model_copy(
+        update={"entity_ids": ["wikidata:Q1"]}
+    )
+    run = PipelineRun(config, tmp_path / "pipeline.yml")
+
+    with pytest.raises(
+        ValueError,
+        match=(
+            r"no year dossiers were loaded; "
+            r"feature/entity coverage 0\.00% is below 50\.00%; "
+            r"feature/dossier coverage 0\.00% is below 50\.00%"
+        ),
+    ):
+        run._validate_publication_requirements(
+            [feature], [], [], year_dossier_count=0
+        )
+
+
+def test_publication_requirements_accept_complete_reader_capabilities(
+    tmp_path: Path,
+    historical_feature: HistoricalFeature,
+    source_reference: SourceReference,
+) -> None:
+    config = PipelineConfig(
+        raw_dir=tmp_path / "raw",
+        staged_dir=tmp_path / "staged",
+        cache_dir=tmp_path / "cache",
+        dist_dir=tmp_path / "dist",
+        sources=[],
+        license_policy={"allowed": []},
+        publication_requirements={
+            "require_year_pages": True,
+            "minimum_feature_entity_coverage": 1,
+            "minimum_feature_dossier_coverage": 1,
+        },
+    )
+    feature = historical_feature.model_copy(
+        update={"entity_ids": ["wikidata:Q1"]}
+    )
+    entity = HistoricalEntity(
+        entity_id="wikidata:Q1",
+        entity_type="polity",
+        names={"en": "Example polity"},
+        source_refs=[source_reference],
+    )
+    dossier = HistoricalDossier(
+        dossier_id="wikipedia:en:1",
+        title="Example polity",
+        language="en",
+        entity_ids=["wikidata:Q1"],
+        extract="A saved source introduction.",
+        url="https://en.wikipedia.org/wiki/Example",
+        page_id=1,
+        content_checksum_sha256="c" * 64,
+        source_ref=source_reference,
+    )
+
+    PipelineRun(config, tmp_path / "pipeline.yml")._validate_publication_requirements(
+        [feature], [entity], [dossier], year_dossier_count=1
+    )
+
+
 def test_enrichment_checkpoint_fingerprints_authority_inputs(
     tmp_path: Path, historical_feature: HistoricalFeature
 ) -> None:
@@ -126,7 +287,7 @@ def test_enrichment_checkpoint_fingerprints_authority_inputs(
     )
     config_path = tmp_path / "pipeline.yml"
     config_path.write_text("sources: []\n", encoding="utf-8")
-    run = PipelineRun(config, config_path, user_agent="HistoryJoice/test")
+    run = PipelineRun(config, config_path, user_agent="Palimpsest/test")
 
     original = run._enrichment_checkpoint([historical_feature]).run_id
     changed_qid = run._enrichment_checkpoint(
@@ -173,9 +334,9 @@ def test_online_enrichment_requires_contactable_user_agent(tmp_path: Path) -> No
 @pytest.mark.parametrize(
     "user_agent",
     [
-        "HistoryJoice/0.1 (https://history.example.org/contact)",
-        "HistoryJoice/0.1 (data@example.org)",
-        "HistoryJoice/0.1 (wikipedia:en; User:ExampleEditor)",
+        "Palimpsest/0.1 (https://history.example.org/contact)",
+        "Palimpsest/0.1 (data@example.org)",
+        "Palimpsest/0.1 (wikipedia:en; User:ExampleEditor)",
     ],
 )
 def test_wikimedia_user_agent_accepts_one_valid_contact_channel(
@@ -188,10 +349,10 @@ def test_wikimedia_user_agent_accepts_one_valid_contact_channel(
     "user_agent",
     [
         "local test",
-        "HistoryJoice/0.1",
+        "Palimpsest/0.1",
         "curl/8.0 (https://example.org/contact)",
-        "HistoryJoice/0.1 (http://localhost/contact)",
-        "HistoryJoice/0.1 (not-an-email@example)",
+        "Palimpsest/0.1 (http://localhost/contact)",
+        "Palimpsest/0.1 (not-an-email@example)",
     ],
 )
 def test_wikimedia_user_agent_rejects_generic_or_uncontactable_clients(

@@ -1,0 +1,79 @@
+{
+  "palimpsest:publication-de-revolutionibus:1543": {
+    "available_entity_ids": [
+      "palimpsest:event:de-revolutionibus-publication",
+      "palimpsest:institution:petreius-workshop",
+      "palimpsest:person:nicolaus-copernicus",
+      "palimpsest:place:nuremberg",
+      "palimpsest:work:de-revolutionibus"
+    ],
+    "dossier_ids": [],
+    "entity_ids": [
+      "palimpsest:event:de-revolutionibus-publication",
+      "palimpsest:work:de-revolutionibus",
+      "palimpsest:person:nicolaus-copernicus",
+      "palimpsest:institution:petreius-workshop",
+      "palimpsest:place:nuremberg"
+    ],
+    "feature_id": "palimpsest:publication-de-revolutionibus:1543",
+    "missing_entity_ids": [],
+    "primary_entity_id": "palimpsest:event:de-revolutionibus-publication",
+    "reading_eligibility": [
+      {
+        "entity_id": "palimpsest:event:de-revolutionibus-publication",
+        "identity_basis": "source_asserted",
+        "identity_relation": "exact_match",
+        "reading_eligible": true,
+        "reason_codes": [
+          "feature_entity_intervals_overlap"
+        ],
+        "temporal_overlap": "overlaps"
+      },
+      {
+        "entity_id": "palimpsest:work:de-revolutionibus",
+        "identity_basis": "source_asserted",
+        "identity_relation": "broader_topic",
+        "reading_eligible": false,
+        "reason_codes": [
+          "feature_entity_intervals_overlap",
+          "entity_kind_incompatible_with_feature"
+        ],
+        "temporal_overlap": "overlaps"
+      },
+      {
+        "entity_id": "palimpsest:person:nicolaus-copernicus",
+        "identity_basis": "source_asserted",
+        "identity_relation": "broader_topic",
+        "reading_eligible": false,
+        "reason_codes": [
+          "feature_entity_intervals_overlap",
+          "entity_kind_incompatible_with_feature"
+        ],
+        "temporal_overlap": "overlaps"
+      },
+      {
+        "entity_id": "palimpsest:institution:petreius-workshop",
+        "identity_basis": "source_asserted",
+        "identity_relation": "broader_topic",
+        "reading_eligible": false,
+        "reason_codes": [
+          "entity_interval_unbounded",
+          "entity_kind_incompatible_with_feature"
+        ],
+        "temporal_overlap": "unknown"
+      },
+      {
+        "entity_id": "palimpsest:place:nuremberg",
+        "identity_basis": "source_asserted",
+        "identity_relation": "broader_topic",
+        "reading_eligible": false,
+        "reason_codes": [
+          "entity_interval_unbounded",
+          "entity_kind_incompatible_with_feature"
+        ],
+        "temporal_overlap": "unknown"
+      }
+    ],
+    "related_entity_ids": []
+  }
+}

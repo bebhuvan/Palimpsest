@@ -1,0 +1,14 @@
+{
+  "palimpsest:royal-cedula-vasco-de-quiroga:1543": {
+    "feature_id": "palimpsest:royal-cedula-vasco-de-quiroga:1543",
+    "items": [],
+    "seed_entity_ids": [
+      "palimpsest:concept:ordinances-for-treatment-in-the-indies",
+      "palimpsest:event:royal-cedula-vasco-de-quiroga",
+      "palimpsest:person:philip-prince-later-philip-ii",
+      "palimpsest:person:vasco-de-quiroga",
+      "palimpsest:place:michoacan",
+      "palimpsest:place:valladolid"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "palimpsest:publication-de-revolutionibus:1543": {
+    "assertion_ids": [
+      "theme:5b5f48a7e65db003",
+      "theme:5cc2aebdd42edf8a"
+    ],
+    "feature_id": "palimpsest:publication-de-revolutionibus:1543",
+    "themes": [
+      "culture",
+      "knowledge"
+    ]
+  }
+}

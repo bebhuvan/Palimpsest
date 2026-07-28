@@ -172,7 +172,7 @@ export function historyMapStyle(year: number, lens: HistoricalLens = 'all'): Sty
   const filter = (id: string) => ohmFilterForLayer(id, year, lens) as never;
   return {
     version: 8,
-    name: 'History Joice quiet historical map',
+    name: 'Palimpsest quiet historical map',
     glyphs: OHM_GLYPHS,
     sources: {
       'physical-land': {

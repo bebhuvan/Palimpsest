@@ -168,7 +168,7 @@ def test_unknown_assertion_and_entity_or_date_mismatch_fail_closed() -> None:
         _ingest(raw, bundle, curated)
 
     raw = draft.content.model_dump(mode="json")
-    raw["claims"][0]["entity_ids"] = ["historyjoice:person:nicolaus-copernicus"]
+    raw["claims"][0]["entity_ids"] = ["palimpsest:person:nicolaus-copernicus"]
     with pytest.raises(ValueError, match="entity IDs"):
         _ingest(raw, bundle, curated)
 
@@ -326,7 +326,7 @@ def test_review_rejection_and_immutable_publication_states(tmp_path: Path) -> No
             bundle,
             curated,
             editorial_license_id="CC-BY-4.0",
-            editorial_attribution="History Joice",
+            editorial_attribution="Palimpsest",
             published_at=datetime.now(UTC),
         )
 
@@ -343,7 +343,7 @@ def test_review_rejection_and_immutable_publication_states(tmp_path: Path) -> No
         bundle,
         curated,
         editorial_license_id="CC-BY-4.0",
-        editorial_attribution="History Joice",
+        editorial_attribution="Palimpsest",
         published_at=datetime(2026, 7, 23, 8, 0, tzinfo=UTC),
     )
     validate_published_dossier(published)

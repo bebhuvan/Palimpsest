@@ -1,0 +1,10 @@
+{
+  "palimpsest:work:de-revolutionibus": {
+    "assertion_ids": [
+      "assertion:copernicus-authored-de-revolutionibus",
+      "assertion:de-revolutionibus-subject-heliocentric-astronomy",
+      "assertion:publication-event-published-work"
+    ],
+    "subject_id": "palimpsest:work:de-revolutionibus"
+  }
+}

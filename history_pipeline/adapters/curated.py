@@ -15,6 +15,9 @@ class CuratedSourceAdapter:
         asset = context.downloads.fetch(
             str(context.source.url),
             context.raw_source_dir / filename,
+            reuse_cached=bool(
+                context.source.options.get("reuse_reviewed_snapshot", False)
+            ),
         )
         verify_expected_checksum(context.source, asset)
         return AdapterResult(raw_assets=[asset])

@@ -1,0 +1,251 @@
+{
+  "$defs": {
+    "RestatementProvenance": {
+      "additionalProperties": false,
+      "description": "Generation provenance for a restatement.\n\n`source_sha256` deliberately covers the exact source extract text rather than an evidence\nbundle. When the upstream revision changes, the recorded hash stops matching and the build\ntreats the restatement as stale instead of silently attributing new text to an old revision.",
+      "properties": {
+        "prompt_version": {
+          "minLength": 1,
+          "title": "Prompt Version",
+          "type": "string"
+        },
+        "prompt_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Prompt Sha256",
+          "type": "string"
+        },
+        "model_identifier": {
+          "minLength": 1,
+          "title": "Model Identifier",
+          "type": "string"
+        },
+        "source_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Source Sha256",
+          "type": "string"
+        },
+        "output_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Output Sha256",
+          "type": "string"
+        },
+        "generated_at": {
+          "format": "date-time",
+          "title": "Generated At",
+          "type": "string"
+        },
+        "provider_response_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Response Id"
+        }
+      },
+      "required": [
+        "prompt_version",
+        "prompt_sha256",
+        "model_identifier",
+        "source_sha256",
+        "output_sha256",
+        "generated_at"
+      ],
+      "title": "RestatementProvenance",
+      "type": "object"
+    },
+    "RestatementTimelineEntry": {
+      "additionalProperties": false,
+      "description": "One dated moment already present in the source extract.\n\nThe date is retained exactly as the source wrote it. Deriving a century or a decade from a\nsource year is a new claim, so `year_text` may only reuse digits the source already contains.",
+      "properties": {
+        "year_text": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Year Text",
+          "type": "string"
+        },
+        "sort_year": {
+          "maximum": 2100,
+          "minimum": -50000,
+          "title": "Sort Year",
+          "type": "integer"
+        },
+        "text": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "year_text",
+        "sort_year",
+        "text"
+      ],
+      "title": "RestatementTimelineEntry",
+      "type": "object"
+    },
+    "RestatementValidation": {
+      "additionalProperties": false,
+      "description": "The mechanical closed-world report for one restatement.\n\nA restatement introduces no new claim, so it needs no human claim review. What it does need is\nproof that it stayed inside its source. These fields record that check rather than asserting it.",
+      "properties": {
+        "policy_version": {
+          "minLength": 1,
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "source_chars": {
+          "exclusiveMinimum": 0,
+          "title": "Source Chars",
+          "type": "integer"
+        },
+        "restatement_chars": {
+          "exclusiveMinimum": 0,
+          "title": "Restatement Chars",
+          "type": "integer"
+        },
+        "unsupported_numbers": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Unsupported Numbers",
+          "type": "array"
+        },
+        "unsupported_names": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Unsupported Names",
+          "type": "array"
+        },
+        "denied_phrases": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Denied Phrases",
+          "type": "array"
+        },
+        "retained_furniture": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Retained Furniture",
+          "type": "array"
+        }
+      },
+      "required": [
+        "policy_version",
+        "source_chars",
+        "restatement_chars"
+      ],
+      "title": "RestatementValidation",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "A plain-English restatement bound to exactly one source dossier revision.",
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "restatement_id": {
+      "pattern": "^restatement:[a-f0-9]{16}$",
+      "title": "Restatement Id",
+      "type": "string"
+    },
+    "dossier_id": {
+      "minLength": 1,
+      "title": "Dossier Id",
+      "type": "string"
+    },
+    "dossier_kind": {
+      "const": "restatement",
+      "default": "restatement",
+      "title": "Dossier Kind",
+      "type": "string"
+    },
+    "content_role": {
+      "const": "source_restatement",
+      "default": "source_restatement",
+      "title": "Content Role",
+      "type": "string"
+    },
+    "language": {
+      "minLength": 1,
+      "title": "Language",
+      "type": "string"
+    },
+    "headline": {
+      "minLength": 1,
+      "title": "Headline",
+      "type": "string"
+    },
+    "text": {
+      "minLength": 1,
+      "title": "Text",
+      "type": "string"
+    },
+    "timeline": {
+      "items": {
+        "$ref": "#/$defs/RestatementTimelineEntry"
+      },
+      "title": "Timeline",
+      "type": "array"
+    },
+    "entity_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Entity Ids",
+      "type": "array"
+    },
+    "source_revision_id": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Revision Id"
+    },
+    "source_content_checksum_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Source Content Checksum Sha256",
+      "type": "string"
+    },
+    "content_checksum_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Content Checksum Sha256",
+      "type": "string"
+    },
+    "generation": {
+      "$ref": "#/$defs/RestatementProvenance"
+    },
+    "validation": {
+      "$ref": "#/$defs/RestatementValidation"
+    }
+  },
+  "required": [
+    "restatement_id",
+    "dossier_id",
+    "language",
+    "headline",
+    "text",
+    "source_content_checksum_sha256",
+    "content_checksum_sha256",
+    "generation",
+    "validation"
+  ],
+  "title": "DossierRestatement",
+  "type": "object"
+}

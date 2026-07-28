@@ -302,7 +302,7 @@
       "type": "string"
     },
     "dossier_id": {
-      "pattern": "^historyjoice:editorial:[a-f0-9]{16}$",
+      "pattern": "^palimpsest:editorial:[a-f0-9]{16}$",
       "title": "Dossier Id",
       "type": "string"
     },

@@ -1,0 +1,38 @@
+{
+  "band-06|g10:17:13": {
+    "band_id": "band-06",
+    "bounds": [
+      -10.0,
+      40.0,
+      0.0,
+      50.0
+    ],
+    "bucket_id": "band-06|g10:17:13",
+    "cell_id": "g10:17:13",
+    "entries": [
+      {
+        "dossier_ids": [],
+        "entity_id": "palimpsest:event:royal-cedula-vasco-de-quiroga",
+        "entry_id": "feature:palimpsest:royal-cedula-vasco-de-quiroga:1543",
+        "entry_type": "map_feature",
+        "feature_id": "palimpsest:royal-cedula-vasco-de-quiroga:1543",
+        "kind": "event",
+        "latitude": 41.6523,
+        "longitude": -4.7245,
+        "review_status": "provisional",
+        "source_ids": [
+          "loc_new_laws"
+        ],
+        "spatial_basis": "feature_geometry_intersection",
+        "temporal_confidence": "B",
+        "themes": [
+          "power"
+        ],
+        "valid_from": 1543,
+        "valid_to": 1543
+      }
+    ],
+    "valid_from": 1500,
+    "valid_to": 1799
+  }
+}

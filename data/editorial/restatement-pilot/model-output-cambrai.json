@@ -1,0 +1,33 @@
+{
+  "result": "restated",
+  "headline": "A bishops' city on the Scheldt, and the ground where tanks were first used in mass",
+  "text": "Cambrai stands on the Scheldt, the river known locally as the Escaut, in the north of France.\n\nTowards the end of the Roman Empire it replaced Bavay as the capital of the land of the Nervii. In the Merovingian era it became the seat of an immense archdiocese covering the whole right bank of the Scheldt, and the centre of a small ecclesiastical principality that roughly coincided with the shire of Brabant and took in the central Low Countries. Its bishopric held some limited secular power and depended on the Holy Roman Empire until France annexed it in 1678. Fénelon, nicknamed the Swan of Cambrai, was the most renowned of its archbishops.\n\nFertile land and the textile industry made it prosperous in the Middle Ages. Wellington kept his headquarters here for the British Army of Occupation from 1815 to 1818.\n\nThe German army occupied the town during World War I, and British artillery partly destroyed it. The fighting from 20 November to 3 December 1917, around the town and the nearby Bourlon Wood, is considered the first mass use of tanks in battle. A second battle followed between 8 and 10 October 1918, during the Hundred Days Offensive. Reconstruction and a rapidly developing economy came after World War II, until the 1973 oil crisis abruptly reversed both.",
+  "timeline": [
+    {
+      "year_text": "1678",
+      "sort_year": 1678,
+      "text": "France annexed the bishopric"
+    },
+    {
+      "year_text": "1815",
+      "sort_year": 1815,
+      "text": "Wellington made the town his headquarters for the British Army of Occupation"
+    },
+    {
+      "year_text": "1917",
+      "sort_year": 1917,
+      "text": "The first mass use of tanks in battle, around the town and Bourlon Wood"
+    },
+    {
+      "year_text": "1918",
+      "sort_year": 1918,
+      "text": "A second battle, during the Hundred Days Offensive"
+    },
+    {
+      "year_text": "1973",
+      "sort_year": 1973,
+      "text": "The oil crisis reversed a rapidly developing economy"
+    }
+  ],
+  "unsuitable_reason": null
+}

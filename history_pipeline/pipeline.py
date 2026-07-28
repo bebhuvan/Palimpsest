@@ -20,6 +20,7 @@ from history_pipeline.adapters import (
     AuthorityReconciliationAdapter,
     CliopatriaAdapter,
     CuratedSourceAdapter,
+    DirectAuthorityAdapter,
     GeoJsonAdapter,
     IiifMapAdapter,
     LinkedPlacesAdapter,
@@ -27,11 +28,13 @@ from history_pipeline.adapters import (
     OwidAdapter,
     PeriodoAdapter,
     PleiadesAdapter,
+    SeshatApiAdapter,
 )
 from history_pipeline.adapters.base import AdapterContext, RejectedRecord, SourceAdapter
 from history_pipeline.adapters.wikidata import WikidataEnricher
 from history_pipeline.adapters.wikipedia import WikipediaEnricher
 from history_pipeline.artifacts import build_artifacts, compute_build_id
+from history_pipeline.assertion_restatement import read_assertion_restatements
 from history_pipeline.causal import load_causal_dataset, validate_causal_entities
 from history_pipeline.config import PipelineConfig, config_fingerprint_bytes
 from history_pipeline.curated import load_curated_records
@@ -42,6 +45,7 @@ from history_pipeline.models import (
     AuthorityMatch,
     BuildManifest,
     CausalDataset,
+    DossierRestatement,
     EvidenceAssertion,
     HistoricalDossier,
     HistoricalEntity,
@@ -54,7 +58,9 @@ from history_pipeline.models import (
     RawSnapshot,
     SourceReference,
     ThematicAssertion,
+    YearDossier,
 )
+from history_pipeline.restatement import read_restatements
 from history_pipeline.storage import DownloadCache, NdjsonWriter, RawAsset, sha256_file
 from history_pipeline.themes import (
     apply_thematic_assertions,
@@ -67,6 +73,7 @@ from history_pipeline.validation import Severity, validate_collection
 ADAPTERS: dict[str, type[SourceAdapter]] = {
     "cliopatria": CliopatriaAdapter,
     "curated": CuratedSourceAdapter,
+    "direct_authority": DirectAuthorityAdapter,
     "geojson": GeoJsonAdapter,
     "linked_places": LinkedPlacesAdapter,
     "owid": OwidAdapter,
@@ -75,6 +82,7 @@ ADAPTERS: dict[str, type[SourceAdapter]] = {
     "open_context": OpenContextAdapter,
     "authority_reconciliation": AuthorityReconciliationAdapter,
     "iiif_maps": IiifMapAdapter,
+    "seshat_api": SeshatApiAdapter,
 }
 WIKIMEDIA_CLIENT = re.compile(
     r"^[A-Za-z][A-Za-z0-9._-]{2,}/[A-Za-z0-9][A-Za-z0-9._-]*"
@@ -114,7 +122,7 @@ class PipelineRun:
         self.config_path = config_path
         self.offline = offline
         self.user_agent = user_agent or os.environ.get(
-            config.user_agent_env, "HistoryJoiceDataPipeline/0.1 (local development)"
+            config.user_agent_env, "PalimpsestDataPipeline/0.1 (local development)"
         )
         self.progress = progress
 
@@ -180,6 +188,7 @@ class PipelineRun:
                 result = adapter_type().run(context, limit=limit)
                 features.extend(result.features)
                 indicators.extend(result.indicators)
+                evidence_assertions.extend(result.evidence_assertions)
                 periods.extend(result.periods)
                 authority_matches.extend(result.authority_matches)
                 historical_maps.extend(result.historical_maps)
@@ -213,6 +222,19 @@ class PipelineRun:
         accepted_features = apply_thematic_assertions(
             accepted_features, thematic_assertions
         )
+        evidence_assertions = self._link_source_assertions(
+            evidence_assertions, accepted_features
+        )
+        evidence_assertions = [
+            assertion
+            for assertion in evidence_assertions
+            if assertion.valid_to >= self.config.minimum_year
+            and assertion.valid_from <= self.config.maximum_year
+        ]
+        evidence_assertions = self._attach_assertion_restatements(
+            evidence_assertions
+        )
+        year_dossiers = self._load_year_dossiers()
 
         if enrich:
             checkpoint = self._enrichment_checkpoint(accepted_features)
@@ -238,6 +260,14 @@ class PipelineRun:
             checksums.extend(asset.checksum_sha256 for _, asset in enrichment_assets)
             raw_assets.extend(enrichment_assets)
             entities = self._merge_entities(entities, enriched_entities)
+
+        if advance_latest:
+            self._validate_publication_requirements(
+                accepted_features,
+                entities,
+                dossiers,
+                year_dossier_count=len(year_dossiers),
+            )
 
         self._validate_causal_sources(causal)
         self._validate_evidence_assertions(
@@ -301,6 +331,9 @@ class PipelineRun:
                 sources=self.config.sources,
                 authority_matches=authority_matches,
                 historical_maps=historical_maps,
+                restatements=self._load_restatements(),
+                year_dossiers=year_dossiers,
+                license_policy=self.config.license_policy,
             )
             if tiles:
                 artifacts.extend(
@@ -373,6 +406,113 @@ class PipelineRun:
                 pointer.model_dump(mode="json"),
             )
         return manifest
+
+    def _validate_publication_requirements(
+        self,
+        features: list[HistoricalFeature],
+        entities: list[HistoricalEntity],
+        dossiers: list[HistoricalDossier],
+        *,
+        year_dossier_count: int,
+    ) -> None:
+        """Refuse to replace a reader release with a capability-thin build."""
+
+        requirements = self.config.publication_requirements
+        failures: list[str] = []
+        if requirements.require_year_pages and year_dossier_count == 0:
+            failures.append("no year dossiers were loaded")
+
+        feature_count = len(features)
+        entity_ids = {entity.entity_id for entity in entities}
+        dossier_entity_ids = {
+            entity_id for dossier in dossiers for entity_id in dossier.entity_ids
+        }
+
+        def coverage(available_ids: set[str]) -> float:
+            if feature_count == 0:
+                return 0
+            return sum(
+                bool(set(feature.entity_ids) & available_ids) for feature in features
+            ) / feature_count
+
+        entity_coverage = coverage(entity_ids)
+        if entity_coverage < requirements.minimum_feature_entity_coverage:
+            failures.append(
+                "feature/entity coverage "
+                f"{entity_coverage:.2%} is below "
+                f"{requirements.minimum_feature_entity_coverage:.2%}"
+            )
+
+        dossier_coverage = coverage(dossier_entity_ids)
+        if dossier_coverage < requirements.minimum_feature_dossier_coverage:
+            failures.append(
+                "feature/dossier coverage "
+                f"{dossier_coverage:.2%} is below "
+                f"{requirements.minimum_feature_dossier_coverage:.2%}"
+            )
+
+        if failures:
+            detail = "; ".join(failures)
+            raise ValueError(
+                "Publication requirements failed: "
+                f"{detail}. A build may still be created with --no-advance-latest. "
+                "For a cached reader release use --offline --enrich."
+            )
+
+    def _load_restatements(self) -> list[DossierRestatement]:
+        """Read editorial restatements, if any exist, from outside the pipeline source tree.
+
+        Restatements are generated by a separate explicit command and live under `data/editorial/`.
+        A build never generates them and never fails for lacking them: an absent file simply means
+        every reader sees source extracts.
+        """
+
+        path = self.config.restatements_path
+        if path is None or not path.exists():
+            return []
+        return list(read_restatements(path))
+
+    def _attach_assertion_restatements(
+        self, assertions: list[EvidenceAssertion]
+    ) -> list[EvidenceAssertion]:
+        path = self.config.assertion_restatements_path
+        if path is None or not path.exists():
+            return assertions
+        restatements = {
+            item.assertion_id: item for item in read_assertion_restatements(path)
+        }
+        attached: list[EvidenceAssertion] = []
+        for assertion in assertions:
+            restatement = restatements.get(assertion.assertion_id)
+            if (
+                restatement is None
+                or assertion.source_excerpt_checksum_sha256
+                != restatement.source_excerpt_checksum_sha256
+            ):
+                attached.append(assertion)
+                continue
+            attached.append(assertion.model_copy(update={"restatement": restatement}))
+        return attached
+
+    def _load_year_dossiers(self) -> list[YearDossier]:
+        """Read generated year dossiers, if any exist, from outside the pipeline source tree.
+
+        Each is bound to a chronicle revision and carries its own checksum, so reading one is a
+        validation: a file edited since it was generated fails here rather than in a browser. A
+        directory that is absent, empty or partly written is not an error — the release simply
+        carries the years that are ready.
+        """
+
+        directory = self.config.year_dossiers_path
+        if directory is None or not directory.is_dir():
+            return []
+        return sorted(
+            (
+                YearDossier.model_validate_json(path.read_bytes())
+                for path in directory.glob("*-dossier.json")
+            ),
+            key=lambda dossier: dossier.year,
+        )
 
     def _language_fallbacks(self) -> tuple[str, ...]:
         for source in self.config.sources:
@@ -460,14 +600,23 @@ class PipelineRun:
         configured = {source.id: source for source in self.config.sources}
         feature_ids = {feature.feature_id for feature in features}
         entity_ids = {entity.entity_id for entity in entities}
+        feature_entity_ids = {
+            entity_id for feature in features for entity_id in feature.entity_ids
+        }
         for assertion in assertions:
-            linked_entities = set(assertion.subject_entity_ids)
-            if assertion.object.entity_id:
-                linked_entities.add(assertion.object.entity_id)
-            missing_entities = linked_entities - entity_ids
+            missing_subjects = set(assertion.subject_entity_ids) - (
+                entity_ids | feature_entity_ids
+            )
+            missing_objects = (
+                {assertion.object.entity_id} - entity_ids
+                if assertion.object.entity_id
+                else set()
+            )
             missing_features = set(assertion.feature_ids) - feature_ids
-            if missing_entities or missing_features:
-                missing = sorted({*missing_entities, *missing_features})
+            if missing_subjects or missing_objects or missing_features:
+                missing = sorted(
+                    {*missing_subjects, *missing_objects, *missing_features}
+                )
                 raise ValueError(
                     f"Evidence assertion {assertion.assertion_id} references records "
                     f"absent from the release: {', '.join(missing)}"
@@ -728,6 +877,76 @@ class PipelineRun:
             if not unique:
                 unique = [f"feature:{feature.feature_id}"]
             linked.append(feature.model_copy(update={"entity_ids": unique}))
+        return linked
+
+    @staticmethod
+    def _link_source_assertions(
+        assertions: list[EvidenceAssertion],
+        features: list[HistoricalFeature],
+    ) -> list[EvidenceAssertion]:
+        """Resolve acquisition-time Seshat polity keys to canonical release records."""
+
+        by_seshat_id: dict[str, list[HistoricalFeature]] = {}
+        for feature in features:
+            value = feature.properties.get("SeshatID")
+            if value is None:
+                continue
+            seshat_ids = [
+                candidate.strip() for candidate in str(value).split(";") if candidate.strip()
+            ]
+            # Cliopatria repeats an aggregate polity's Seshat ID on its component geometries
+            # (for example British Empire -> British Africa, British Raj, Trucial States).
+            # Seshat's aggregate population, territory and institutions do not become facts
+            # about each component merely because that parent key is copied onto the record.
+            if str(feature.properties.get("MemberOf") or "").strip():
+                continue
+            # A composite relation carrying several component IDs is likewise not an exact
+            # assertion subject. Retain one-ID aggregate records, which are the actual parent.
+            if (
+                str(feature.properties.get("Components") or "").strip()
+                and len(seshat_ids) > 1
+            ):
+                continue
+            for seshat_id in seshat_ids:
+                normalized = seshat_id.strip()
+                if normalized:
+                    by_seshat_id.setdefault(normalized, []).append(feature)
+
+        linked: list[EvidenceAssertion] = []
+        for assertion in assertions:
+            acquisition_ids = [
+                entity_id
+                for entity_id in assertion.subject_entity_ids
+                if entity_id.startswith("seshat-polity:")
+            ]
+            if not acquisition_ids:
+                linked.append(assertion)
+                continue
+            matches = {
+                feature.feature_id: feature
+                for acquisition_id in acquisition_ids
+                for feature in by_seshat_id.get(
+                    acquisition_id.removeprefix("seshat-polity:"), []
+                )
+            }
+            if not matches:
+                continue
+            feature_ids = sorted(matches)
+            entity_ids = sorted(
+                {
+                    entity_id
+                    for feature in matches.values()
+                    for entity_id in feature.entity_ids
+                }
+            )
+            linked.append(
+                assertion.model_copy(
+                    update={
+                        "subject_entity_ids": entity_ids,
+                        "feature_ids": feature_ids,
+                    }
+                )
+            )
         return linked
 
     def _enrich(

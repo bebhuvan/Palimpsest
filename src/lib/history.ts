@@ -35,9 +35,14 @@ export function eraLabel(era: Era): string {
   }[era];
 }
 
+/**
+ * Years are never group-separated. "1,543 CE" is a quantity; 1543 CE is a date, and
+ * a history interface that renders the difference wrong forfeits the reader's trust
+ * before it has said anything.
+ */
 export function formatYear(year: number): string {
-  if (year < 0) return `${Math.abs(year).toLocaleString('en')} BCE`;
-  return `${year.toLocaleString('en')} CE`;
+  if (year < 0) return `${Math.abs(year)} BCE`;
+  return `${year} CE`;
 }
 
 export function normalizeYear(

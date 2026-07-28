@@ -1,0 +1,12 @@
+{
+  "palimpsest:event:tanegashima-firearms-encounter": {
+    "assertion_ids": [
+      "assertion:tanegashima-encounter-described-in-teppoki",
+      "assertion:tanegashima-encounter-occurred-on-island",
+      "assertion:tanegashima-ship-carried-portuguese-traders",
+      "assertion:tanegashima-tokitaka-commissioned-yaita",
+      "assertion:tanegashima-tokitaka-purchased-matchlocks"
+    ],
+    "subject_id": "palimpsest:event:tanegashima-firearms-encounter"
+  }
+}

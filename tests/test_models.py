@@ -117,6 +117,25 @@ def test_assertion_object_requires_exactly_one_typed_value() -> None:
     with pytest.raises(ValidationError, match="exactly one"):
         AssertionObject(
             kind=AssertionObjectKind.ENTITY,
-            entity_id="historyjoice:person:example",
+            entity_id="palimpsest:person:example",
             value="duplicate",
+        )
+
+
+def test_assertion_object_supports_numeric_ranges() -> None:
+    value = AssertionObject(
+        kind=AssertionObjectKind.NUMBER_RANGE,
+        value_from=1000,
+        value_to=1500,
+        unit="people",
+    )
+    assert value.value_from == 1000
+    assert value.value_to == 1500
+
+    with pytest.raises(ValidationError, match="lower bound"):
+        AssertionObject(
+            kind=AssertionObjectKind.NUMBER_RANGE,
+            value_from=1500,
+            value_to=1000,
+            unit="people",
         )

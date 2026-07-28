@@ -1,0 +1,45 @@
+{
+  "wikidata:Q200": {
+    "content_shard": "49",
+    "dossier_ids": [],
+    "entity_id": "wikidata:Q200",
+    "feature_ids": [
+      "browser-pilot:missing-dossier-place:50:150:bbbb"
+    ],
+    "kind": "polity",
+    "latitude": 25.0,
+    "longitude": 27.0,
+    "name_attestations": [
+      {
+        "date_precision": "range",
+        "feature_id": "browser-pilot:missing-dossier-place:50:150:bbbb",
+        "language": "en",
+        "name_id": "name:0dece1f6f2759e03",
+        "name_kind": "unknown",
+        "perspective": null,
+        "primary": true,
+        "script": null,
+        "source_ids": [
+          "browser-pilot"
+        ],
+        "temporal_basis": "feature_interval",
+        "temporal_confidence": "B",
+        "text": "Undossiered Pilot Place",
+        "valid_from": 50,
+        "valid_to": 150
+      }
+    ],
+    "names": {
+      "en": "Undossiered Pilot Place"
+    },
+    "source_ids": [
+      "browser-pilot"
+    ],
+    "themes": [
+      "power"
+    ],
+    "valid_from": 50,
+    "valid_to": 150,
+    "year_dossier_years": []
+  }
+}

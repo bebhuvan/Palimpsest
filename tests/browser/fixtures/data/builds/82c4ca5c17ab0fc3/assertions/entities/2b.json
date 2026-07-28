@@ -1,0 +1,10 @@
+{
+  "palimpsest:artifact:matchlock-muskets": {
+    "assertion_ids": [
+      "assertion:tanegashima-became-matchlock-term",
+      "assertion:tanegashima-tokitaka-commissioned-yaita",
+      "assertion:tanegashima-tokitaka-purchased-matchlocks"
+    ],
+    "subject_id": "palimpsest:artifact:matchlock-muskets"
+  }
+}

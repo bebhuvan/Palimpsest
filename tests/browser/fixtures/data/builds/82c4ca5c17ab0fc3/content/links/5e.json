@@ -1,0 +1,105 @@
+{
+  "palimpsest:tanegashima-firearms-tradition:1543": {
+    "available_entity_ids": [
+      "palimpsest:artifact:matchlock-muskets",
+      "palimpsest:event:tanegashima-firearms-encounter",
+      "palimpsest:group:portuguese-traders-tanegashima",
+      "palimpsest:person:tanegashima-tokitaka",
+      "palimpsest:person:yaita-kinbei",
+      "palimpsest:place:tanegashima",
+      "palimpsest:work:teppoki"
+    ],
+    "dossier_ids": [],
+    "entity_ids": [
+      "palimpsest:event:tanegashima-firearms-encounter",
+      "palimpsest:place:tanegashima",
+      "palimpsest:person:tanegashima-tokitaka",
+      "palimpsest:person:yaita-kinbei",
+      "palimpsest:artifact:matchlock-muskets",
+      "palimpsest:work:teppoki",
+      "palimpsest:group:portuguese-traders-tanegashima"
+    ],
+    "feature_id": "palimpsest:tanegashima-firearms-tradition:1543",
+    "missing_entity_ids": [],
+    "primary_entity_id": "palimpsest:event:tanegashima-firearms-encounter",
+    "reading_eligibility": [
+      {
+        "entity_id": "palimpsest:event:tanegashima-firearms-encounter",
+        "identity_basis": "source_asserted",
+        "identity_relation": "exact_match",
+        "reading_eligible": true,
+        "reason_codes": [
+          "feature_entity_intervals_overlap"
+        ],
+        "temporal_overlap": "overlaps"
+      },
+      {
+        "entity_id": "palimpsest:place:tanegashima",
+        "identity_basis": "source_asserted",
+        "identity_relation": "broader_topic",
+        "reading_eligible": false,
+        "reason_codes": [
+          "entity_interval_unbounded",
+          "entity_kind_incompatible_with_feature"
+        ],
+        "temporal_overlap": "unknown"
+      },
+      {
+        "entity_id": "palimpsest:person:tanegashima-tokitaka",
+        "identity_basis": "source_asserted",
+        "identity_relation": "broader_topic",
+        "reading_eligible": false,
+        "reason_codes": [
+          "feature_entity_intervals_overlap",
+          "entity_kind_incompatible_with_feature"
+        ],
+        "temporal_overlap": "overlaps"
+      },
+      {
+        "entity_id": "palimpsest:person:yaita-kinbei",
+        "identity_basis": "source_asserted",
+        "identity_relation": "broader_topic",
+        "reading_eligible": false,
+        "reason_codes": [
+          "feature_entity_intervals_overlap",
+          "entity_kind_incompatible_with_feature"
+        ],
+        "temporal_overlap": "overlaps"
+      },
+      {
+        "entity_id": "palimpsest:artifact:matchlock-muskets",
+        "identity_basis": "source_asserted",
+        "identity_relation": "broader_topic",
+        "reading_eligible": false,
+        "reason_codes": [
+          "entity_interval_unbounded",
+          "entity_kind_incompatible_with_feature"
+        ],
+        "temporal_overlap": "unknown"
+      },
+      {
+        "entity_id": "palimpsest:work:teppoki",
+        "identity_basis": "source_asserted",
+        "identity_relation": "broader_topic",
+        "reading_eligible": false,
+        "reason_codes": [
+          "entity_interval_unbounded",
+          "entity_kind_incompatible_with_feature"
+        ],
+        "temporal_overlap": "unknown"
+      },
+      {
+        "entity_id": "palimpsest:group:portuguese-traders-tanegashima",
+        "identity_basis": "source_asserted",
+        "identity_relation": "broader_topic",
+        "reading_eligible": false,
+        "reason_codes": [
+          "entity_interval_unbounded",
+          "entity_kind_incompatible_with_feature"
+        ],
+        "temporal_overlap": "unknown"
+      }
+    ],
+    "related_entity_ids": []
+  }
+}

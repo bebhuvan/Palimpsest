@@ -1,0 +1,13 @@
+{
+  "palimpsest:royal-cedula-vasco-de-quiroga:1543": {
+    "assertion_ids": [
+      "theme:0201807fc88b74b2",
+      "theme:4c66042d8a0e97e7"
+    ],
+    "feature_id": "palimpsest:royal-cedula-vasco-de-quiroga:1543",
+    "themes": [
+      "belief",
+      "power"
+    ]
+  }
+}

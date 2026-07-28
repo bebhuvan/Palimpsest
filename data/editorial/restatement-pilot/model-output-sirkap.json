@@ -1,0 +1,18 @@
+{
+  "result": "restated",
+  "headline": "A city built by a Greco-Bactrian king across the river from Taxila",
+  "text": "Sirkap is an archaeological site on the bank opposite Taxila, in Punjab, Pakistan.\n\nThe Greco-Bactrian king Demetrius built the city after invading the region around 180 BC. He founded an Indo-Greek kingdom that was to last until around 10 BC. Sirkap is also said to have been rebuilt by king Menander I.",
+  "timeline": [
+    {
+      "year_text": "around 180 BC",
+      "sort_year": -180,
+      "text": "Demetrius built the city after invading the region"
+    },
+    {
+      "year_text": "around 10 BC",
+      "sort_year": -10,
+      "text": "The end of the Indo-Greek kingdom Demetrius founded"
+    }
+  ],
+  "unsuitable_reason": null
+}

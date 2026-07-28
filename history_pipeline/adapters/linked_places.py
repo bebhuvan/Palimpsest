@@ -38,7 +38,14 @@ class LinkedPlacesAdapter:
 
         result = AdapterResult(raw_assets=[asset])
         for index, record in enumerate(records):
-            record_id = str(record.get("@id") or record.get("id") or index)
+            properties = record.get("properties") or {}
+            record_id = str(
+                record.get("@id")
+                or record.get("id")
+                or properties.get("url")
+                or properties.get("src_id")
+                or index
+            )
             try:
                 raw_geometry = record.get("geometry")
                 if not raw_geometry:
@@ -52,7 +59,6 @@ class LinkedPlacesAdapter:
                 if geometry.is_empty:
                     raise ValueError("empty geometry")
                 valid_from, valid_to = self._date_range(record, chronology)
-                properties = record.get("properties") or {}
                 title = str(properties.get("title") or record.get("title") or "").strip()
                 if not title:
                     raise ValueError("place has no title")
@@ -86,15 +92,26 @@ class LinkedPlacesAdapter:
                                 source,
                                 asset,
                                 record_id,
-                                url=record_id if record_id.startswith("http") else None,
+                                url=(
+                                    str(properties.get("url"))
+                                    if str(properties.get("url") or "").startswith("http")
+                                    else record_id if record_id.startswith("http") else None
+                                ),
                                 title=f"{source.title}: {title}",
                             )
                         ],
                         min_display_zoom=source.defaults.min_display_zoom,
                         properties={
-                            "types": record.get("types", []),
-                            "links": record.get("links", []),
-                            "relations": record.get("relations", []),
+                            "types": record.get("types") or properties.get("types") or [],
+                            "links": record.get("links") or properties.get("links") or [],
+                            "relations": (
+                                record.get("relations")
+                                or properties.get("related")
+                                or []
+                            ),
+                            "descriptions": properties.get("descriptions") or [],
+                            "dataset": properties.get("dataset"),
+                            "dataset_id": properties.get("dataset_id"),
                             "source_properties": properties,
                         },
                     )
@@ -124,7 +141,22 @@ class LinkedPlacesAdapter:
 
     @staticmethod
     def _date_range(record: dict[str, Any], chronology: str) -> tuple[int, int]:
-        timespans = (record.get("when") or {}).get("timespans") or []
+        properties = record.get("properties") or {}
+        when_objects: list[dict[str, Any]] = []
+        direct_when = record.get("when")
+        if isinstance(direct_when, dict):
+            when_objects.append(direct_when)
+        nested_whens = properties.get("whens") or []
+        if isinstance(nested_whens, dict):
+            when_objects.append(nested_whens)
+        elif isinstance(nested_whens, list):
+            when_objects.extend(item for item in nested_whens if isinstance(item, dict))
+        timespans = [
+            timespan
+            for when in when_objects
+            for timespan in (when.get("timespans") or [])
+            if isinstance(timespan, dict)
+        ]
         starts: list[int] = []
         ends: list[int] = []
         for timespan in timespans:
@@ -143,7 +175,8 @@ class LinkedPlacesAdapter:
     @staticmethod
     def _names(record: dict[str, Any], title: str) -> dict[str, str]:
         names = {"und": title}
-        for item in record.get("names") or []:
+        properties = record.get("properties") or {}
+        for item in record.get("names") or properties.get("names") or []:
             value = item.get("toponym")
             if value:
                 names.setdefault(str(item.get("lang") or "und"), str(value))

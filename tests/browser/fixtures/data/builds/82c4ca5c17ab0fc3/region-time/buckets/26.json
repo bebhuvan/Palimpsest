@@ -1,0 +1,39 @@
+{
+  "band-06|g10:31:12": {
+    "band_id": "band-06",
+    "bounds": [
+      130.0,
+      30.0,
+      140.0,
+      40.0
+    ],
+    "bucket_id": "band-06|g10:31:12",
+    "cell_id": "g10:31:12",
+    "entries": [
+      {
+        "dossier_ids": [],
+        "entity_id": "palimpsest:event:tanegashima-firearms-encounter",
+        "entry_id": "feature:palimpsest:tanegashima-firearms-tradition:1543",
+        "entry_type": "map_feature",
+        "feature_id": "palimpsest:tanegashima-firearms-tradition:1543",
+        "kind": "event",
+        "latitude": 30.57,
+        "longitude": 130.96,
+        "review_status": "provisional",
+        "source_ids": [
+          "mlit_tanegashima"
+        ],
+        "spatial_basis": "feature_geometry_intersection",
+        "temporal_confidence": "C",
+        "themes": [
+          "knowledge",
+          "trade"
+        ],
+        "valid_from": 1543,
+        "valid_to": 1543
+      }
+    ],
+    "valid_from": 1500,
+    "valid_to": 1799
+  }
+}

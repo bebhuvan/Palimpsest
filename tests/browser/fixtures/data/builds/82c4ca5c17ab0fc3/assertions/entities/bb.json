@@ -1,0 +1,8 @@
+{
+  "palimpsest:place:nuremberg": {
+    "assertion_ids": [
+      "assertion:publication-event-occurred-in-nuremberg"
+    ],
+    "subject_id": "palimpsest:place:nuremberg"
+  }
+}

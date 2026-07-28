@@ -1,0 +1,206 @@
+{
+  "compression": "gzip",
+  "features": {
+    "count": 5,
+    "path_template": "search/features/{shard}.json",
+    "shards": [
+      "22",
+      "35",
+      "5e",
+      "60",
+      "70"
+    ]
+  },
+  "minimum_query_length": 2,
+  "name_ngrams": {
+    "length": 2,
+    "paths": {
+      "ac": "search/names/f45de51cdef30991551e41e882dd7b5404799648a0a00753f44fc966e6153fc1.json.gz",
+      "al": "search/names/6351825030155836664876686dcff61b6a91254a0458537072a1b26ad151b5ce.json.gz",
+      "an": "search/names/ea325d761f98c6b73320e442b67f2a3574d9924716d788ddc0dbbdcaca853fe7.json.gz",
+      "ar": "search/names/ab5b62081b1d305e78d0daadb2cd23470b3faeb65af7370627798b7219ea2061.json.gz",
+      "as": "search/names/f4bf9f7fcbedaba0392f108c59d8f4a38b3838efb64877380171b54475c2ade8.json.gz",
+      "at": "search/names/b1d6b91b67c2afa5e322988d9462638d354ddf8a1ef79dba987f815c22b4baee.json.gz",
+      "bl": "search/names/29d9489564c875d731108c8fbd8dfa3e698ca20be4c00878dda716de8c993b97.json.gz",
+      "bu": "search/names/9508394fe63a491fdcc07886367a676baac5e1207bfcc5ae13b08f37b3a31b49.json.gz",
+      "ca": "search/names/6959097001d10501ac7d54c0bdb8db61420f658f2922cc26e46d536119a31126.json.gz",
+      "ce": "search/names/e64c826b6b33f307cecf54ff843c5f9797c1056eb33f9dd60bc632f519712cb9.json.gz",
+      "ch": "search/names/343677762813eaeb65704cc8d9e96f7a444ba0cca92ff861af7f68648b3e6ef1.json.gz",
+      "co": "search/names/c330ec504d82c24fcd10be978fa74b8a3185a8df719604a85443bb9ca279f5a2.json.gz",
+      "de": "search/names/959a45d44e6fcf58361ed004681556fe50129f2109e817dec098c00c9e5d2578.json.gz",
+      "do": "search/names/ac0b52a2ae6ef99999bc08fb31e19188bf0085a4614204068e677e140e1458be.json.gz",
+      "du": "search/names/601b2c2473811afea7864a21e4b965a970afa4ce9eaf85dbdf01414bca66c12c.json.gz",
+      "ea": "search/names/8405ae6de3ebde2abffb2531d437a163a31dc42a109c7369b66b93258c7e1d67.json.gz",
+      "ed": "search/names/9c1623f0d38e28e9594f2ef31a7ec909291c4fdb05a777dccd2e936a7f406011.json.gz",
+      "eg": "search/names/d8c59e8348e0c03f9d2105eed9791438f9aea9586381b79deadbc857eef89d78.json.gz",
+      "en": "search/names/dbd3a49d0d906b4ed9216b73330d2fb080ef2f758c12f3885068222e5e17151c.json.gz",
+      "er": "search/names/cc7e4412564ba8a761bd32ab4cc6086bac3c2c9e580367e0b0eb32a4316f9154.json.gz",
+      "ev": "search/names/67d35554c1f60638d6d72a0edc045450a841f7efabe0f9843b7e653499094538.json.gz",
+      "fi": "search/names/b4bdc848109722a383d0a972c6eb859f2abd29565b8c4cc7199e7c9eb708f1b7.json.gz",
+      "ga": "search/names/f52d63231eb0dbaac689ec9147e4b131fc95ef92d5bc78135b22934b36d76bf4.json.gz",
+      "he": "search/names/372f7e2fd2d01ce2a1d71dc072acbba4c6fd25a1087cd7f153f4ec0ce37e1ede.json.gz",
+      "hi": "search/names/8f434346648f6b96df89dda901c5176b10a6d83961dd3c1ac88b59b2dc327aa4.json.gz",
+      "ib": "search/names/765dbb8c38a58a5dc019d7b3133dffb251d643cb291328ad8e86d4f05655e68b.json.gz",
+      "ic": "search/names/dae7f3a056377ab98e8eba07dd01c64c813dc392d02ecd4b7b3b728c6d1e21a8.json.gz",
+      "ie": "search/names/292c1980ba2805512acfef5d0cf8f43fba5c7b9b73a5a7afad1c37cfacad3c98.json.gz",
+      "il": "search/names/a0fb903525dc10dccaa4bd72bed4fe5b24ae8346b8a7343edce84172feb7085a.json.gz",
+      "im": "search/names/a898df22bfc74a1ae298c73211ab3b319e5b8da7543d6cd002a8dc4f8723be43.json.gz",
+      "io": "search/names/4021fadf187fd2c8277aad0fbc5e8fc4e7f1c75fbb38b6337160f125444790b2.json.gz",
+      "ir": "search/names/08c85bd37cdd0ffce8c39ecd7c7f0ff94e6f45af2aa986673b0c9f1a8a2fffea.json.gz",
+      "la": "search/names/b737ca7ee563ae80e457bb3d1dfe64edd2b4c015a8f88b6f87d5c113b68897fd.json.gz",
+      "li": "search/names/00a9e4255a5b63067b76cbfb9fd67f26bdb91be802d5ffcb177ec1b7a8d4c623.json.gz",
+      "lo": "search/names/9294ab38039f60d2ec53822fb46b52c663af7ea478f4d17bf43da44ede5e166c.json.gz",
+      "lu": "search/names/80c0fcbbfa9d03d861b22230e67c380afb545c12de43094f3985128625858361.json.gz",
+      "ma": "search/names/3c44c3e1b8b7844786724ac776d3d90ee7eac452bdbcb44495b77dec2ef73cfe.json.gz",
+      "ms": "search/names/f785c3ce1d580c8f22c1db8a14cf1268e44279ff5d461361dbbfaf19e8b11578.json.gz",
+      "nc": "search/names/0be477336d3e1a8d45d820aa54755092e2ec5e0751ccdf93a8fa8fa1e10bd753.json.gz",
+      "nd": "search/names/051603900bc7a27051b385299b0ef6c3dd2da3c6216845df7f501d9e4337cbcd.json.gz",
+      "ne": "search/names/cb58e4600bf0142cbe4ad513de98b73c5c9da7f4023a393d13b395375fccaea6.json.gz",
+      "ni": "search/names/4db03a277cfb9ef4c68b4c9780470eee479abacb5fd01b8a2c2b3cb955998e87.json.gz",
+      "nr": "search/names/6194e73eb25916046397e515de98f4e4357e06af9f3054d347ffe82aadfd8bf2.json.gz",
+      "nt": "search/names/93797144b3d31e8897a3920dddae96b83248c3e6da896f32e8ac4ec97bf46621.json.gz",
+      "of": "search/names/28391d3bc64ec15cbb090426b04aa6b7649c3cc85f11230bb0105e02d15e3624.json.gz",
+      "og": "search/names/e2dc13ee2937512f50cc4eb177c3d9d694e26e0d7257ec74edcbee68f1907d57.json.gz",
+      "ol": "search/names/e20882595488fa4f5a9ecf837ef7e2d220e9898cac625f1163dba2c1c7ec56f7.json.gz",
+      "on": "search/names/b8d31e852725afb1e26d53bab6095b2bff1749c9275be13ed1c05a56ed31ec09.json.gz",
+      "os": "search/names/840a8dcfeae95966a870b0b5257997ce94cbc19dd979409d1671d2e93a9e0de6.json.gz",
+      "ot": "search/names/0a19b4727d1fbd3a43ba819816b0ec8fb670b37b9cab4c0327aa0a3f9d162443.json.gz",
+      "ou": "search/names/fc74181ece96ac0d3a8d14da85058f9a336cab3ea77d797cfbb9fadcf49e86d0.json.gz",
+      "oy": "search/names/c45439e874c4bed7bcbd5a785cb79b55a6a71e35e988147245a729bee438c9fa.json.gz",
+      "pi": "search/names/85b42e1702877c851eb7412fe958c8fb447c3207b4798fadab42ea8539046ce1.json.gz",
+      "pl": "search/names/3485639faf1591f3c16f295198e9389db5b33c949587ec48663597d4e00299d5.json.gz",
+      "pu": "search/names/4b4d5589e12d32d589355ac6b1416bf2928a3da86f58d6d1683440ac41b8102a.json.gz",
+      "qu": "search/names/a082f17cf976fb34724b2d88f5a779341f1db75157bde2da48cd392c0b74ecb7.json.gz",
+      "re": "search/names/3ac1ecbd2220c6757eb9f289fee88c4068c6791c5b0affef7644e77adfc97b45.json.gz",
+      "ri": "search/names/396a14ab206e2b44e03c4e00393e948cce36a6b0f0d7489cb46d944b33ad51c8.json.gz",
+      "rm": "search/names/58466ebdd352f801198118e294e38715f864985fd87977f348bfcd7db62e7c76.json.gz",
+      "ro": "search/names/7ef9ec0cf2c4facafddd03ab96eca0939d6749b49952bd816f1e0cc6901941d5.json.gz",
+      "sc": "search/names/e0b9a8799f32453a478c9122f8b83cee68e16db18f493ac81bc1d474594b5df4.json.gz",
+      "sh": "search/names/89c4ec9f6b3f1086b158d8ef03dfe8155e6f79d9e66434b8f9b3432fe8720e50.json.gz",
+      "si": "search/names/97a62ad21d79c01cceb7767952acec4fec86bfe909b06e5f3f6963365cf91ab8.json.gz",
+      "ss": "search/names/a31fe9656fc8d3a459e623dc8204e6d0268f8df56d734dac3ca3262edb5db883.json.gz",
+      "ta": "search/names/76592b9de6d38238a52a3651867871e5c670e6320a8ef46a84b5590f8933f33e.json.gz",
+      "te": "search/names/2d6c9a90dd38f6852515274cde41a8cd8e7e1a7a053835334ec7e29f61b918dd.json.gz",
+      "ti": "search/names/cfccfcdeb2a5022c816b8c3e50353698c6994a2a7bea4b8ea6aef2fe56880f22.json.gz",
+      "to": "search/names/663ea1bfffe5038f3f0cf667f14c4257eff52d77ce7f2a218f72e9286616ea39.json.gz",
+      "ub": "search/names/ece134c3f8737a954710c0b89a9f70e8e59359f6a8ab4c19ae77cf1203d5c5bc.json.gz",
+      "ui": "search/names/d3ef7de562f9a4a34a9a0b05a112955fdecdd0102c3faae5eeb03a195091a5e4.json.gz",
+      "ul": "search/names/51db253425817abff5f9d6cb749a42d8cbb7cd4dc95128efb59d788fcc570593.json.gz",
+      "un": "search/names/68bca10eea2ba33f6f15a6ab0c7df2a49051a6541f9118d468b0585d5d60398b.json.gz",
+      "us": "search/names/79adb2a2fce5c6ba215fe5f27f532d4e7edbac4b6a5e09e1ef3a08084a904621.json.gz",
+      "ut": "search/names/469cc643a19fb75901e5d331b8dc14befa8b98810b246c2fb22fff0c382dc39e.json.gz",
+      "va": "search/names/198dea392afc21d070f8abfc7c06d11060f1b278e5d62501bd57f1159a72ebac.json.gz",
+      "vo": "search/names/3f98114b0f77b7da78bca527117c4f3126aafbba8b94b68b0bc3ccd13944258d.json.gz",
+      "ya": "search/names/6663103a3e47efc879ea31fa38458be23be0ce0895f3d8b27b7ea19a1120b3d4.json.gz",
+      "の鉄": "search/names/7f6fc112f4621672c7c3ece630774d92f395fe77780c6abb50d7adab2fd3776e.json.gz",
+      "への": "search/names/264daf31f5830966f67c1c4065e35360bd0d12c4fa88676c21efc43059bc1501.json.gz",
+      "伝来": "search/names/c52c3dcf3cbf4f403f914c0e5f41392899453884249f1d0e2472ea319cf9ef63.json.gz",
+      "子島": "search/names/c8022de47ca360d674e02b73f1e9b528f65575f6da777cb68f07889443d5e634.json.gz",
+      "島へ": "search/names/8777263dc8161ccc0baceb4d6f59451c740a31ccef5347e1c94096a935022db9.json.gz",
+      "砲伝": "search/names/077abb6a2c93dc73d341d37fc9b1bad1be66dd01d780c952ab021221368eacfb.json.gz",
+      "種子": "search/names/a8a0510564d6180bbb4a5c1ce40fde6d465f157b34baaac4c192d927837223d9.json.gz",
+      "鉄砲": "search/names/e7e128669c2602b148d656a83eff1a9d43aca9a179e0a1b888d72a152679d1e6.json.gz"
+    }
+  },
+  "normalization": "unicode-nfkd-lowercase-alphanumeric-spaces",
+  "pages": {
+    "count": 5,
+    "page_size": 250,
+    "pages": [
+      "0000"
+    ],
+    "path_template": "search/pages/{page}.json.gz"
+  },
+  "records": {
+    "count": 5,
+    "path_template": "search/records/{shard}.json",
+    "shards": [
+      "22",
+      "38",
+      "49",
+      "97",
+      "b3"
+    ]
+  },
+  "schema_version": "1.0.0",
+  "semantics": "lazy-static-search-over-release-records",
+  "time_bands": [
+    {
+      "band_id": "band-00",
+      "count": 0,
+      "path": "search/time/band-00.json.gz",
+      "valid_from": -3400,
+      "valid_to": -2001
+    },
+    {
+      "band_id": "band-01",
+      "count": 0,
+      "path": "search/time/band-01.json.gz",
+      "valid_from": -2000,
+      "valid_to": -1001
+    },
+    {
+      "band_id": "band-02",
+      "count": 0,
+      "path": "search/time/band-02.json.gz",
+      "valid_from": -1000,
+      "valid_to": -1
+    },
+    {
+      "band_id": "band-03",
+      "count": 2,
+      "path": "search/time/band-03.json.gz",
+      "valid_from": 1,
+      "valid_to": 499
+    },
+    {
+      "band_id": "band-04",
+      "count": 0,
+      "path": "search/time/band-04.json.gz",
+      "valid_from": 500,
+      "valid_to": 999
+    },
+    {
+      "band_id": "band-05",
+      "count": 0,
+      "path": "search/time/band-05.json.gz",
+      "valid_from": 1000,
+      "valid_to": 1499
+    },
+    {
+      "band_id": "band-06",
+      "count": 3,
+      "path": "search/time/band-06.json.gz",
+      "valid_from": 1500,
+      "valid_to": 1799
+    },
+    {
+      "band_id": "band-07",
+      "count": 0,
+      "path": "search/time/band-07.json.gz",
+      "valid_from": 1800,
+      "valid_to": 1885
+    },
+    {
+      "band_id": "band-08",
+      "count": 0,
+      "path": "search/time/band-08.json.gz",
+      "valid_from": 1886,
+      "valid_to": 1945
+    },
+    {
+      "band_id": "band-09",
+      "count": 0,
+      "path": "search/time/band-09.json.gz",
+      "valid_from": 1946,
+      "valid_to": 1999
+    },
+    {
+      "band_id": "band-10",
+      "count": 0,
+      "path": "search/time/band-10.json.gz",
+      "valid_from": 2000,
+      "valid_to": 2026
+    }
+  ]
+}

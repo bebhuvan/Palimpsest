@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0.0",
+  "semantics": "build-time-reviewed-source-integrations",
+  "authority_matches_path": "integrations/authority-matches.ndjson",
+  "authority_match_count": 1,
+  "historical_maps_path": "integrations/historical-maps.ndjson",
+  "historical_map_count": 1
+}

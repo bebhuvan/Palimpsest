@@ -37,6 +37,9 @@ exit 1
     sequence = (tmp_path / "work" / "ancient.geojsonseq").read_text()
     assert '\"feature_id\":\"test-source:polity:-100:100:abcdef\"' in sequence
     assert '\"primary_entity_id\":\"wikidata:Q1\"' in sequence
+    assert '\"source_record_id\":\"record-1\"' in sequence
+    assert '\"source_title\":\"Test source\"' in sequence
+    assert '\"source_url\":\"https://example.org/record-1\"' in sequence
     assert '\"content_shard\":' in sequence
     assert '\"themes\":[\"power\"]' in sequence
     assert '\"tippecanoe\":{\"minzoom\":0}' in sequence

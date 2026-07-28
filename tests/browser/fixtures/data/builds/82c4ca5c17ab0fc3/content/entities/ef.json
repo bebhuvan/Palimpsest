@@ -1,0 +1,49 @@
+{
+  "palimpsest:person:tanegashima-tokitaka": {
+    "aliases": {},
+    "commons_categories": [],
+    "commons_images": [],
+    "context_depth": 0,
+    "coordinates": [],
+    "date_claims": [],
+    "date_precision": "year",
+    "descriptions": {},
+    "discovered_from_entity_ids": [],
+    "discovery_predicates": [],
+    "entity_id": "palimpsest:person:tanegashima-tokitaka",
+    "entity_kind": "person",
+    "entity_type": "human",
+    "links": {},
+    "names": {
+      "en": "Tanegashima Tokitaka",
+      "ja": "種子島時堯"
+    },
+    "redirects_from": [],
+    "relationships": [],
+    "review_status": "provisional",
+    "sitelinks": {},
+    "source_refs": [
+      {
+        "checksum_sha256": "295aea5847ce5d9afa801bbd2f46ab4c45a437e5dacfc37b7157a284011a6aab",
+        "citation": "Ministry of Land, Infrastructure, Transport and Tourism, Japan, Early Modern Firearms in Japan, page R4-00195.",
+        "license_id": "PDL-1.0",
+        "modified": false,
+        "publisher": "Ministry of Land, Infrastructure, Transport and Tourism, Japan",
+        "record_id": "R4-00195",
+        "retrieved_at": "2026-07-23T06:00:00Z",
+        "source_id": "mlit_tanegashima",
+        "title": "Early modern firearms in Japan",
+        "url": "https://www.mlit.go.jp/tagengo-db/R4-00195.html",
+        "version": "browser-pilot-curated-snapshot-v1"
+      }
+    ],
+    "temporal_confidence": {
+      "grade": "B",
+      "rationale": "The MLIT page supplies the life years 1528–1579."
+    },
+    "temporal_uncertainty": null,
+    "valid_from": 1528,
+    "valid_to": 1579,
+    "wikidata_id": null
+  }
+}

@@ -1,0 +1,344 @@
+/*
+ * Palimpsest — "Daylight"
+ *
+ * One light world. Chrome and reading surface are variations on the same neutral
+ * scale rather than two opposed palettes, so the interface reads as a single sheet
+ * with the map set into it.
+ *
+ * Colour carries two jobs, kept far apart on the wheel so they can never be confused:
+ *
+ *   Ultramarine  — interaction and identity. Active state, focus, links, the brand.
+ *                  Chosen because it was the costly pigment in manuscript illumination,
+ *                  reserved for what mattered most; it is used here the same way.
+ *   The ramp     — evidential confidence, teal → green → amber → clay. Ordinal, and
+ *                  the only place a hue means "how well is this known".
+ *
+ * The six historical lenses stay non-chromatic: they are categories, not grades, so
+ * they are told apart by mark (○ ◆ ✦ ● ■ ↔) and only the active one lights up.
+ */
+
+:root {
+  /* Neutrals are biased toward the accent rather than pure grey — a chosen neutral,
+     not an inherited one, and it keeps the warm cartography looking warm. */
+  --bg: #f6f7fc;
+  --bg-sunk: #eef0f8;
+  --surface: #ffffff;
+  --hover: #e9edf9;
+  --line: #e0e4f0;
+  --line-strong: #c4cadd;
+
+  --text: #14172a;
+  --text-dim: #545b73;
+  --text-faint: #838ba1;
+
+  --accent: #2f42c9;
+  --accent-hover: #2333a6;
+  --accent-soft: #edeffc;
+  --accent-line: #c3caf4;
+
+  /* Confidence, as type and rules. */
+  --conf-a: #0f7a68;
+  --conf-b: #4a7a3e;
+  --conf-c: #8a5e18;
+  --conf-d: #8e4630;
+  --conf-unknown: #6b7285;
+
+  /* Confidence, as chart fills and swatches — brighter, so a ribbon of them reads as
+     a chart on white rather than as four near-black bars. */
+  --conf-a-fill: #14a08a;
+  --conf-b-fill: #6aa24f;
+  --conf-c-fill: #c99029;
+  --conf-d-fill: #c05f3c;
+  --conf-unknown-fill: #98a0b4;
+
+  /*
+    Newsreader over Spectral: Spectral's small x-height went grey and thin at reading
+    sizes, which is most of why the prose read as blocks rather than text. Newsreader is
+    drawn for screen reading, carries a real italic, and has an optical-size axis so the
+    display sizes tighten while the body stays open.
+  */
+  --font-display: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-ui: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* 11px is a hard floor. The design this replaced set 122 declarations at or below 9px. */
+  --t-xs: 11px;
+  --t-sm: 13px;
+  --t-base: 16px;
+  --t-md: 18px;
+  --t-lg: 22px;
+  --t-xl: 28px;
+  --t-2xl: 36px;
+  --t-3xl: 48px;
+  /* Long-form reading, used where a column is a column and not a UI panel. */
+  --t-read: 19px;
+
+  --lh-tight: 1.1;
+  --lh-snug: 1.34;
+  --lh-body: 1.7;
+
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+
+  --rail-width: 118px;
+  --reader-width: 452px;
+  --timeline-height: 96px;
+
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+
+  color-scheme: light;
+  font-family: var(--font-ui);
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/*
+ * Scrollbars.
+ *
+ * A default scrollbar is the one piece of chrome a design does not get to draw, and it
+ * undoes a lot of quiet work — a grey trough with arrow buttons beside a hairline layout.
+ * The thumb is inset by a transparent border clipped to the padding box, so it floats free
+ * of the edge and needs no knowledge of whichever surface it happens to be over.
+ */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-corner { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  background-clip: padding-box;
+  border: 3px solid transparent;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--text-faint); background-clip: padding-box; }
+::-webkit-scrollbar-thumb:active { background: var(--text-dim); background-clip: padding-box; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+.hj-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.hj-label {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.hj-numeral {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+.hj-mono {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  letter-spacing: -0.01em;
+}
+
+/* ---------------------------------------------------------------------------
+ * Reading surface
+ *
+ * One rhythm, declared once. The design this replaced gave nine panel sections five
+ * near-identical off-white tints; the reader could not decode them, so they read
+ * as stripes. Section identity comes from a label and consistent space.
+ * ------------------------------------------------------------------------- */
+
+.hj-section {
+  padding: var(--s-6);
+  border-bottom: 1px solid var(--line);
+}
+
+/* Deliberately not the accent. Nine sections all labelled in ultramarine would spend
+   the accent everywhere and leave it meaning nothing — the exact failure this redesign
+   set out to fix. The accent stays scarce: interaction, active state, identity. */
+.hj-section-label {
+  margin: 0 0 var(--s-3);
+  color: var(--text-faint);
+  font-family: var(--font-ui);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+/* The one display-weight statement a section is allowed. */
+.hj-lede {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: var(--t-lg);
+  font-weight: 400;
+  line-height: var(--lh-snug);
+  letter-spacing: -0.008em;
+}
+
+.hj-prose {
+  margin: 0 0 var(--s-3);
+  color: var(--text-dim);
+  font-family: var(--font-display);
+  font-size: var(--t-base);
+  line-height: var(--lh-body);
+}
+.hj-prose:last-child { margin-bottom: 0; }
+
+.hj-note {
+  margin: 0 0 var(--s-3);
+  color: var(--text-dim);
+  font-size: var(--t-sm);
+  line-height: var(--lh-body);
+}
+
+.hj-caveat {
+  margin: 0 0 var(--s-4);
+  color: var(--text-faint);
+  font-size: var(--t-xs);
+  line-height: var(--lh-body);
+}
+
+.hj-meta {
+  margin: 0;
+  color: var(--text-faint);
+  font-size: var(--t-xs);
+  line-height: 1.5;
+}
+
+/* A repeated record within a section: assertion, period, connection, context card. */
+.hj-entry {
+  display: grid;
+  gap: var(--s-1);
+  padding: var(--s-4) 0;
+  border-top: 1px solid var(--line);
+}
+.hj-entry > strong {
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: var(--t-md);
+  font-weight: 500;
+  line-height: var(--lh-snug);
+}
+
+.hj-link {
+  color: var(--accent);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.hj-link:hover { color: var(--accent-hover); text-decoration-thickness: 2px; }
+
+.hj-inline-button {
+  justify-self: start;
+  margin-top: var(--s-1);
+  padding: 0 0 2px;
+  border: 0;
+  border-bottom: 1px solid var(--accent-line);
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: var(--t-xs);
+  font-weight: 500;
+}
+.hj-inline-button:hover { border-bottom-color: var(--accent); color: var(--accent-hover); }
+
+.hj-disclosure {
+  margin-top: var(--s-2);
+  color: var(--text-dim);
+  font-size: var(--t-sm);
+  line-height: var(--lh-body);
+}
+.hj-disclosure > summary {
+  cursor: pointer;
+  color: var(--text-dim);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.hj-disclosure > summary:hover { color: var(--accent); }
+.hj-disclosure ul { margin: var(--s-2) 0 0; padding-left: var(--s-4); }
+.hj-disclosure li { margin-bottom: var(--s-1); font-size: var(--t-xs); line-height: var(--lh-body); }
+
+/* The confidence chip. Hue is a claim about evidence here, and only here. */
+.hj-grade {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-dim);
+  font-size: var(--t-xs);
+  font-weight: 500;
+}
+.hj-grade::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--grade, var(--conf-unknown));
+}
+
+@media (max-width: 860px) {
+  .hj-section { padding: var(--s-5) var(--s-4); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

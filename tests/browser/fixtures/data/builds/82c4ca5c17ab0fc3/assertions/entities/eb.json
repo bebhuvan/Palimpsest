@@ -1,0 +1,9 @@
+{
+  "palimpsest:person:vasco-de-quiroga": {
+    "assertion_ids": [
+      "assertion:royal-cedula-addressed-to-vasco-de-quiroga",
+      "assertion:royal-cedula-assigned-ecclesiastical-oversight"
+    ],
+    "subject_id": "palimpsest:person:vasco-de-quiroga"
+  }
+}

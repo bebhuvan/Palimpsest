@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This pilot must prove the History Joice experience, not imply that one year can represent the
+This pilot must prove the Palimpsest experience, not imply that one year can represent the
 world evenly. A visitor selecting 1543 should be able to move between source-backed map records,
 people, events, institutions, works and interpretations while seeing where evidence, coverage and
 perspective are limited.
@@ -44,7 +44,7 @@ contested when its date, location, source rights or interpretation cannot pass t
 
 1. Geometry answers only “where may this record be inspected?” unless a source supports a
    different spatial meaning.
-2. A source extract, a primary source, a scholarly assertion and History Joice interpretation
+2. A source extract, a primary source, a scholarly assertion and Palimpsest interpretation
    remain visibly different records.
 3. Wikipedia and Wikidata may provide bounded discovery context after map records are admitted;
    neither establishes borders or supplies uncited facts to generated prose.

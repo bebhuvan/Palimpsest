@@ -31,6 +31,35 @@ OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses"
 def canonical_json_bytes(value: Any) -> bytes:
     if hasattr(value, "model_dump"):
         value = value.model_dump(mode="json")
+
+    def omit_additive_assertion_defaults(item: Any) -> None:
+        """Keep old signed evidence stable as the assertion schema gains optional fields."""
+
+        if isinstance(item, list):
+            for nested in item:
+                omit_additive_assertion_defaults(nested)
+            return
+        if not isinstance(item, dict):
+            return
+        if item.get("representation") == "structured_sourced_assertion":
+            for key in (
+                "source_excerpt",
+                "source_excerpt_checksum_sha256",
+                "restatement",
+            ):
+                if item.get(key) is None:
+                    item.pop(key, None)
+            if item.get("source_citations") == []:
+                item.pop("source_citations", None)
+            assertion_object = item.get("object")
+            if isinstance(assertion_object, dict):
+                for key in ("value_from", "value_to", "unit"):
+                    if assertion_object.get(key) is None:
+                        assertion_object.pop(key, None)
+        for nested in item.values():
+            omit_additive_assertion_defaults(nested)
+
+    omit_additive_assertion_defaults(value)
     return orjson.dumps(value, option=orjson.OPT_SORT_KEYS)
 
 
@@ -469,7 +498,7 @@ def publish_reviewed_draft(
     }
     candidate = PublishedEditorialDossier.model_validate(
         {
-            "dossier_id": "historyjoice:editorial:0000000000000000",
+            "dossier_id": "palimpsest:editorial:0000000000000000",
             **published_values,
         }
     )
@@ -477,7 +506,7 @@ def publish_reviewed_draft(
     normalized.pop("dossier_id")
     publication_hash = canonical_sha256(normalized)
     dossier = candidate.model_copy(
-        update={"dossier_id": f"historyjoice:editorial:{publication_hash[:16]}"}
+        update={"dossier_id": f"palimpsest:editorial:{publication_hash[:16]}"}
     )
     validate_published_dossier(dossier)
     return dossier
@@ -502,7 +531,7 @@ def validate_published_dossier(dossier: PublishedEditorialDossier) -> None:
         raise ValueError("Published dossier evidence attribution differs from its sources")
     values = dossier.model_dump(mode="json")
     values.pop("dossier_id")
-    expected_id = f"historyjoice:editorial:{canonical_sha256(values)[:16]}"
+    expected_id = f"palimpsest:editorial:{canonical_sha256(values)[:16]}"
     if dossier.dossier_id != expected_id:
         raise ValueError("Published dossier ID does not match its immutable content")
 
@@ -544,7 +573,7 @@ def generate_with_openai(
         "text": {
             "format": {
                 "type": "json_schema",
-                "name": "history_joice_dossier_draft",
+                "name": "palimpsest_dossier_draft",
                 "strict": True,
                 "schema": _openai_output_schema(),
             }

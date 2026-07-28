@@ -58,6 +58,10 @@ entry records policy; `enabled: true` plus a matching manifest source proves act
   the causal argument. Wikipedia and Wikidata are discovery aids, not sufficient causal evidence.
 - Our World in Data supplies contextual indicators. Values using present-day geographic units must
   not be painted onto incompatible historical polities.
+- The Seshat API supplies selected polity-level scholarly assertions joined to Cliopatria only by
+  exact `SeshatID`. Its numeric ranges, coded values, intervals, uncertainty, disputes,
+  explanations and references must survive normalization. Generated plain-English restatements
+  can simplify one explanation but cannot alter or replace its structured value.
 - OpenHistoricalMap supplies contributor-built local historical detail. Per-feature `license=*` tags must survive
   normalization.
 - World Historical Gazetteer is a reconciliation and linked-place source, not a global boundary

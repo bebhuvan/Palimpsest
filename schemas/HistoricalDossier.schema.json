@@ -4,6 +4,7 @@
       "enum": [
         "primary_source",
         "tertiary_summary",
+        "source_restatement",
         "project_interpretation"
       ],
       "title": "ContentRole",
